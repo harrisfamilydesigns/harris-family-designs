@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import AdminLoginPage from './components/AdminLoginPage';
 import LandingPage from './components/LandingPage';
 import AdminDashboardPage from './components/AdminDashboardPage';
