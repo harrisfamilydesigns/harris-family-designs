@@ -5,9 +5,14 @@ import { post } from "../config/request";
 const login = async (email, password) => {
   const url = `${BASE_URL}/users/sign_in`;
   try {
-    const data = post(url, { user: { email, password } }, false);
-    localStorage.setItem('token', data.token);
-    return data;
+    const data = await post(url, { user: { email, password } }, false);
+    const token = data.token;
+    if (token) {
+      localStorage.setItem('token', data.token);
+      return data;
+    } else {
+      throw new Error('No token received');
+    }
   } catch (error) {
     throw new Error('Error logging in:', error);
   }
