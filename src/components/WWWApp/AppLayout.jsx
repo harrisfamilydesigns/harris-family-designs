@@ -2,6 +2,7 @@ import React from 'react'
 import { Layout, Menu } from 'antd';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
+import { auth } from '../../api';
 
 const AppLayout = () => {
   const [current, setCurrent] = React.useState('about');
@@ -20,7 +21,7 @@ const AppLayout = () => {
   }, [location]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove the token
+    auth.logout();
     navigate('/'); // Redirect to home
   };
 

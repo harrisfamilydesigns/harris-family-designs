@@ -1,26 +1,23 @@
-import React from 'react';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
-import AdminLoginPage from './components/AdminLoginPage';
-import LandingPage from './components/LandingPage';
-import AdminDashboardPage from './components/AdminDashboardPage';
-import AppLayout from './components/AppLayout';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
+// Lazy load the apps
+const WWWApp = lazy(() => import('./components/WWWApp/Root'));
+const SecondHandApp = lazy(() => import('./components/SecondHandApp/Root'));
 
 const Root = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<AppLayout/>}>
-          <Route index element={<LandingPage/>} />
-          <Route path="about" element={<LandingPage/>} />
-          <Route path="products" element={<LandingPage/>} />
-          <Route path="contact" element={<LandingPage/>} />
+  const [subdomain, setSubdomain] = useState('');
 
-          <Route path="admin_login" element={<AdminLoginPage/>} />
-          <Route path="admin" element={<AdminDashboardPage/>} />
-        </Route>
-      </Routes>
-    </Router>
-  );
+  useEffect(() => {
+    const hostnameArray = window.location.hostname.split('.');
+    if (hostnameArray.length >= 3) { // Basic check for a subdomain
+      setSubdomain(hostnameArray[0]);
+    }
+  }, []);
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      {subdomain === 'secondhand' ? <SecondHandApp /> : <WWWApp />}
+    </Suspense>
+  )
 };
 
 export default Root;
