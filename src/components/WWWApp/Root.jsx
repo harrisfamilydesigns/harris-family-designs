@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import AdminLoginPage from './AdminLoginPage';
 import LandingPage from './LandingPage';
 import AdminDashboardPage from './AdminDashboardPage';
@@ -18,6 +18,8 @@ const Root = () => {
           <Route path="admin_login" element={<AdminLoginPage/>} />
           <Route path="admin" element={<AdminDashboardPage/>} />
         </Route>
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   )

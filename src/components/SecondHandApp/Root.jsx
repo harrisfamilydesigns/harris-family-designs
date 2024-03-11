@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import AppLayout from './AppLayout';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
@@ -20,6 +20,8 @@ const Root = () => {
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
           </Route>
+
+          <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Suspense>
     </Router>
