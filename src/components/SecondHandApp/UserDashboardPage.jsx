@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Card, Col, Row, Typography } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
