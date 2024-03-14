@@ -1,70 +1,76 @@
 import React from 'react'
-import { Layout, Menu } from 'antd';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
+import { Layout, Button, Menu } from 'antd';
+import { Outlet } from 'react-router-dom';
+import { useCurrentUser, auth } from '../../api';
+import { useNavigate } from 'react-router-dom';
+
 const { Header, Content, Footer } = Layout;
-import { auth } from '../../api';
 
 const AppLayout = () => {
-  // const [current, setCurrent] = React.useState('about');
-  // const token = localStorage.getItem('token');
-  // const navigate = useNavigate();
-  // const location = useLocation();
+  const { data: currentUser, error, isLoading } = useCurrentUser();
+  const [current, setCurrent] = React.useState('home');
 
-  // React.useEffect(() => {
-  //   const pathKeyMap = {
-  //     '/about': 'about',
-  //     '/products': 'product',
-  //     '/contact': 'contact',
-  //     '/admin': 'admin',
-  //   };
-  //   setCurrent(pathKeyMap[location.pathname] || 'about');
-  // }, [location]);
+  const menuItems = [
+    {
+      key: 'home',
+      label: 'Home',
+      link: '/',
+    },
+  ];
 
-  // const handleLogout = () => {
-  //   auth.logout();
-  //   navigate('/'); // Redirect to home
-  // };
-
-  // let menuItems = [
-  //   {
-  //     key: 'about',
-  //     label: <Link to="/about">About Us</Link>,
-  //   },
-  //   {
-  //     key: 'product',
-  //     label: <Link to="/products">Our Products</Link>,
-  //   },
-  //   {
-  //     key: 'contact',
-  //     label: <Link to="/contact">Contact Us</Link>,
-  //   },
-  // ];
-
-  // if (token) {
-  //   menuItems.push({
-  //     key: 'admin',
-  //     label: <Link to="/admin">Admin</Link>,
-  //   });
-
-  //   menuItems.push({
-  //     key: 'logout',
-  //     label: 'Logout',
-  //     onClick: handleLogout,
-  //   });
-  // }
+  const navigate = useNavigate();
+  const logout = async () => {
+    await auth.logout();
+    navigate('/login');
+  }
 
   return (
-    <Layout className="layout">
-      <Header>
+    <Layout className="layout"
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
+      <Header
+        style={{
+          position: 'sticky',
+          top: 0,
+          zIndex: 1,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
         <div className="logo" />
-        {/* <Menu onClick={e => setCurrent(e.key)} theme="dark" mode="horizontal" selectedKeys={[current]} items={menuItems} /> */}
+        <Menu
+          onClick={e => setCurrent(e.key)}
+          theme="dark"
+          mode="horizontal"
+          selectedKeys={[current]}
+          items={menuItems}
+          style={{flex: 1}}
+        />
+        {currentUser && (
+          <Button type="primary" onClick={logout}>Logout</Button>
+        )}
       </Header>
-      <Content style={{ padding: '0 50px' }}>
+      <Content style={{padding: '0 50px'}}>
         <Outlet />
       </Content>
-      <Footer style={{ textAlign: 'center' }}>
+      {/* <Footer
+        style={{
+          position: 'sticky',
+          bottom: 0,
+          zIndex: 1,
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
         Contact us at info@harrisfamilydesigns.com
-      </Footer>
+      </Footer> */}
     </Layout>
   )
 }

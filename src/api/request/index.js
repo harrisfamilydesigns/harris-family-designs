@@ -1,6 +1,7 @@
-// TODO: if requiresAuth and auth fails, logout user
+import { urlForPath } from './utils';
 
-const request = async (url, method, body, requiresAuth = true) => {
+const request = async (path, method, body, requiresAuth = true) => {
+  const url = urlForPath(path);
   const token = localStorage.getItem('token');
   const headers = {
     'Content-Type': 'application/json',
@@ -30,9 +31,9 @@ const request = async (url, method, body, requiresAuth = true) => {
   };
 }
 
-const get = (url, requiresAuth = true) => request(url, 'GET', null, requiresAuth);
-const post = (url, body, requiresAuth = true) => request(url, 'POST', body, requiresAuth);
-const patch = (url, body, requiresAuth = true) => request(url, 'PATCH', body, requiresAuth);
-const destroy = (url, requiresAuth = true) => request(url, 'DELETE', null, requiresAuth);
+const get = (path, requiresAuth = true) => request(path, 'GET', null, requiresAuth);
+const post = (path, body, requiresAuth = true) => request(path, 'POST', body, requiresAuth);
+const patch = (path, body, requiresAuth = true) => request(path, 'PATCH', body, requiresAuth);
+const destroy = (path, requiresAuth = true) => request(path, 'DELETE', null, requiresAuth);
 
 export { get, post, patch, destroy };

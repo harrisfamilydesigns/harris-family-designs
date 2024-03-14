@@ -1,11 +1,11 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 
-const Authenticated = () => {
+const NotAuthenticated = () => {
   const token = localStorage.getItem('token');
 
-  if (!token) {
-    return <Navigate to="/login" />;
+  if (token) {
+    return <Navigate to="/" />;
   }
 
   return (
@@ -13,4 +13,4 @@ const Authenticated = () => {
   );
 }
 
-export default Authenticated;
+export default NotAuthenticated;

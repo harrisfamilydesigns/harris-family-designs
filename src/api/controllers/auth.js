@@ -1,10 +1,9 @@
-import { BASE_URL } from "../config/constants";
-import { post } from "../config/request";
+import { post } from "../request";
 
 // Also returns user data
 const login = async (email, password) => {
-  const url = `${BASE_URL}/users/sign_in`;
-  const { data } = await post(url, { user: { email, password } }, false);
+  const path = '/users/sign_in';
+  const { data } = await post(path, { user: { email, password } }, false);
 
   const token = data.token;
   if (token) {
@@ -21,6 +20,3 @@ export const auth = {
   login,
   logout,
 };
-
-export default auth;
-

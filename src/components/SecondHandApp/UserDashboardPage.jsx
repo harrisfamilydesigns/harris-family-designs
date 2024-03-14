@@ -18,20 +18,42 @@ const UserDashboardPage = () => {
   }
 
   return (
-    <div>
-      <h1>User Dashboard</h1>
-      <p>Welcome to the User Dashboard</p>
-      {isLoading && <p>Loading...</p>}
-      {currentUser && (
-        <div>
-          <pre>
-            {JSON.stringify(currentUser, null, 2)}
-          </pre>
-        </div>
-      )}
-      {error && <p>Error: {error.message}</p>}
-      <Button type="primary" onClick={logout}>Logout</Button>
-    </div>
+    <Row>
+      <Col
+        span={24}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      >
+        <Card
+          title="User Dashboard"
+          style={{
+            width: '100%',
+            maxWidth: 600,
+            margin: 'auto',
+            marginTop: 20,
+            marginBottom: 20,
+          }}
+        >
+          <Typography>Welcome to the User Dashboard</Typography>
+          {isLoading && <Typography>Loading...</Typography>}
+          {currentUser && (
+            <div>
+              <pre>
+                {JSON.stringify(currentUser, null, 2)}
+              </pre>
+
+              <Button type="primary" onClick={logout}>Logout</Button>
+            </div>
+          )}
+          {error && <p>Error: {error.message}</p>}
+        </Card>
+      </Col>
+
+    </Row>
+    // Show 50 red blocks stacked vertically
   );
 }
 

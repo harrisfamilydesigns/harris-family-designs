@@ -1,10 +1,9 @@
-import { BASE_URL } from "../config/constants";
-import { get } from "../config/request";
+import { get } from "../request";
 
 const current = async () => {
-  return get(`${BASE_URL}/users/current`);
+  return get('/users/current');
 }
 
-export default {
+export const users = {
   current,
 };

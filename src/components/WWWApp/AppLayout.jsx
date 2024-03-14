@@ -54,7 +54,15 @@ const AppLayout = () => {
   }
 
   return (
-    <Layout className="layout">
+    <Layout
+      className="layout"
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        textAlign: 'center'
+      }}
+    >
       <Header>
         <div className="logo" />
         <Menu onClick={e => setCurrent(e.key)} theme="dark" mode="horizontal" selectedKeys={[current]} items={menuItems} />
