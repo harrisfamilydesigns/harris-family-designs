@@ -1,9 +1,15 @@
 import { Button } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
+import { users } from '../../api';
 
-// TODO: Placeholder for the user dashboard page
 const UserDashboardPage = () => {
+
+  const { data: currentUser, error, isLoading } = useSWR(`/users/current`, async (_url) => {
+    const { data } = await users.current();
+    return data;
+  });
 
   const navigate = useNavigate();
   const logout = () => {
@@ -15,6 +21,15 @@ const UserDashboardPage = () => {
     <div>
       <h1>User Dashboard</h1>
       <p>Welcome to the User Dashboard</p>
+      {isLoading && <p>Loading...</p>}
+      {currentUser && (
+        <div>
+          <pre>
+            {JSON.stringify(currentUser, null, 2)}
+          </pre>
+        </div>
+      )}
+      {error && <p>Error: {error.message}</p>}
       <Button type="primary" onClick={logout}>Logout</Button>
     </div>
   );

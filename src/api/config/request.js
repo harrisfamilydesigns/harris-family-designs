@@ -9,10 +9,25 @@ const request = async (url, method, body, requiresAuth = true) => {
   const response = await fetch(url, {
     method,
     headers,
-    body: JSON.stringify(body),
+    ...(body && { body: JSON.stringify(body) }),
   });
 
-  return response.json();
+  const data = await response.json();
+
+  if (requiresAuth && response.status === 401) {
+    localStorage.removeItem('token');
+    window.location.reload();
+  }
+
+  if (response.status < 200 || response.status >= 300) {
+    throw new Error(`${response.statusText}: ${data.error}`);
+  }
+
+  return {
+    data,
+    status: response.status,
+    headers: response.headers,
+  };
 }
 
 const get = (url, requiresAuth = true) => request(url, 'GET', null, requiresAuth);
