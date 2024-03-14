@@ -1,8 +1,9 @@
+import tokenProvider from '../tokenProvider';
 import { urlForPath } from './utils';
 
 const request = async (path, method, body, requiresAuth = true) => {
   const url = urlForPath(path);
-  const token = localStorage.getItem('token');
+  const token = tokenProvider.getToken();
   const headers = {
     'Content-Type': 'application/json',
     ...(requiresAuth && { Authorization: `Bearer ${token}` }),
@@ -16,12 +17,19 @@ const request = async (path, method, body, requiresAuth = true) => {
   const data = await response.json();
 
   if (requiresAuth && response.status === 401) {
-    localStorage.removeItem('token');
+    tokenProvider.removeToken();
     window.location.reload();
   }
 
   if (response.status < 200 || response.status >= 300) {
-    throw new Error(`${response.statusText}: ${data.error}`);
+    let message = response.statusText || 'An error occurred';
+    if (data.error) {
+      message = data.error;
+    }
+    if (data.errors) {
+      message = Object.values(data.errors).join(', ');
+    }
+    throw new Error(message);
   }
 
   return {

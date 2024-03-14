@@ -1,7 +1,8 @@
 import React from 'react';
+import { tokenProvider } from '../../api';
 
 const AdminDashboardPage = () => {
-  const token = localStorage.getItem('token');
+  const token = tokenProvider.getToken();
 
   return (
     <div>

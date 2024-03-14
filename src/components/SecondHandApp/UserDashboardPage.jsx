@@ -2,7 +2,8 @@ import { Button, Card, Col, Row, Typography } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import { users } from '../../api';
+import { users, tokenProvider } from '../../api';
+import { row, card } from '../../styles';
 
 const UserDashboardPage = () => {
 
@@ -13,7 +14,7 @@ const UserDashboardPage = () => {
 
   const navigate = useNavigate();
   const logout = () => {
-    localStorage.removeItem('token');
+    tokenProvider.removeToken();
     navigate('/login');
   }
 
@@ -21,23 +22,14 @@ const UserDashboardPage = () => {
     <Row>
       <Col
         span={24}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+        style={row.flexRowCenterCenter}
       >
         <Card
           title="User Dashboard"
-          style={{
-            width: '100%',
-            maxWidth: 600,
-            margin: 'auto',
-            marginTop: 20,
-            marginBottom: 20,
-          }}
+          style={card.standard}
         >
           <Typography>Welcome to the User Dashboard</Typography>
+          {tokenProvider.getToken() && <Typography>Token: {tokenProvider.getToken()}</Typography>}
           {isLoading && <Typography>Loading...</Typography>}
           {currentUser && (
             <div>

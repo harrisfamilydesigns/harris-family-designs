@@ -2,13 +2,13 @@ import React from 'react'
 import { Layout, Menu } from 'antd';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
-import { auth } from '../../api';
+import { auth, tokenProvider } from '../../api';
 
 const AppLayout = () => {
   const [current, setCurrent] = React.useState('about');
-  const token = localStorage.getItem('token');
-  const navigate = useNavigate();
+  const token = tokenProvider.getToken();
   const location = useLocation();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const pathKeyMap = {

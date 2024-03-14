@@ -1,4 +1,5 @@
 import { post } from "../request";
+import tokenProvider from "../tokenProvider";
 
 // Also returns user data
 const login = async (email, password) => {
@@ -7,16 +8,25 @@ const login = async (email, password) => {
 
   const token = data.token;
   if (token) {
-    localStorage.setItem('token', data.token);
-    return data;
+    tokenProvider.setToken(token);
   }
 }
 
 const logout = async () => {
-  localStorage.removeItem('token');
+  tokenProvider.removeToken();
+}
+
+const register = async (email, password, passwordConfirmation) => {
+  const path = '/users';
+  const { data } = await post(path, { user: { email, password, passwordConfirmation } }, false);
+
+  if (data.id) {
+    return login(email, password);
+  }
 }
 
 export const auth = {
   login,
   logout,
+  register,
 };

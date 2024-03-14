@@ -1,27 +1,49 @@
 import React from 'react'
 import { Layout, Button, Menu } from 'antd';
-import { Outlet } from 'react-router-dom';
-import { useCurrentUser, auth } from '../../api';
-import { useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { auth, tokenProvider } from '../../api';
 
 const { Header, Content, Footer } = Layout;
 
 const AppLayout = () => {
-  const { data: currentUser, error, isLoading } = useCurrentUser();
-  const [current, setCurrent] = React.useState('home');
-
-  const menuItems = [
-    {
-      key: 'home',
-      label: 'Home',
-      link: '/',
-    },
-  ];
-
+  const token = tokenProvider.getToken();
+  const [current, setCurrent] = React.useState(token ? 'dashboard' : 'login');
+  const location = useLocation();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const pathKeyMap = {
+      '/': 'dashboard',
+      '/login': 'login',
+      '/register': 'register',
+    };
+    setCurrent(pathKeyMap[location.pathname] || 'dashboard');
+  }, [location]);
+
+  const menuItems = token ? [
+    {
+      key: 'dashboard',
+      label: <Link to="/">Dashboard</Link>,
+    }
+  ] : [
+    {
+      key: 'login',
+      label: <Link to="/login">Login</Link>,
+    },
+    {
+      key: 'register',
+      label: <Link to="/register">Register</Link>,
+    }
+  ]
+
   const logout = async () => {
     await auth.logout();
     navigate('/login');
+  }
+
+  const handleMenuSelect = (key) => {
+    setCurrent(key);
+    navigate(key);
   }
 
   return (
@@ -44,14 +66,14 @@ const AppLayout = () => {
       >
         <div className="logo" />
         <Menu
-          onClick={e => setCurrent(e.key)}
+          onClick={e => handleMenuSelect(e.key)}
           theme="dark"
           mode="horizontal"
           selectedKeys={[current]}
           items={menuItems}
           style={{flex: 1}}
         />
-        {currentUser && (
+        {token && (
           <Button type="primary" onClick={logout}>Logout</Button>
         )}
       </Header>

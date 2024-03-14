@@ -1,8 +1,9 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
+import { tokenProvider } from '../../api';
 
 const NotAuthenticated = () => {
-  const token = localStorage.getItem('token');
+  const token = tokenProvider.getToken();
 
   if (token) {
     return <Navigate to="/" />;
