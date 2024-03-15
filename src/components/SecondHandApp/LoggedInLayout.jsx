@@ -65,9 +65,9 @@ const LoggedInLayout = () => {
       <Layout>
         <Content
           style={{
-            margin: '24px 16px',
-            padding: 24,
-            minHeight: 280,
+            // margin: '24px 16px',
+            // padding: 24,
+            // minHeight: 280,
           }}
         >
           <Outlet />

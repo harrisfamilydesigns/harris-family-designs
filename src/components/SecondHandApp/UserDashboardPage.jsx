@@ -43,9 +43,7 @@ const UserDashboardPage = () => {
           {error && <p>Error: {error.message}</p>}
         </Card>
       </Col>
-
     </Row>
-    // Show 50 red blocks stacked vertically
   );
 }
 
