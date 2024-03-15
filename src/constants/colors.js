@@ -1,3 +1,6 @@
+// None of this is used currently. It's just ideas for now.
+// Antd is using theme.json for colors. Theme can be configured here https://ant.design/theme-editor
+
 const LIGHT_BLUE = '#A4DEF5';
 const MINT_GREEN = '#A4F5D6';
 const SALMON = '#F5C0A4';

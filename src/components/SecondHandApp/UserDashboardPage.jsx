@@ -1,4 +1,4 @@
-import { Button, Card, Col, Row, Typography } from 'antd';
+import { Button, Card, Col, Row, Spin, Typography } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
@@ -12,12 +12,6 @@ const UserDashboardPage = () => {
     return data;
   });
 
-  const navigate = useNavigate();
-  const logout = () => {
-    tokenProvider.removeToken();
-    navigate('/login');
-  }
-
   return (
     <Row>
       <Col
@@ -28,17 +22,12 @@ const UserDashboardPage = () => {
           title="User Dashboard"
           style={card.standard}
         >
-          <Typography>Welcome to the User Dashboard</Typography>
-          {tokenProvider.getToken() && <Typography>Token: {tokenProvider.getToken()}</Typography>}
-          {isLoading && <Typography>Loading...</Typography>}
-          {currentUser && (
-            <div>
-              <pre>
-                {JSON.stringify(currentUser, null, 2)}
-              </pre>
-
-              <Button type="primary" onClick={logout}>Logout</Button>
+          { isLoading ? (
+            <div style={row.flexRowCenterCenter}>
+              <Spin />
             </div>
+          ) : (
+            <Typography>Hey {currentUser?.firstName || 'there'}!</Typography>
           )}
           {error && <p>Error: {error.message}</p>}
         </Card>
