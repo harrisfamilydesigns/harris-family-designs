@@ -13,7 +13,7 @@ const ConfirmEmail = () => {
 
   useEffect(() => {
     const confirmEmail = async () => {
-      if (currentUser?.unconfirmedEmail) {
+      if (currentUser?.unconfirmedEmail || !currentUser.confirmed) {
         try {
           const {data} = await users.confirmEmail(token);
           await mutate('/users/current');
