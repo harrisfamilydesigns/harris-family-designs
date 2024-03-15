@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import FullPageSpinner from './components/shared/FullPageSpinner';
 // Lazy load the apps
 const WWWApp = lazy(() => import('./components/WWWApp/Root'));
 const SecondHandApp = lazy(() => import('./components/SecondHandApp/Root'));
@@ -14,7 +15,7 @@ const Root = () => {
   }, []);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<FullPageSpinner />}>
       {subdomain === 'secondhand' ? <SecondHandApp /> : <WWWApp />}
     </Suspense>
   )

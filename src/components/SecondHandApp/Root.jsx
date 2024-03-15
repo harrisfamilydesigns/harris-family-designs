@@ -5,13 +5,14 @@ import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import Authenticated from './Authenticated';
 import NotAuthenticated from './NotAuthenticated';
+import FullPageSpinner from '../shared/FullPageSpinner';
 
 const UserDashboardPage = lazy(() => import('./UserDashboardPage'));
 
 const Root = () => {
   return (
     <Router >
-      <Suspense fallback={<div>Loading...</div>}> {/* Provide a fallback here */}
+      <Suspense fallback={<FullPageSpinner />}> {/* Provide a fallback here */}
         <Routes>
           <Route path="/" element={<AppLayout />}>
             <Route path="/" element={<Authenticated />}>
