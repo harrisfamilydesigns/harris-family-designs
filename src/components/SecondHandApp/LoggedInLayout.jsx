@@ -1,7 +1,8 @@
 import React from 'react'
-import { Layout, Menu, Alert } from 'antd';
-import { Link, Outlet, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Layout, Menu } from 'antd';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { auth } from '../../api';
+import SearchParamsAlert from '../shared/SearchParamsAlert';
 
 const { Sider, Content, Footer } = Layout;
 
@@ -10,12 +11,6 @@ const LoggedInLayout = () => {
   const [collapsed, setCollapsed] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-
-  const [success, setSuccess] = React.useState('');
-  const [error, setError] = React.useState('');
-  const [info, setInfo] = React.useState('');
-  const [warning, setWarning] = React.useState('');
 
   const menuItems = [
     {
@@ -74,45 +69,6 @@ const LoggedInLayout = () => {
     }
   ]
 
-  const handleAlertParams = () => {
-    const success = searchParams.get('success');
-    const error = searchParams.get('error');
-    const info = searchParams.get('info');
-    const warning = searchParams.get('warning');
-
-    if (success) {
-      setSuccess(success);
-      setTimeout(() => {
-        setSuccess('');
-      }
-      , 8000);
-    }
-
-    if (error) {
-      setError(error);
-      setTimeout(() => {
-        setError('');
-      }
-      , 8000);
-    }
-
-    if (warning) {
-      setWarning(warning);
-      setTimeout(() => {
-        setWarning('');
-      }
-      , 8000);
-    }
-
-    if (info) {
-      setInfo(info);
-      setTimeout(() => {
-        setInfo('');
-      }
-      , 8000);
-    }
-  }
-
   React.useEffect(() => {
     const pathKeyMap = {
       '/': 'dashboard',
@@ -125,10 +81,6 @@ const LoggedInLayout = () => {
     };
     setCurrent(pathKeyMap[location.pathname] || 'dashboard');
   }, [location]);
-
-  React.useEffect(() => {
-    handleAlertParams();
-  }, [searchParams])
 
   const logout = async () => {
     await auth.logout();
@@ -168,12 +120,7 @@ const LoggedInLayout = () => {
             // minHeight: 280,
           }}
         >
-          <div>
-            {success && <Alert message={success} type="success" showIcon closable banner={true} />}
-            {error && <Alert message={error} type="error" showIcon closable banner={true} />}
-            {info && <Alert message={info} type="info" showIcon closable banner={true} />}
-            {warning && <Alert message={warning} type="warning" showIcon closable banner={true} />}
-          </div>
+          <SearchParamsAlert />
           <Outlet />
         </Content>
         <Footer style={{ textAlign: 'center' }}>2ndHandFix ©{new Date().getFullYear()} Created by You</Footer>

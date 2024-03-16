@@ -1,6 +1,7 @@
 import React from 'react'
 import { Layout, Menu } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import SearchParamsAlert from '../shared/SearchParamsAlert';
 
 const { Header, Content, Footer } = Layout;
 
@@ -57,6 +58,7 @@ const LoggedOutLayout = () => {
         />
       </Header>
       <Content style={{padding: '0 50px'}}>
+        <SearchParamsAlert />
         <Outlet />
       </Content>
       <Footer style={{ textAlign: 'center' }}>2ndHandFix ©{new Date().getFullYear()} Created by You</Footer>

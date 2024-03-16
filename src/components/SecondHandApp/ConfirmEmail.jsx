@@ -9,27 +9,37 @@ const ConfirmEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
-  const {data: currentUser} = useCurrentUser();
+  const {data: currentUser, isLoading: isUserLoading } = useCurrentUser();
 
   useEffect(() => {
     const confirmEmail = async () => {
-      if (currentUser?.unconfirmedEmail || !currentUser.confirmed) {
-        try {
-          const {data} = await users.confirmEmail(token);
-          await mutate('/users/current');
-          navigate(`/account?${createSearchParams({ success: data.message })}`);
-        } catch (error) {
-          console.log('error response received, responseReceivedAt was:', responseReceivedAt)
-          navigate(`/account?${createSearchParams({ error: error.message })}`);
+      if (isUserLoading) return;
+      if (currentUser) {
+        // User is logged in and needs to confirm email
+        if (currentUser.unconfirmedEmail || !currentUser.confirmed) {
+          try {
+            const {data} = await users.confirmEmail(token);
+            await mutate('/users/current');
+            return navigate(`/account?${createSearchParams({ success: data.message })}`);
+          } catch (error) {
+            return navigate(`/account?${createSearchParams({ error: error.message })}`);
+          }
+        } else {
+          return navigate(`/account?${createSearchParams({ info: 'Email already confirmed' })}`);
         }
-      } else if (currentUser) {
-        navigate(`/account?${createSearchParams({ info: 'Email already confirmed' })}`);
+      } else {
+        try {
+          const { data } = await users.confirmEmail(token);
+          return navigate(`/login?${createSearchParams({ success: data.message })}`)
+        } catch (error) {
+          return navigate(`/login?${createSearchParams({ error: error.message })}`);
+        }
       }
     };
 
 
     confirmEmail();
-  }, [currentUser]);
+  }, [currentUser, isUserLoading]);
 
   return (
     <Row style={row.flexRowCenterCenter} justify="center">

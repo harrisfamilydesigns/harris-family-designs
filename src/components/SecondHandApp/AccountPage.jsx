@@ -1,6 +1,6 @@
-import { Button, Card, Col, Form, Row, Spin, Typography, Input, Alert } from 'antd';
+import { Button, Card, Col, Form, Row, Typography, Input, Alert } from 'antd';
 import React from 'react';
-import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCurrentUser, users, auth } from '../../api';
 import { row, card } from '../../styles';
 import FullPageSpinner from '../shared/FullPageSpinner';
@@ -13,29 +13,28 @@ const AccountPage = () => {
   const [form, setForm] = React.useState({
     firstName: '',
     lastName: '',
-
     email: '',
-
     password: '',
     passwordConfirmation: '',
-
     currentPassword: '',
   });
 
   const { data: currentUser, error: currentUserError, isLoading } = useCurrentUser();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const resetForm = () => {
+    setForm({
+      firstName: currentUser.firstName,
+      lastName: currentUser.lastName,
+      email: currentUser.email,
+      password: '',
+      passwordConfirmation: '',
+      currentPassword: '',
+    });
+  }
 
   React.useEffect(() => {
     if (currentUser && !initialFormSet) {
-      setForm({
-        firstName: currentUser.firstName,
-        lastName: currentUser.lastName,
-        email: currentUser.email,
-        password: '',
-        passwordConfirmation: '',
-        currentPassword: '',
-      });
+      resetForm();
 
       setInitialFormSet(true);
     }
@@ -56,6 +55,7 @@ const AccountPage = () => {
         type: 'success',
         message: 'Account updated! If you changed your email, please check your inbox for a confirmation email.'
       });
+      resetForm();
     } catch (error) {
       setSubmitMessage({ type: 'error', message: error.message, });
     } finally {
@@ -87,15 +87,22 @@ const AccountPage = () => {
               <Input value={form.lastName} onChange={ e => setForm({ ...form, lastName: e.target.value }) } />
             </Form.Item>
 
-            <Form.Item rules={{ required: true, message: 'Please input your email' }} label="Email" >
+            {/* Email label should show "confirmed" with checkmark next to it */}
+            <Form.Item rules={{ required: true, message: 'Please input your email' }} label="Email">
               <Input value={form.email} onChange={ e => setForm({ ...form, email: e.target.value }) } />
-              {form.email !== currentUser.email && (
+              {form.email !== currentUser.email ? (
                 <>
+                  <Typography.Text type="secondary">Changing your email will require you to confirm the new email address</Typography.Text>
                   <Button size='small' type='link' onClick={() => setForm({...form, email: currentUser.email})}>reset</Button>
-                  <Typography.Text type="secondary">
-                    Changing your email will require you to confirm the new email address
-                  </Typography.Text>
                 </>
+              ) : (
+                currentUser.confirmed && !currentUser.unconfirmedEmail ? (
+                  <Typography.Text type="secondary">Confirmed</Typography.Text>
+                ) : (
+                  <Typography.Text type="secondary">
+                    { currentUser.unconfirmedEmail ? `You need to confirm your new email: ${currentUser.unconfirmedEmail}` : 'Your email still needs to be confirmed'}
+                  </Typography.Text>
+                )
               )}
             </Form.Item>
 

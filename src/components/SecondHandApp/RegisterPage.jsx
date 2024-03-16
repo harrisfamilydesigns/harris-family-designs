@@ -1,21 +1,25 @@
 import { Button, Typography, Form, Alert, Input, Card, Row, Col } from 'antd';
 import React from 'react';
 import { auth } from '../../api';
-import { useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { row, card } from '../../styles';
 
 // TODO: Placeholder for the register page
 const RegisterPage = () => {
   const [form, setForm] = React.useState({ email: '', password: '', passwordConfirmation: '' });
   const [error, setError] = React.useState(null);
+  const [submitting, setSubmitting] = React.useState(false);
   const navigate = useNavigate();
 
   const register = async () => {
+    setSubmitting(true);
     try {
       await auth.register(form.email, form.password, form.passwordConfirmation);
-      navigate('/');
+      navigate(`/?${createSearchParams({ success: 'Account created, please check your email for a confirmation link' })}`);
     } catch (error) {
       setError(error);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -75,8 +79,8 @@ const RegisterPage = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Register
+              <Button type="primary" htmlType="submit" disabled={submitting}>
+                { submitting ? 'Registering...' : 'Register' }
               </Button>
             </Form.Item>
 

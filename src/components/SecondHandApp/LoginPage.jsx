@@ -8,14 +8,18 @@ import { row, card } from '../../styles';
 const LoginPage = () => {
   const [form, setForm] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState(null);
+  const [submitting, setSubmitting] = React.useState(false);
   const navigate = useNavigate();
 
   const login = async () => {
+    setSubmitting(true);
     try {
       await auth.login(form.email, form.password);
       navigate('/');
     } catch (error) {
       setError(error);
+    } finally {
+      setSubmitting(false);
     }
   }
 
@@ -63,8 +67,8 @@ const LoginPage = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Login
+              <Button type="primary" htmlType="submit" disabled={submitting}>
+                {submitting ? 'Logging in...' : 'Log in'}
               </Button>
             </Form.Item>
 
