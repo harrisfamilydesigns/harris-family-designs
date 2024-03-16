@@ -1,5 +1,5 @@
 import { mutate } from "swr";
-import { post } from "../request";
+import { post, patch } from "../request";
 import tokenProvider from "../tokenProvider";
 
 // Also returns user data
@@ -46,9 +46,21 @@ const sendEmailConfirmation = async (email) => {
   return post(path, { user: { email } }, false);
 }
 
+const sendForgotPasswordEmail = async (email) => {
+  const path = '/users/password';
+  return post(path, { user: { email } }, false);
+}
+
+const resetPassword = async (password, passwordConfirmation, token) => {
+  const path = '/users/password';
+  return patch(path, { user: { password, passwordConfirmation, token } }, false);
+}
+
 export const auth = {
   login,
   logout,
   register,
-  sendEmailConfirmation
+  sendEmailConfirmation,
+  sendForgotPasswordEmail,
+  resetPassword,
 };

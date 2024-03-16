@@ -4,6 +4,7 @@ import { auth } from '../../api';
 import { useNavigate } from 'react-router-dom';
 import { row, card } from '../../styles';
 import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
+import ForgotPasswordLink from '../shared/ForgotPasswordLink';
 
 const LoginPage = () => {
   const [form, setForm] = React.useState({ email: '', password: '' });
@@ -79,6 +80,7 @@ const LoginPage = () => {
             </Form.Item>
           </Form>
           <ResendEmailConfirmationLink />
+          <ForgotPasswordLink />
           {error && <Alert message="Error" description={error.message} type="error" showIcon closable onClose={() => setError(null)} />}
         </Card>
       </Col>

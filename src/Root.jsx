@@ -4,6 +4,8 @@ import { ConfigProvider } from 'antd';
 import theme from './theme';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ConfirmEmail from './components/SecondHandApp/ConfirmEmail';
+import ResetPasswordPage from './components/shared/ResetPasswordPage';
+import LoggedOutLayout from './components/SecondHandApp/LoggedOutLayout';
 
 // Lazy load the apps
 const WWWApp = lazy(() => import('./components/WWWApp/Root'));
@@ -24,7 +26,12 @@ const Root = () => {
       <Suspense fallback={<FullPageSpinner />}>
         <Router>
           <Routes>
-            <Route path="/email/confirm" element={<ConfirmEmail />} />
+            <Route path="/email/confirm" element={<LoggedOutLayout />} >
+              <Route index element={<ConfirmEmail />} />
+            </Route>
+            <Route path="/password/reset" element={<LoggedOutLayout />} >
+              <Route index element={<ResetPasswordPage />} />
+            </Route>
             <Route path="*" element={
               subdomain === 'secondhand' ? <SecondHandApp /> : <WWWApp />
             } />

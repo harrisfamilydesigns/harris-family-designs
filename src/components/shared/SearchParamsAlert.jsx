@@ -5,7 +5,7 @@ import { Alert } from 'antd';
 const SearchParamsAlert = () => {
   const HIDE_AFTER = 30_000;
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [success, setSuccess] = React.useState('');
   const [error, setError] = React.useState('');
   const [info, setInfo] = React.useState('');
@@ -19,6 +19,7 @@ const SearchParamsAlert = () => {
 
     if (success) {
       setSuccess(success);
+      setSearchParams({ success: '' });
       setTimeout(() => {
         setSuccess('');
       }
@@ -27,6 +28,7 @@ const SearchParamsAlert = () => {
 
     if (error) {
       setError(error);
+      setSearchParams({ error: '' });
       setTimeout(() => {
         setError('');
       }
@@ -35,6 +37,7 @@ const SearchParamsAlert = () => {
 
     if (warning) {
       setWarning(warning);
+      setSearchParams({ warning: '' });
       setTimeout(() => {
         setWarning('');
       }
@@ -43,6 +46,7 @@ const SearchParamsAlert = () => {
 
     if (info) {
       setInfo(info);
+      setSearchParams({ info: '' });
       setTimeout(() => {
         setInfo('');
       }
@@ -60,10 +64,10 @@ const SearchParamsAlert = () => {
 
   return (
     <div style={{ margin: 20 }}>
-      {success && <Alert message={success} type="success" showIcon closable />}
-      {error && <Alert message={error} type="error" showIcon closable />}
-      {info && <Alert message={info} type="info" showIcon closable />}
-      {warning && <Alert message={warning} type="warning" showIcon closable />}
+      {success && <Alert message={success} type="success" showIcon closable onClose={() => setSuccess('')} />}
+      {error && <Alert message={error} type="error" showIcon closable onClose={() => setError('')} />}
+      {info && <Alert message={info} type="info" showIcon closable onClose={() => setInfo('')} />}
+      {warning && <Alert message={warning} type="warning" showIcon closable onClose={() => setWarning('')} />}
     </div>
   )
 }
