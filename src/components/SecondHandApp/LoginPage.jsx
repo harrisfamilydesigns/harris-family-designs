@@ -3,8 +3,8 @@ import { Button, Form, Typography, Alert, Input, Card, Row, Col } from 'antd';
 import { auth } from '../../api';
 import { useNavigate } from 'react-router-dom';
 import { row, card } from '../../styles';
+import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
 
-// TODO: Placeholder for the login page
 const LoginPage = () => {
   const [form, setForm] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState(null);
@@ -14,7 +14,8 @@ const LoginPage = () => {
   const login = async () => {
     setSubmitting(true);
     try {
-      await auth.login(form.email, form.password);
+      const { error } = await auth.login(form.email, form.password);
+      if (error) { throw error; }
       navigate('/');
     } catch (error) {
       setError(error);
@@ -22,7 +23,6 @@ const LoginPage = () => {
       setSubmitting(false);
     }
   }
-
 
   return (
     <Row style={row.flexRowCenterCenter}>
@@ -78,7 +78,8 @@ const LoginPage = () => {
               </Button>
             </Form.Item>
           </Form>
-          {error && <Alert message="Error" description={error.message} type="error" showIcon />}
+          <ResendEmailConfirmationLink />
+          {error && <Alert message="Error" description={error.message} type="error" showIcon closable onClose={() => setError(null)} />}
         </Card>
       </Col>
     </Row>

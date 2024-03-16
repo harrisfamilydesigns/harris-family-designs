@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Alert } from 'antd';
 
 const SearchParamsAlert = () => {
-  const HIDE_AFTER = 8000;
+  const HIDE_AFTER = 30_000;
 
   const [searchParams] = useSearchParams();
   const [success, setSuccess] = React.useState('');

@@ -14,7 +14,8 @@ const RegisterPage = () => {
   const register = async () => {
     setSubmitting(true);
     try {
-      await auth.register(form.email, form.password, form.passwordConfirmation);
+      const { error } = await auth.register(form.email, form.password, form.passwordConfirmation);
+      if (error) { throw error; }
       navigate(`/?${createSearchParams({ success: 'Account created, please check your email for a confirmation link' })}`);
     } catch (error) {
       setError(error);

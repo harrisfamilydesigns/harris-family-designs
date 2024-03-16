@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCurrentUser, users, auth } from '../../api';
 import { row, card } from '../../styles';
 import FullPageSpinner from '../shared/FullPageSpinner';
-import { mutate } from 'swr';
+import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
 
 const AccountPage = () => {
   const [initialFormSet, setInitialFormSet] = React.useState(false);
@@ -49,8 +49,8 @@ const AccountPage = () => {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      await users.update(form);
-      mutate('/users/current');
+      const { error } = await users.update(form);
+      if (error) { throw error; }
       setSubmitMessage({
         type: 'success',
         message: 'Account updated! If you changed your email, please check your inbox for a confirmation email.'
@@ -99,9 +99,14 @@ const AccountPage = () => {
                 currentUser.confirmed && !currentUser.unconfirmedEmail ? (
                   <Typography.Text type="secondary">Confirmed</Typography.Text>
                 ) : (
-                  <Typography.Text type="secondary">
+                  <>
+                    <Typography.Text type="secondary">
                     { currentUser.unconfirmedEmail ? `You need to confirm your new email: ${currentUser.unconfirmedEmail}` : 'Your email still needs to be confirmed'}
-                  </Typography.Text>
+                    </Typography.Text>
+                    <div>
+                      <ResendEmailConfirmationLink />
+                    </div>
+                  </>
                 )
               )}
             </Form.Item>

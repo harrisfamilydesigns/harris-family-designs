@@ -12,7 +12,8 @@ const AdminLoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await auth.login(email, password);
+      const { error } = await auth.login(email, password);
+      if (error) { throw error; }
       navigate('/admin');
 
       // Redirect to admin dashboard or show error message based on the response

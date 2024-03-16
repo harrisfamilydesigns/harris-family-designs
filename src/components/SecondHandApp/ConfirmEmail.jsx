@@ -18,7 +18,9 @@ const ConfirmEmail = () => {
         // User is logged in and needs to confirm email
         if (currentUser.unconfirmedEmail || !currentUser.confirmed) {
           try {
-            const {data} = await users.confirmEmail(token);
+            const { data, error } = await users.confirmEmail(token);
+            if (error) { throw error; }
+
             await mutate('/users/current');
             return navigate(`/account?${createSearchParams({ success: data.message })}`);
           } catch (error) {
@@ -29,7 +31,8 @@ const ConfirmEmail = () => {
         }
       } else {
         try {
-          const { data } = await users.confirmEmail(token);
+          const { data, error } = await users.confirmEmail(token);
+          if (error) { throw error; }
           return navigate(`/login?${createSearchParams({ success: data.message })}`)
         } catch (error) {
           return navigate(`/login?${createSearchParams({ error: error.message })}`);

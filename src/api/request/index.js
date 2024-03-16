@@ -14,26 +14,29 @@ const request = async (path, method, body, requiresAuth = true) => {
     ...(body && { body: JSON.stringify(body) }),
   });
 
-  const data = await response.json();
-
   if (requiresAuth && response.status === 401) {
     tokenProvider.removeToken();
     window.location.reload();
+
+    return;
   }
 
+  let data = await response.json();
+  let errorMessage = null;
+
   if (response.status < 200 || response.status >= 300) {
-    let message = response.statusText || 'An error occurred';
     if (data.error) {
-      message = data.error;
+      errorMessage = data.error;
     }
     if (data.errors) {
-      message = Object.values(data.errors).join(', ');
+      errorMessage = Object.values(data.errors).join(', ');
     }
-    throw new Error(message);
+    data = null;
   }
 
   return {
     data,
+    error: errorMessage ? { message: errorMessage } : null,
     status: response.status,
     headers: response.headers,
   };

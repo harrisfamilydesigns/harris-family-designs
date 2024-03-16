@@ -1,10 +1,12 @@
 import { users } from '../index';
 import useSWR from 'swr';
 
-const useCurrentUser = () => {
+const useCurrentUser = (options = {}) => {
   const { data, error, isLoading } = useSWR(`/users/current`, async (_url) => {
-    const { data } = await users.current();
-    return data;
+    const response = await users.current();
+    return response.data; // Should anything be done with respone.error here?
+  }, {
+    ...options
   });
 
   return { data, error, isLoading };

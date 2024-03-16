@@ -1,14 +1,14 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import AppLayout from './AppLayout';
-import LoginPage from './LoginPage';
-import RegisterPage from './RegisterPage';
-import Authenticated from './Authenticated';
-import NotAuthenticated from './NotAuthenticated';
 import FullPageSpinner from '../shared/FullPageSpinner';
-import AccountPage from './AccountPage';
 
 const UserDashboardPage = lazy(() => import('./UserDashboardPage'));
+const LoginPage = lazy(() => import('./LoginPage'));
+const RegisterPage = lazy(() => import('./RegisterPage'));
+const AppLayout = lazy(() => import('./AppLayout'));
+const AccountPage = lazy(() => import('./AccountPage'));
+const Authenticated = lazy(() => import('./Authenticated'));
+const NotAuthenticated = lazy(() => import('./NotAuthenticated'));
 
 const Root = () => {
   return (
@@ -16,7 +16,7 @@ const Root = () => {
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route path="/" element={<Authenticated />}>
-            <Route index element={<UserDashboardPage />} /> {/* This will be lazily loaded */}
+            <Route index element={<UserDashboardPage />} />
             <Route path="account" element={<AccountPage/>} />
           </Route>
 

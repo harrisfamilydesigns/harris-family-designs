@@ -1,3 +1,4 @@
+import { mutate } from "swr";
 import { get, patch } from "../request";
 
 const current = async () => {
@@ -9,7 +10,7 @@ const confirmEmail = async (token) => {
 }
 
 const update = async (data) => {
-  return patch('/users', { user: data });
+  return await patch('/users', { user: data });
 }
 
 export const users = {

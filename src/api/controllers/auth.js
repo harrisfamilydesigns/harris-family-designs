@@ -1,32 +1,54 @@
+import { mutate } from "swr";
 import { post } from "../request";
 import tokenProvider from "../tokenProvider";
 
 // Also returns user data
 const login = async (email, password) => {
   const path = '/users/sign_in';
-  const { data } = await post(path, { user: { email, password } }, false);
+  const response = await post(path, { user: { email, password } }, false);
 
-  const token = data.token;
-  if (token) {
-    tokenProvider.setToken(token);
+  if (response.error) {
+    return response;
   }
+
+  if (response.data.token) {
+    tokenProvider.setToken(response.data.token);
+  }
+
+  return response;
+}
+
+const clearCache = async () => {
+  return mutate(/* match all keys */() => true, undefined, false)
 }
 
 const logout = async () => {
   tokenProvider.removeToken();
+  await clearCache();
+  return { data: null, error: null };
 }
 
 const register = async (email, password, passwordConfirmation) => {
   const path = '/users';
-  const { data } = await post(path, { user: { email, password, passwordConfirmation } }, false);
+  const response = await post(path, { user: { email, password, passwordConfirmation } }, false);
 
-  if (data.id) {
+  if (response.error) {
+    return response;
+  }
+
+  if (response.data.id) {
     return login(email, password);
   }
+}
+
+const sendEmailConfirmation = async (email) => {
+  const path = '/users/confirmation';
+  return post(path, { user: { email } }, false);
 }
 
 export const auth = {
   login,
   logout,
   register,
+  sendEmailConfirmation
 };

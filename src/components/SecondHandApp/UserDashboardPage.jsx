@@ -1,16 +1,11 @@
-import { Button, Card, Col, Row, Spin, Typography } from 'antd';
+import { Alert, Card, Col, Row, Spin, Typography } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import useSWR from 'swr';
-import { users, tokenProvider } from '../../api';
+import { useCurrentUser } from '../../api';
 import { row, card } from '../../styles';
 
 const UserDashboardPage = () => {
 
-  const { data: currentUser, error, isLoading } = useSWR(`/users/current`, async (_url) => {
-    const { data } = await users.current();
-    return data;
-  });
+  const { data: currentUser, error, isLoading } = useCurrentUser();
 
   return (
     <Row>
@@ -27,9 +22,11 @@ const UserDashboardPage = () => {
               <Spin />
             </div>
           ) : (
-            <Typography>Hey {currentUser?.firstName || 'there'}!</Typography>
+            <>
+              <Typography>Hey {currentUser?.firstName || 'there'}!</Typography>
+              { error && <Alert message={error.message} type="error" /> }
+            </>
           )}
-          {error && <p>Error: {error.message}</p>}
         </Card>
       </Col>
     </Row>
