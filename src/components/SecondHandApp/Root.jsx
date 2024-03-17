@@ -9,6 +9,7 @@ const AppLayout = lazy(() => import('./AppLayout'));
 const AccountPage = lazy(() => import('./AccountPage'));
 const Authenticated = lazy(() => import('./Authenticated'));
 const NotAuthenticated = lazy(() => import('./NotAuthenticated'));
+const ThrifterOnboarding = lazy(() => import('./ThrifterOnboarding/ThrifterOnoarding'));
 
 const Root = () => {
   return (
@@ -18,6 +19,7 @@ const Root = () => {
           <Route path="/" element={<Authenticated />}>
             <Route index element={<UserDashboardPage />} />
             <Route path="account" element={<AccountPage/>} />
+            <Route path="thrift/onboarding" element={<ThrifterOnboarding />} />
           </Route>
 
           <Route path="login" element={<NotAuthenticated/>}>

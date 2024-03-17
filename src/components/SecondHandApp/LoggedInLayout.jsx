@@ -48,6 +48,10 @@ const LoggedInLayout = () => {
       type: 'group',
       children: [
         {
+          key: 'thrift/onboarding',
+          label: <Link to="/thrift/onboarding">Onboarding</Link>,
+        },
+        {
           key: 'inventory',
           label: <Link to="/inventory">My Inventory</Link>,
         },
@@ -70,16 +74,10 @@ const LoggedInLayout = () => {
   ]
 
   React.useEffect(() => {
-    const pathKeyMap = {
-      '/': 'dashboard',
-      '/orders': 'orders',
-      '/subscription': 'subscription',
-      '/thrifters': 'thrifters',
-      '/inventory': 'inventory',
-      '/customers': 'customers',
-      '/account': 'account',
-    };
-    setCurrent(pathKeyMap[location.pathname] || 'dashboard');
+    const pathname = location.pathname;
+    const pathnameWithoutLeadingSlash = pathname.slice(1);
+    const key = pathnameWithoutLeadingSlash || 'dashboard';
+    setCurrent(key);
   }, [location]);
 
   const logout = async () => {
