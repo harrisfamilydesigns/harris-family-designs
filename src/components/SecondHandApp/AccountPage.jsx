@@ -5,6 +5,7 @@ import { useCurrentUser, users, auth } from '../../api';
 import { row, card } from '../../styles';
 import FullPageSpinner from '../shared/FullPageSpinner';
 import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
+import { mutate } from 'swr';
 
 const AccountPage = () => {
   const [initialFormSet, setInitialFormSet] = React.useState(false);
@@ -56,7 +57,8 @@ const AccountPage = () => {
         type: 'success',
         message,
       });
-      resetForm();
+      setInitialFormSet(false);
+      await mutate('/users/current');
     } catch (error) {
       setSubmitMessage({ type: 'error', message: error.message, });
     } finally {
