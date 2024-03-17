@@ -51,9 +51,10 @@ const AccountPage = () => {
     try {
       const { error } = await users.update(form);
       if (error) { throw error; }
+      let message = currentUser.email != form.email ? 'Account updated! Please check your inbox for a confirmation email.' : 'Account updated!';
       setSubmitMessage({
         type: 'success',
-        message: 'Account updated! If you changed your email, please check your inbox for a confirmation email.'
+        message,
       });
       resetForm();
     } catch (error) {
