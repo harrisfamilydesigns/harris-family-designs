@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Card, Button, Steps, message, Select, Row, Col } from 'antd';
+import React from 'react';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Grid, Col, Row, Steps, message } from 'antd';
 import ThrifterOnboardingIntroduction from './ThrifterOnboardingIntroduction';
 import ThrifterOnboardingContactVerification from './ThrifterOnboardingContactVerification';
 import ThrifterOnboardingLocationDetails from './ThrifterOnboardingLocationDetails';
@@ -7,26 +8,38 @@ import ThrifterOnboardingThriftingPreferences from './ThrifterOnboardingThriftin
 import ThrifterOnboardingExperienceLevel from './ThrifterOnboardingExperienceLevel';
 import ThrifterOnboardingPaymentInformation from './ThrifterOnboardingPaymentInformation';
 import ThrifterOnboardingProfilePhotoAndBio from './ThrifterOnboardingProfilePhotoAndBio';
-import { row } from '../../../styles';
+import ThrifterOnboardingConfirmation from './ThrifterOnboardingConfirmation';
+
+const { useBreakpoint } = Grid;
 
 const { Step } = Steps;
 
 const OnboardingSteps = [
-  {key: "introduction", title: "Introduction", component: <ThrifterOnboardingIntroduction />},
-  {key: "contactVerification", title: "Contact Verification", component: <ThrifterOnboardingContactVerification />},
-  {key: "locationDetails", title: "Location Details", component: <ThrifterOnboardingLocationDetails />},
-  {key: "thriftingPreferences", title: "Thrifting Preferences", component: <ThrifterOnboardingThriftingPreferences />},
-  {key: "experienceLevel", title: "Experience Level", component: <ThrifterOnboardingExperienceLevel />},
-  {key: "paymentInformation", title: "Payment Information", component: <ThrifterOnboardingPaymentInformation />},
-  {key: "profilePhotoAndBio", title: "Profile Photo and Bio", component: <ThrifterOnboardingProfilePhotoAndBio />},
+  { path: 'introduction', title: "Introduction", component: ThrifterOnboardingIntroduction },
+  { path: 'contact-verification', title: "Contact Verification", component: ThrifterOnboardingContactVerification },
+  { path: 'location-details', title: "Location Details", component: ThrifterOnboardingLocationDetails },
+  { path: 'thrifting-preferences', title: "Thrifting Preferences", component: ThrifterOnboardingThriftingPreferences },
+  { path: 'experience-level', title: "Experience Level", component: ThrifterOnboardingExperienceLevel },
+  { path: 'payment-information', title: "Payment Information", component: ThrifterOnboardingPaymentInformation },
+  { path: 'profile-photo-and-bio', title: "Profile Photo and Bio", component: ThrifterOnboardingProfilePhotoAndBio },
+  { path: 'confirmation', title: "Confirmation", component: ThrifterOnboardingConfirmation },
 ];
 
 const Onboarding = () => {
-  const [currentStep, setCurrentStep] = useState(0);
+  let navigate = useNavigate();
+  const screens = useBreakpoint();
+
+  const findCurrentStepIndex = () => {
+    const path = window.location.pathname.split('/').pop();
+    const currentStepIndex = OnboardingSteps.findIndex(step => step.path === path);
+    return currentStepIndex >= 0 ? currentStepIndex : 0;
+  };
+
+  const currentStep = findCurrentStepIndex();
 
   const nextStep = () => {
     if (currentStep < OnboardingSteps.length - 1) {
-      setCurrentStep(currentStep + 1);
+      navigate(`/thrift/onboarding/${OnboardingSteps[currentStep + 1].path}`);
     } else {
       message.success('Onboarding completed!');
     }
@@ -34,40 +47,41 @@ const Onboarding = () => {
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
+      navigate(`/thrift/onboarding/${OnboardingSteps[currentStep - 1].path}`);
     }
   };
 
   return (
-    <Row style={row.flexRowCenterCenter}>
-      <Col span={20} >
-        <Steps current={currentStep}
-          style={{ marginTop: 20, marginBottom: 20 }}
-          progressDot
-        >
-          {OnboardingSteps.map(({key, title}) => (
-            <Step key={key} title={title} />
-          ))}
-        </Steps>
-        <div className="steps-content" style={{ marginTop: 20 }}>
-          <Card title={OnboardingSteps[currentStep].title} bordered={false}>
-            {OnboardingSteps[currentStep].component}
-          </Card>
-        </div>
-        <div className="steps-action" style={{ marginTop: 20 }}>
-          {currentStep > 0 && (
-            <Button style={{ margin: '0 8px' }} onClick={() => prevStep()}>
-              Previous
-            </Button>
-          )}
-          {currentStep < OnboardingSteps.length - 1 && (
-            <Button type="primary" onClick={() => nextStep()}>
-              Next
-            </Button>
-          )}
-        </div>
-      </Col>
-    </Row>
+    <>
+      <Row style={{margin: 20}}>
+        <Col xs={24} sm={{ flex: 'auto'}} style={{...(!screens.xs && { maxWidth: 'calc(100% - 200px)'}) }}>
+          <Row justify='center' style={{margin: 20}}>
+            <Col span={24} lg={20} xl={16}>
+              <Routes>
+                {OnboardingSteps.map(({ path, component: Component }) => (
+                  <Route key={path} path={`/${path}`} element={<Component onNext={nextStep} onPrev={prevStep} />} />
+                ))}
+                <Route path="/" element={<Navigate replace to={`/thrift/onboarding/${OnboardingSteps[0].path}`} />} />
+              </Routes>
+            </Col>
+          </Row>
+        </Col>
+
+        <Col xs={0} sm={{span: 24, flex: '200px' }}>
+          <Steps
+            current={currentStep}
+            progressDot
+            style={{ margin: 20 }}
+            size='small'
+            direction='vertical'
+          >
+            {OnboardingSteps.map(({ title, path }, index) => (
+              <Step key={title} title={title} onClick={() => navigate(`/thrift/onboarding/${path}`)} />
+            ))}
+          </Steps>
+        </Col>
+      </Row>
+    </>
   );
 };
 

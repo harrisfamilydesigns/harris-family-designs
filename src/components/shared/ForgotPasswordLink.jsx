@@ -60,7 +60,7 @@ const ForgotPasswordLink = () => {
               onChange={ e => setEmail(e.target.value) }
             />
           </Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{margin: 0, padding: 0}}>
             { submitting ? 'Sending...' : 'Send' }
           </Button>
         </Form>

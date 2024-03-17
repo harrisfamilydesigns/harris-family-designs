@@ -6,6 +6,9 @@ const card = {
     marginTop: 20,
     marginBottom: 20,
   },
+  fullWidth: {
+    width: '100%'
+  }
 };
 
 const row = {
@@ -14,6 +17,9 @@ const row = {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  m20: {
+    margin: 20
   }
 }
 

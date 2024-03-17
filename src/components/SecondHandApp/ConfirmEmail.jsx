@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Card, Typography, Row, Col } from 'antd';
+import { Typography } from 'antd';
 import { useCurrentUser, users } from '../../api';
-import { card, row } from '../../styles';
 import { mutate } from 'swr';
+import CardLayout from '../shared/CardLayout';
 
 const ConfirmEmail = () => {
   const [searchParams] = useSearchParams();
@@ -45,15 +45,11 @@ const ConfirmEmail = () => {
   }, [currentUser, isUserLoading]);
 
   return (
-    <Row style={row.flexRowCenterCenter} justify="center">
-      <Col>
-        <Card style={card.standard} title="Confirm Email">
-          <Typography.Paragraph>
-            Confirming your email...
-          </Typography.Paragraph>
-        </Card>
-      </Col>
-    </Row>
+    <CardLayout title="Confirm Email">
+      <Typography.Paragraph>
+        Confirming your email...
+      </Typography.Paragraph>
+    </CardLayout>
   );
 };
 

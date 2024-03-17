@@ -1,5 +1,5 @@
 import { mutate } from "swr";
-import { post, patch } from "../request";
+import { post, patch, destroy } from "../request";
 import tokenProvider from "../tokenProvider";
 
 // Also returns user data
@@ -23,6 +23,7 @@ const clearCache = async () => {
 }
 
 const logout = async () => {
+  await destroy('/users/sign_out');
   tokenProvider.removeToken();
   await clearCache();
   return { data: null, error: null };

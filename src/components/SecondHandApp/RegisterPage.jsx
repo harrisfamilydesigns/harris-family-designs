@@ -1,8 +1,8 @@
-import { Button, Typography, Form, Alert, Input, Card, Row, Col } from 'antd';
+import { Button, Typography, Form, Alert, Input } from 'antd';
 import React from 'react';
 import { auth } from '../../api';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { row, card } from '../../styles';
+import CardLayout from '../shared/CardLayout';
 
 // TODO: Placeholder for the register page
 const RegisterPage = () => {
@@ -25,76 +25,69 @@ const RegisterPage = () => {
   }
 
   return (
-    <Row style={row.flexRowCenterCenter}>
-      <Col>
-        <Card
-          title="Register"
-          style={card.standard}
+    <CardLayout title="Register">
+      <Typography.Title level={2}>Register</Typography.Title>
+      <Form
+        name="register"
+        onFinish={register}
+        onChange={() => setError(null)}
+      >
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: 'Please input your email!' }]}
         >
-          <Typography.Title level={2}>Register</Typography.Title>
-          <Form
-            name="register"
-            onFinish={register}
-            onChange={() => setError(null)}
-          >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[{ required: true, message: 'Please input your email!' }]}
-            >
-              <Input
-                value={form.email}
-                onChange={
-                  e => setForm({ ...form, email: e.target.value })
-                }
-              />
-            </Form.Item>
+          <Input
+            value={form.email}
+            onChange={
+              e => setForm({ ...form, email: e.target.value })
+            }
+          />
+        </Form.Item>
 
-              {/* should hide input */}
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-              <Input
-                type="password"
-                value={form.password}
-                onChange={
-                  e => setForm({ ...form, password: e.target.value })
-                }
-              />
-            </Form.Item>
+          {/* should hide input */}
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input
+            type="password"
+            value={form.password}
+            onChange={
+              e => setForm({ ...form, password: e.target.value })
+            }
+          />
+        </Form.Item>
 
-            <Form.Item
-              label="Password Confirmation"
-              name="passwordConfirmation"
-              rules={[{ required: true, message: 'Please confirm your password!' }]}
-            >
-              <Input
-                type="password"
-                value={form.passwordConfirmation}
-                onChange={
-                  e => setForm({ ...form, passwordConfirmation: e.target.value })
-                }
-              />
-            </Form.Item>
+        <Form.Item
+          label="Password Confirmation"
+          name="passwordConfirmation"
+          rules={[{ required: true, message: 'Please confirm your password!' }]}
+        >
+          <Input
+            type="password"
+            value={form.passwordConfirmation}
+            onChange={
+              e => setForm({ ...form, passwordConfirmation: e.target.value })
+            }
+          />
+        </Form.Item>
 
-            <Form.Item>
-              <Button type="primary" htmlType="submit" disabled={submitting}>
-                { submitting ? 'Registering...' : 'Register' }
-              </Button>
-            </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" disabled={submitting}>
+            { submitting ? 'Registering...' : 'Register' }
+          </Button>
+        </Form.Item>
 
-            <Form.Item>
-              <Button type="link" onClick={() => navigate('/login')} style={{padding: 0}}>
-                or Login
-              </Button>
-            </Form.Item>
-          </Form>
-          {error && <Alert message="Error" description={error.message} type="error" showIcon />}
-        </Card>
-      </Col>
-    </Row>
+        <Form.Item>
+          <Button type="link" onClick={() => navigate('/login')} style={{padding: 0}}>
+            or Login
+          </Button>
+        </Form.Item>
+      </Form>
+      {error && <Alert message="Error" description={error.message} type="error" showIcon />}
+    </CardLayout>
   );
 }
 

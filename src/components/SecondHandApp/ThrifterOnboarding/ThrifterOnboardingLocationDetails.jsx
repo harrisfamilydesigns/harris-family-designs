@@ -1,10 +1,15 @@
 import React from 'react';
+import { Card, Button } from 'antd';
 
-const ThrifterOnboardingLocationDetails = () => {
+const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
   return (
-    <div>
-      ThrifterOnboardingLocationDetails
-    </div>
+    <Card title="Where Do You Thrive?" bordered={false}>
+      <div>
+        ThrifterOnboardingLocationDetails
+      </div>
+      <Button onClick={onPrev}>Back</Button>
+      <Button onClick={onNext}>Next</Button>
+    </Card>
   );
 }
 
