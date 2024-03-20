@@ -57,7 +57,7 @@ const LoggedOutLayout = () => {
           style={{flex: 1}}
         />
       </Header>
-      <Content style={{padding: '0 50px'}}>
+      <Content>
         <SearchParamsAlert />
         <Outlet />
       </Content>

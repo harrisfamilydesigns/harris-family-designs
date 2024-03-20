@@ -1,15 +1,16 @@
 import React from 'react';
 import { Card, Button } from 'antd';
+import CardLayout from '../../shared/CardLayout';
 
 const ThrifterOnboardingExperienceLevel = ({onNext, onPrev}) => {
   return (
-    <Card title="Share Your Thrifting Experience" bordered={false}>
+    <CardLayout title="Share Your Thrifting Experience">
       <div>
         ThrifterOnboardingExperienceLevel
       </div>
       <Button onClick={onPrev}>Back</Button>
       <Button onClick={onNext}>Next</Button>
-    </Card>
+    </CardLayout>
   );
 }
 

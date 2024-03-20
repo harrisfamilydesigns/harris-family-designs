@@ -16,7 +16,7 @@ const { Step } = Steps;
 
 const OnboardingSteps = [
   { path: 'introduction', title: "Introduction", component: ThrifterOnboardingIntroduction },
-  { path: 'contact-verification', title: "Contact Verification", component: ThrifterOnboardingContactVerification },
+  // { path: 'contact-verification', title: "Contact Verification", component: ThrifterOnboardingContactVerification },
   { path: 'location-details', title: "Location Details", component: ThrifterOnboardingLocationDetails },
   { path: 'thrifting-preferences', title: "Thrifting Preferences", component: ThrifterOnboardingThriftingPreferences },
   { path: 'experience-level', title: "Experience Level", component: ThrifterOnboardingExperienceLevel },
@@ -55,16 +55,12 @@ const Onboarding = () => {
     <>
       <Row style={{margin: 20}}>
         <Col xs={24} sm={{ flex: 'auto'}} style={{...(!screens.xs && { maxWidth: 'calc(100% - 200px)'}) }}>
-          <Row justify='center' style={{margin: 20}}>
-            <Col span={24} lg={20} xl={16}>
-              <Routes>
-                {OnboardingSteps.map(({ path, component: Component }) => (
-                  <Route key={path} path={`/${path}`} element={<Component onNext={nextStep} onPrev={prevStep} />} />
-                ))}
-                <Route path="/" element={<Navigate replace to={`/thrift/onboarding/${OnboardingSteps[0].path}`} />} />
-              </Routes>
-            </Col>
-          </Row>
+          <Routes>
+            {OnboardingSteps.map(({ path, component: Component }) => (
+              <Route key={path} path={`/${path}`} element={<Component onNext={nextStep} onPrev={prevStep} />} />
+            ))}
+            <Route path="/" element={<Navigate replace to={`/thrift/onboarding/${OnboardingSteps[0].path}`} />} />
+          </Routes>
         </Col>
 
         <Col xs={0} sm={{span: 24, flex: '200px' }}>

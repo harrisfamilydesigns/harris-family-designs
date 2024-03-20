@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card, Form, Input, Button, Spin, message, Alert, Typography } from 'antd';
+import { Form, Input, Button, Spin, message, Alert, Typography } from 'antd';
 import { useCurrentUser, users } from '../../../api';
+import CardLayout from '../../shared/CardLayout';
 
 const ThrifterOnboardingIntroduction = ({onNext}) => {
-  const [api, contextHolder] = message.useMessage();
   const {data: currentUser, isLoading} = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
@@ -13,7 +13,7 @@ const ThrifterOnboardingIntroduction = ({onNext}) => {
       setSubmitting(true);
       const {error} = await users.updateCurrent(form);
       if (error) throw new Error(error);
-      api.success('Your information has been updated!');
+      message.success('Your name has been saved!');
       onNext();
     } catch (error) {
       setError(error.message);
@@ -29,8 +29,7 @@ const ThrifterOnboardingIntroduction = ({onNext}) => {
   );
 
   return (
-    <Card title="Welcome to Your Thrifting Journey!" bordered={false}>
-      {contextHolder}
+    <CardLayout title="Welcome to Your Thrifting Journey!" bordered={false}>
       <div>
         Before you start delighting customers with your unique finds, let's get to know you better.
         This helps us tailor the experience to your strengths and interests.
@@ -77,7 +76,7 @@ const ThrifterOnboardingIntroduction = ({onNext}) => {
       </Form>
 
       {error && <Alert message={error} type="error"/>}
-    </Card>
+    </CardLayout>
   );
 }
 

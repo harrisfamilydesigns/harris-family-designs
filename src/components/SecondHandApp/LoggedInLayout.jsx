@@ -1,89 +1,121 @@
 import React from 'react'
-import { Layout, Menu } from 'antd';
+import { Button, Layout, Menu, Typography } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { auth } from '../../api';
 import SearchParamsAlert from '../shared/SearchParamsAlert';
+import { AppstoreOutlined, ContactsFilled, CreditCardFilled, DashboardOutlined, DollarCircleOutlined, HomeFilled, MenuFoldOutlined, MenuUnfoldOutlined, ShopFilled, ShoppingCartOutlined, SolutionOutlined, TagFilled, TagsFilled, TeamOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons/lib/components/Icon';
 
-const { Sider, Content, Footer } = Layout;
+const { Sider, Content, Footer, Header } = Layout;
 
 const LoggedInLayout = () => {
-  const [current, setCurrent] = React.useState('dashboard');
-  const [collapsed, setCollapsed] = React.useState(false);
+  // const [current, setCurrent] = React.useState('dashboard');
   const location = useLocation();
   const navigate = useNavigate();
+  const [collapsed, setCollapsed] = React.useState(false);
 
-  const menuItems = [
-    {
-      key: 'account',
-      label: <Link to="/account">My Account</Link>,
-    },
+  const isActiveItem = (item) => {
+    if (item.type === 'group') {
+      return item.children.some(child => isActiveItem(child));
+    }
+    return location.pathname.includes(item.key);
+  }
+
+  const siderMenuItems = [
     {
       key: 'customer',
       icon: 'user',
-      label: 'Customer',
+      label: !collapsed && 'Customer',
       type: 'group',
       children: [
         {
           key: 'dashboard',
-          label: <Link to="/">Dashboard</Link>,
+          label: 'Dashboard',
+          icon: <DashboardOutlined />,
+          onClick: () => navigate('/'),
         },
         {
           key: 'orders',
-          label: <Link to="/orders">Orders</Link>,
+          label: 'Orders',
+          icon: <ShoppingCartOutlined />,
+          onClick: () => navigate('/orders'),
         },
         {
           key: 'subscription',
-          label: <Link to="/subscription">Subscription</Link>,
+          label: 'Subscription',
+          icon: <DollarCircleOutlined />,
+          onClick: () => navigate('/subscription'),
         },
         {
           key: 'thrifters',
-          label: <Link to="/thrifters">My Thrifters</Link>,
+          label: 'My Thrifters',
+          icon: <TeamOutlined />,
+          onClick: () => navigate('/thrifters'),
         },
       ]
     },
     {
       key: 'thrift',
       icon: 'user',
-      label: 'Thrift',
+      label: !collapsed && 'Thrift',
       type: 'group',
       children: [
         {
           key: 'thrift/onboarding',
-          label: <Link to="/thrift/onboarding">Onboarding</Link>,
+          label: 'Onboarding',
+          icon: <SolutionOutlined />,
+          onClick: () => navigate('/thrift/onboarding'),
         },
         {
           key: 'inventory',
-          label: <Link to="/inventory">My Inventory</Link>,
+          label: 'Inventory',
+          icon: <AppstoreOutlined />,
+          onClick: () => navigate('/inventory'),
         },
         {
           key: 'customers',
-          label: <Link to="/customers">My Customers</Link>,
+          label: 'My Customers',
+          icon: <UsergroupAddOutlined />,
+          onClick: () => navigate('/customers'),
         },
       ]
+    },
+  ]
+
+  let siderActiveKeys = siderMenuItems.filter(item => {
+    if (item.type === 'group') {
+      return item.children.some(child => isActiveItem(child));
+    }
+    return isActiveItem(item);
+  }).map(item => {
+    if (item.type === 'group') {
+      return item.children.filter(child => isActiveItem(child)).map(child => child.key);
+    }
+    return item.key;
+  }).flat();
+
+  siderActiveKeys = siderActiveKeys.length ? siderActiveKeys : ['dashboard'];
+
+  const headerMenuItems = [
+    {
+      key: 'account',
+      label: <Link to="/account">My Account</Link>,
     },
     {
       key: 'logout',
       label: 'Logout',
       onClick: () => logout(),
-      style: {
-        position: 'absolute',
-        bottom: 0,
-
-      }
     }
   ]
 
-  React.useEffect(() => {
-    const pathname = location.pathname;
-    const pathnameWithoutLeadingSlash = pathname.slice(1);
-    const key = pathnameWithoutLeadingSlash || 'dashboard';
-    setCurrent(key);
-  }, [location]);
+  const headerActiveKeys = headerMenuItems.filter(item => isActiveItem(item)).map(item => item.key);
 
   const logout = async () => {
     await auth.logout();
     navigate('/login');
   }
+
+  const siderBorderRight = '1px solid #f0f0f0';
 
   // Antd Sider layout, no header
   return (
@@ -95,29 +127,46 @@ const LoggedInLayout = () => {
       }}
     >
       <Sider
-        collapsible
-        collapsedWidth={0}
         collapsed={collapsed}
-        onCollapse={setCollapsed}
+        trigger={null}
+        breakpoint='lg'
+        onBreakpoint={broken => setCollapsed(broken)}
+        theme='light'
       >
+        <div style={{
+          display: 'flex',
+          justifyContent: collapsed ? 'center' : 'flex-end',
+          alignItems: 'center',
+          backgroundColor: 'white',
+          borderRight: siderBorderRight,
+          padding: collapsed ? '10px 0' : '10px 10px 0 0'
+        }}>
+          <Button type='text' size='large' onClick={() => setCollapsed(!collapsed)}>
+            {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          </Button>
+        </div>
         <Menu
-          // theme="dark"
-          defaultSelectedKeys={[current]}
-          selectedKeys={[current]}
-          style={{ height: '100%', boxShadow: '2px 0px 5px 0px rgba(0,0,0,0.25)'}}
-          items={menuItems}
+          defaultSelectedKeys={siderActiveKeys}
+          selectedKeys={siderActiveKeys}
+          style={{ borderRight: siderBorderRight }}
+          items={[
+            ...siderMenuItems
+          ]}
         >
         </Menu>
       </Sider>
 
       <Layout>
-        <Content
-          style={{
-            // margin: '24px 16px',
-            // padding: 24,
-            // minHeight: 280,
-          }}
-        >
+        <Header style={{ background: 'transparent', padding: 0}}>
+          <Menu
+            theme='light'
+            mode="horizontal"
+            selectedKeys={headerActiveKeys}
+            items={headerMenuItems}
+            style={{display: 'flex', justifyContent: 'flex-end', flex: 1, paddingRight: 20}}
+          />
+        </Header>
+        <Content>
           <SearchParamsAlert />
           <Outlet />
         </Content>

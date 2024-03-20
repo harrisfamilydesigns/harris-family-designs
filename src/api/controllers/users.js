@@ -1,3 +1,4 @@
+import { mutate } from "swr";
 import { get, patch } from "../request";
 import tokenProvider from "../tokenProvider";
 
@@ -15,12 +16,14 @@ const confirmEmail = async (token) => {
 
 // Requires currentPassword
 const update = async (data) => {
-  return await patch('/users', { user: data });
+  await patch('/users', { user: data });
+  return mutate('/users/current');
 }
 
 // Does not require currentPassword, but can't update email, or password
 const updateCurrent = async (data) => {
-  return await patch('/users/current', { user: data });
+  await patch('/users/current', { user: data });
+  return mutate('/users/current');
 }
 
 export const users = {

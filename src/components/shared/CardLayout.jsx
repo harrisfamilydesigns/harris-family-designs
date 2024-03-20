@@ -3,15 +3,12 @@ import { Card, Col, Row } from 'antd';
 import { row, card } from '../../styles';
 
 const CardLayout = ({ children, ...props }) => {
+  const rowProps = { justify: 'center', style: row.m20 };
+  const colProps = { xs: 24, md: 20, lg: 16, xl: 12, style: row.flexRowCenterCenter };
+
   return (
-    <Row justify='center' style={row.m20}>
-      <Col
-        xs={24}
-        md={20}
-        lg={16}
-        xl={12}
-        style={row.flexRowCenterCenter}
-      >
+    <Row {...rowProps}>
+      <Col {...colProps}>
         <Card style={card.fullWidth} {...props}>
           {children}
         </Card>
