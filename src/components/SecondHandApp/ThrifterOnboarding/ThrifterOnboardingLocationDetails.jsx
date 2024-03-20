@@ -17,7 +17,6 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
       message.success('Your address has been saved!');
       onNext();
     } catch (error) {
-      console.log('error', error)
       setError(error.message);
     } finally {
       setSubmitting(false);
