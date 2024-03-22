@@ -1,19 +1,30 @@
 import React from 'react';
 import { Card, Col, Row } from 'antd';
-import { row, card } from '../../styles';
+import { row as rowStyle, card } from '../../styles';
 
-const CardLayout = ({ children, ...props }) => {
-  const rowProps = { justify: 'center', style: row.m20 };
-  const colProps = { xs: 24, md: 20, lg: 16, xl: 12, style: row.flexRowCenterCenter };
+const CardLayout = ({ children, row, col, ...props }) => {
+  const defaultRowProps = { justify: 'center', style: rowStyle.m20 };
+  const defaultColProps = { xs: 24, xl: 20,  style: { display: 'flex', justifyContent: 'center', alignItems: 'center' } };
+
+  const rowProps = {
+    ...defaultRowProps,
+    ...row
+  };
+
+  const colProps = {
+    ...defaultColProps,
+    ...col
+  };
 
   return (
-    <Row {...rowProps}>
-      <Col {...colProps}>
-        <Card style={card.fullWidth} {...props}>
-          {children}
-        </Card>
-      </Col>
-    </Row>
+
+        <Row {...rowProps}>
+          <Col {...colProps}>
+            <Card style={card.fullWidth} {...props}>
+              {children}
+            </Card>
+          </Col>
+        </Row>
   );
 }
 

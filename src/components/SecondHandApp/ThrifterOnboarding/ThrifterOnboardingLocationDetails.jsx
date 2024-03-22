@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, Input, Alert, Spin, message } from 'antd';
+import { Button, Form, Input, Alert, Spin, App } from 'antd';
 import CardLayout from '../../shared/CardLayout';
 import Typography from 'antd/es/typography/Typography';
 import { useCurrentUser, users } from '../../../api';
@@ -8,6 +8,7 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
   const {data: currentUser, isLoading}  = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
+  const { message } = App.useApp();
 
   const handleSubmit = async ({address}) => {
     setSubmitting(true);
@@ -30,7 +31,7 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
   );
 
   return (
-    <CardLayout title="Where Do You Thrive?" extra={<Button onClick={onPrev}>Back</Button>}>
+    <CardLayout title="Where Do You Thrive?">
       <Typography.Paragraph>
         Your local area is a treasure trove of finds. Sharing your location helps us connect you with customers eager for local gems.
       </Typography.Paragraph>
@@ -55,9 +56,12 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
           <Input />
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={submitting}>
-            {submitting ? 'Saving...' : 'Save'}
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button type="text" onClick={onPrev}>Back</Button>
+            <Button type="primary" htmlType="submit" disabled={submitting}>
+              {submitting ? 'Saving...' : 'Save'}
+            </Button>
+          </div>
         </Form.Item>
         {error && <Alert message={error} type="error" />}
       </Form>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Form, message, Alert, Checkbox, Row, Col, Spin } from 'antd';
+import { Button, Form, App, Alert, Checkbox, Row, Col, Spin } from 'antd';
 import CardLayout from '../../shared/CardLayout';
 import Typography from 'antd/es/typography/Typography';
 import { useCurrentUser, users } from '../../../api';
@@ -8,14 +8,13 @@ const ThrifterOnboardingThriftingPreferences = ({ onNext, onPrev }) => {
   const { data: currentUser, isLoading } = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
+  const { message } = App.useApp();
 
   const handleSubmit = async ({ preferences }) => {
     setSubmitting(true);
     try {
       const { error } = await users.updateCurrent({ preferences });
       if (error) throw new Error(error);
-      console.log('currentUser?.preferences', currentUser?.preferences);
-      // setPreferences(currentUser?.preferences || {});
       message.success('Your thrifting preferences have been saved!');
       onNext();
     } catch (error) {
@@ -135,7 +134,7 @@ const ThrifterOnboardingThriftingPreferences = ({ onNext, onPrev }) => {
   );
 
   return (
-    <CardLayout title="Select Your Thrifting Domains" extra={<Button onClick={onPrev}>Back</Button>}>
+    <CardLayout title="Select Your Thrifting Domains">
       <Typography.Paragraph>
         Every Thrifter has their niches. What categories spark joy for you? This helps us match you with customers who love what you love.
       </Typography.Paragraph>
@@ -149,7 +148,7 @@ const ThrifterOnboardingThriftingPreferences = ({ onNext, onPrev }) => {
       >
         <Row>
           {preferenceSections.map(({title, key, options}) => (
-            <Col span={12} key={key}>
+            <Col span={24} xl={12} xxl={8} key={key}>
               <Typography.Title level={5} style={{marginTop: 0}}>{title}</Typography.Title>
               <Form.Item name={['preferences', key]}>
                 <Checkbox.Group
@@ -161,9 +160,12 @@ const ThrifterOnboardingThriftingPreferences = ({ onNext, onPrev }) => {
         </Row>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={submitting}>
-            {submitting ? 'Saving...' : 'Save'}
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button type="text" onClick={onPrev}>Back</Button>
+            <Button type="primary" htmlType="submit" disabled={submitting}>
+              {submitting ? 'Saving...' : 'Save'}
+            </Button>
+          </div>
         </Form.Item>
         {error && <Alert message={error} type="error" />}
       </Form>

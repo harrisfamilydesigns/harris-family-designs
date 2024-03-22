@@ -1,8 +1,8 @@
 import React from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import { Grid, Col, Row, Steps, message } from 'antd';
+import { Grid, Col, Row, Steps, App } from 'antd';
 import ThrifterOnboardingIntroduction from './ThrifterOnboardingIntroduction';
-import ThrifterOnboardingContactVerification from './ThrifterOnboardingContactVerification';
+// import ThrifterOnboardingContactVerification from './ThrifterOnboardingContactVerification';
 import ThrifterOnboardingLocationDetails from './ThrifterOnboardingLocationDetails';
 import ThrifterOnboardingThriftingPreferences from './ThrifterOnboardingThriftingPreferences';
 import ThrifterOnboardingExperienceLevel from './ThrifterOnboardingExperienceLevel';
@@ -26,6 +26,7 @@ const OnboardingSteps = [
 ];
 
 const Onboarding = () => {
+  const { message } = App.useApp();
   let navigate = useNavigate();
   const screens = useBreakpoint();
 

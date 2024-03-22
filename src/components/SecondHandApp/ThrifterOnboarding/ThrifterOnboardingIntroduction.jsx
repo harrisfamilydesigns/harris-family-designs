@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Spin, message, Alert, Typography } from 'antd';
+import { Form, Input, Button, Spin, Alert, App, Typography } from 'antd';
 import { useCurrentUser, users } from '../../../api';
 import CardLayout from '../../shared/CardLayout';
 
@@ -7,6 +7,7 @@ const ThrifterOnboardingIntroduction = ({onNext}) => {
   const {data: currentUser, isLoading} = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
+  const { message } = App.useApp();
 
   const onFinish = async (form) => {
     try {
@@ -29,11 +30,11 @@ const ThrifterOnboardingIntroduction = ({onNext}) => {
   );
 
   return (
-    <CardLayout title="Welcome to Your Thrifting Journey!" bordered={false}>
-      <div>
+    <CardLayout title="Welcome to Your Thrifting Journey!">
+      <Typography.Paragraph>
         Before you start delighting customers with your unique finds, let's get to know you better.
         This helps us tailor the experience to your strengths and interests.
-      </div>
+      </Typography.Paragraph>
 
       <Form
         name="thrifter-onboarding-introduction"
@@ -69,9 +70,11 @@ const ThrifterOnboardingIntroduction = ({onNext}) => {
           <Input/>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={submitting}>
-            {submitting ? 'Submitting' : 'Continue'}
-          </Button>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button type="primary" htmlType="submit" disabled={submitting}>
+              {submitting ? 'Submitting' : 'Continue'}
+            </Button>
+          </div>
         </Form.Item>
       </Form>
 
