@@ -25,7 +25,7 @@ const RegisterPage = () => {
   }
 
   return (
-    <CardLayout title="Register">
+    <CardLayout col={{xs: 24, lg: 16, xl: 14, xxl: 12}} title="Register">
       <Typography.Title level={2}>Register</Typography.Title>
       <Form
         name="register"

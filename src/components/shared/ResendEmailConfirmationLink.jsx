@@ -51,11 +51,10 @@ const ResendEmailConfirmationLink = () => {
   return (
     <>
       <Typography.Text>
-        Didn't receive the email confirmation link?
         { response.type === 'success' && <Typography.Text> Resent! </Typography.Text> }
         { response.type !== 'success' && (
-          <Button type="link" onClick={handleResendClicked}>
-            { submitting ? 'Sending...' : 'Resend' }
+          <Button type="link" onClick={handleResendClicked} style={{padding: 0}}>
+            { submitting ? 'Sending...' : 'Resend confirmation email' }
           </Button>
         )}
       </Typography.Text>

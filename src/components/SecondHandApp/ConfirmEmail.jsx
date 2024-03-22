@@ -45,7 +45,7 @@ const ConfirmEmail = () => {
   }, [currentUser, isUserLoading]);
 
   return (
-    <CardLayout title="Confirm Email">
+    <CardLayout col={{xs: 24, lg: 16, xl: 14, xxl: 12}} title="Confirm Email">
       <Typography.Paragraph>
         Confirming your email...
       </Typography.Paragraph>

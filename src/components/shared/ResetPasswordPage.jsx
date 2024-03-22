@@ -38,7 +38,7 @@ const ResetPasswordPage = () => {
   }
 
   return (
-    <CardLayout title="Reset Password">
+    <CardLayout col={{xs: 24, lg: 16, xl: 14, xxl: 12}} title="Reset Password">
       <Form
         layout="vertical"
         onFinish={handleSubmit}

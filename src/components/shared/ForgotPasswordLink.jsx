@@ -32,7 +32,7 @@ const ForgotPasswordLink = () => {
 
   return (
     <>
-      <Button type="link" onClick={() => {setModalVisible(true)}}>
+      <Button type="link" onClick={() => {setModalVisible(true)}} style={{padding: 0}}>
         Forgot your password?
       </Button>
       <Modal
@@ -60,7 +60,7 @@ const ForgotPasswordLink = () => {
               onChange={ e => setEmail(e.target.value) }
             />
           </Form.Item>
-          <Button type="primary" htmlType="submit" style={{margin: 0, padding: 0}}>
+          <Button type="primary" htmlType="submit">
             { submitting ? 'Sending...' : 'Send' }
           </Button>
         </Form>

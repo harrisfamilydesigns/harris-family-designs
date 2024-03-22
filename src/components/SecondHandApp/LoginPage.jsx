@@ -26,8 +26,7 @@ const LoginPage = () => {
   }
 
   return (
-    <CardLayout title="Login">
-      <Typography.Title level={2}>Login</Typography.Title>
+    <CardLayout col={{xs: 24, lg: 16, xl: 14, xxl: 12}} title="Login">
       <Form
         name="login"
         initialValues={{ remember: true }}
@@ -70,12 +69,16 @@ const LoginPage = () => {
 
         <Form.Item>
           <Button type="link" onClick={() => navigate('/register')} style={{padding: 0}}>
-            or Register
+            Create an account
           </Button>
         </Form.Item>
       </Form>
-      <ResendEmailConfirmationLink />
-      <ForgotPasswordLink />
+      <div>
+        <ResendEmailConfirmationLink />
+      </div>
+      <div>
+        <ForgotPasswordLink />
+      </div>
       {error && <Alert message="Error" description={error.message} type="error" showIcon closable onClose={() => setError(null)} />}
     </CardLayout>
   );
