@@ -1,4 +1,4 @@
-// None of this is used currently. It's just ideas for now.
+// Only using some of the ANTD colors here for icons.
 // Antd is using theme.json for colors. Theme can be configured here https://ant.design/theme-editor
 
 const LIGHT_BLUE = '#A4DEF5';
@@ -25,4 +25,15 @@ export const NEUTRALS = {
   GRAY,
   WHITE,
   BLACK,
+}
+
+const SUCCESS = '#52c41a';
+const ERROR = '#ff4d4f';
+const WARNING = '#faad14';
+const INFO = '#1890ff';
+export const ANTD = {
+  SUCCESS,
+  ERROR,
+  WARNING,
+  INFO,
 }

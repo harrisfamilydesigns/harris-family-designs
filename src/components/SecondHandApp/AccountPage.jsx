@@ -1,30 +1,20 @@
-import { Button, Card, Col, Form, Row, Typography, Input, Alert } from 'antd';
+import { Button, Form, Typography, Input, Alert, Tooltip, Popover } from 'antd';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCurrentUser, users, auth } from '../../api';
-import { row, card } from '../../styles';
+import { useCurrentUser, users } from '../../api';
 import FullPageSpinner from '../shared/FullPageSpinner';
 import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
-import { mutate } from 'swr';
 import CardLayout from '../shared/CardLayout';
+import { CheckCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { ANTD } from '../../constants/colors';
 
 const AccountPage = () => {
-  const [initialFormSet, setInitialFormSet] = React.useState(false);
   const [submitMessage, setSubmitMessage] = React.useState({ type: '', message: '' });
   const [submitting, setSubmitting] = React.useState(false);
-  const [form, setForm] = React.useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    passwordConfirmation: '',
-    currentPassword: '',
-  });
-
-  const { data: currentUser, error: currentUserError, isLoading } = useCurrentUser();
+  const [form] = Form.useForm();
+  const { data: currentUser, isLoading } = useCurrentUser();
 
   const resetForm = () => {
-    setForm({
+    form.setFieldsValue({
       firstName: currentUser.firstName,
       lastName: currentUser.lastName,
       email: currentUser.email,
@@ -34,21 +24,7 @@ const AccountPage = () => {
     });
   }
 
-  React.useEffect(() => {
-    if (currentUser && !initialFormSet) {
-      resetForm();
-
-      setInitialFormSet(true);
-    }
-  }, [currentUser])
-
-  const navigate = useNavigate();
-  const logout = async () => {
-    await auth.logout();
-    navigate('/login');
-  }
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (form) => {
     setSubmitting(true);
     try {
       const { error } = await users.update(form);
@@ -58,8 +34,7 @@ const AccountPage = () => {
         type: 'success',
         message,
       });
-      setInitialFormSet(false);
-      await mutate('/users/current');
+      resetForm();
     } catch (error) {
       setSubmitMessage({ type: 'error', message: error.message, });
     } finally {
@@ -72,50 +47,84 @@ const AccountPage = () => {
   }
 
   return (
-    <CardLayout title="My Account" extra={<Button onClick={logout}>Logout</Button>}>
-      <Form name="userInfo" layout="vertical" onFinish={handleSubmit} onChange={() => setSubmitMessage({ type: '', message: '' })}>
-        <Form.Item label="First Name">
-          <Input value={form.firstName} onChange={ e => setForm({ ...form, firstName: e.target.value }) } />
+    <CardLayout title="My Account">
+      <Form
+        name="userInfo"
+        layout="vertical"
+        onFinish={handleSubmit}
+        onChange={() => setSubmitMessage({ type: '', message: '' })}
+        form={form}
+        initialValues={{
+          firstName: currentUser?.firstName,
+          lastName: currentUser?.lastName,
+          email: currentUser?.email,
+          password: '',
+          passwordConfirmation: '',
+          currentPassword: '',
+        }}
+      >
+        <Form.Item
+          label="First Name"
+          name="firstName"
+        >
+          <Input />
         </Form.Item>
 
-        <Form.Item label="Last Name">
-          <Input value={form.lastName} onChange={ e => setForm({ ...form, lastName: e.target.value }) } />
+        <Form.Item
+          label="Last Name"
+          name="lastName"
+        >
+          <Input />
         </Form.Item>
 
         {/* Email label should show "confirmed" with checkmark next to it */}
-        <Form.Item rules={{ required: true, message: 'Please input your email' }} label="Email">
-          <Input value={form.email} onChange={ e => setForm({ ...form, email: e.target.value }) } />
-          {form.email !== currentUser.email ? (
-            <>
-              <Typography.Text type="secondary">Changing your email will require you to confirm the new email address</Typography.Text>
-              <Button size='small' type='link' onClick={() => setForm({...form, email: currentUser.email})}>reset</Button>
-            </>
-          ) : (
-            currentUser.confirmed && !currentUser.unconfirmedEmail ? (
-              <Typography.Text type="secondary">Confirmed</Typography.Text>
-            ) : (
-              <>
-                <Typography.Text type="secondary">
-                { currentUser.unconfirmedEmail ? `You need to confirm your new email: ${currentUser.unconfirmedEmail}` : 'Your email still needs to be confirmed'}
-                </Typography.Text>
-                <div>
-                  <ResendEmailConfirmationLink />
-                </div>
-              </>
-            )
-          )}
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: 'Please input your email' }]}
+        >
+          <Input
+            suffix={
+              currentUser.confirmed && !currentUser.unconfirmedEmail ? (
+                <Tooltip title="Email confirmed">
+                  <CheckCircleOutlined
+                    style={{color: ANTD.SUCCESS, fontSize: '16px'}}
+                  />
+                </Tooltip>
+              ) : (
+                <Popover
+                  title="Email not confirmed"
+                  content={<ResendEmailConfirmationLink />}
+                >
+                  <ExclamationCircleOutlined
+                    style={{color: ANTD.WARNING, fontSize: '16px'}}
+                  />
+                </Popover>
+              )
+            }
+          />
         </Form.Item>
 
-        <Form.Item label="Change Password" >
-          <Input type="password" value={form.password} onChange={ e => setForm({ ...form, password: e.target.value }) } />
+        <Form.Item
+          label="Change Password"
+          name="password"
+        >
+          <Input type="password" />
         </Form.Item>
 
-        <Form.Item label="Change Password Confirmation" >
-          <Input type="password" value={form.passwordConfirmation} onChange={ e => setForm({ ...form, passwordConfirmation: e.target.value }) } />
+        <Form.Item
+          label="Change Password Confirmation"
+          name="passwordConfirmation"
+        >
+          <Input />
         </Form.Item>
 
-        <Form.Item rules={{ required: true, message: 'Current password is required to make updates' }} label="Current Password" >
-          <Input type="password" value={form.currentPassword} onChange={ e => setForm({ ...form, currentPassword: e.target.value }) } />
+        <Form.Item
+          label="Current Password"
+          name="currentPassword"
+          rules={[{ required: true, message: 'Current password is required to make updates' }]}
+        >
+          <Input type="password" />
         </Form.Item>
 
         <Form.Item>
@@ -132,7 +141,6 @@ const AccountPage = () => {
           </div>
         </Form.Item>
       </Form>
-      {currentUserError && <Alert type="error" message={currentUserError.message} />}
       {submitMessage?.message && <Alert type={submitMessage.type} message={submitMessage.message} />}
     </CardLayout>
   );

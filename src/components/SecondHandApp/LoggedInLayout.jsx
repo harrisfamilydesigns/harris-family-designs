@@ -1,10 +1,8 @@
-import React from 'react'
-import { Button, Layout, Menu, Typography } from 'antd';
+import React from 'react';
+import { Button, Layout, Menu } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { auth } from '../../api';
-import SearchParamsAlert from '../shared/SearchParamsAlert';
-import { AppstoreOutlined, ContactsFilled, CreditCardFilled, DashboardOutlined, DollarCircleOutlined, HomeFilled, MenuFoldOutlined, MenuUnfoldOutlined, ShopFilled, ShoppingCartOutlined, SolutionOutlined, TagFilled, TagsFilled, TeamOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import Icon from '@ant-design/icons/lib/components/Icon';
+import { AppstoreOutlined, DashboardOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -167,7 +165,6 @@ const LoggedInLayout = () => {
           />
         </Header>
         <Content>
-          <SearchParamsAlert />
           <Outlet />
         </Content>
         <Footer style={{ textAlign: 'center' }}>2ndHandFix ©{new Date().getFullYear()} Created by You</Footer>

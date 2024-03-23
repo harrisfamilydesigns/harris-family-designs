@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import FullPageSpinner from '../shared/FullPageSpinner';
+import SearchParamsAlert from '../shared/SearchParamsAlert';
 
 const UserDashboardPage = lazy(() => import('./UserDashboardPage'));
 const LoginPage = lazy(() => import('./LoginPage'));
@@ -14,6 +15,7 @@ const ThrifterOnboarding = lazy(() => import('./ThrifterOnboarding/ThrifterOnoar
 const Root = () => {
   return (
     <Suspense fallback={<FullPageSpinner />}> {/* Provide a fallback here */}
+      <SearchParamsAlert />
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route path="/" element={<Authenticated />}>

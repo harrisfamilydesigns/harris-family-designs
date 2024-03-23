@@ -70,7 +70,7 @@ const ThrifterOnboardingExperienceLevel = ({onNext, onPrev}) => {
         </Form.Item>
         <Form.Item>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button type="text" onClick={onPrev}>Back</Button>
+            <Button type="link" onClick={onPrev} style={{padding: 0}}>Back</Button>
             <Button type="primary" htmlType="submit" disabled={submitting}>
               {submitting ? 'Saving...' : 'Save'}
             </Button>

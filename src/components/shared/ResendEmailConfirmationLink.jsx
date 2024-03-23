@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Modal, Typography, Alert, Spin } from 'antd';
+import { Form, Input, Button, Modal, Typography, Alert, Spin, App } from 'antd';
 import { useCurrentUser } from '../../api';
 import { auth } from '../../api';
 
@@ -13,6 +13,7 @@ const ResendEmailConfirmationLink = () => {
     message: ''
   });
   const [userEnteredEmail, setUserEnteredEmail] = React.useState('');
+  const { message } = App.useApp();
 
   if (currentUser && currentUser.confirmed && !currentUser.unconfirmedEmail) {
     return;
@@ -40,7 +41,7 @@ const ResendEmailConfirmationLink = () => {
       const { error } = await auth.sendEmailConfirmation(email);
       if (error) { throw error; }
       setModalVisible(false);
-      setResponse({ type: 'success', message: 'Email confirmation link sent' });
+      message.success('Email confirmation link sent');
     } catch (error) {
       setResponse({ type: 'error', message: error.message });
     } finally {

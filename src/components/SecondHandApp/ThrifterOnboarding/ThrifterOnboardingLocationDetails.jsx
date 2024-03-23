@@ -3,12 +3,16 @@ import { Button, Form, Input, Alert, Spin, App } from 'antd';
 import CardLayout from '../../shared/CardLayout';
 import Typography from 'antd/es/typography/Typography';
 import { useCurrentUser, users } from '../../../api';
+import { usePlacesWidget } from 'react-google-autocomplete';
+
+const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
-  const {data: currentUser, isLoading}  = useCurrentUser();
+  const {data: currentUser, isLoading: isUserLoading}  = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const { message } = App.useApp();
+  const [form] = Form.useForm();
 
   const handleSubmit = async ({address}) => {
     setSubmitting(true);
@@ -24,11 +28,31 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
     }
   }
 
-  if (isLoading) return (
+  const { ref: placesWidgetRef } = usePlacesWidget({
+    apiKey: googleMapsApiKey,
+    onPlaceSelected: (place) => {
+      form.setFieldsValue({ address: place.formatted_address });
+    },
+    options: {
+      types: ['address'],
+      componentRestrictions: { country: 'us' },
+    },
+  });
+
+  if (isUserLoading) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Spin size="large" style={{marginTop: 16}}/>
     </div>
   );
+
+  // This is a workaround for the issue where the Enter key triggers the form submission
+  // when the user is trying to select an address from the Google Places Autocomplete dropdown
+  const handleKeyDown = (e) => {
+    const placesWidget = placesWidgetRef.current;
+    if (placesWidget && e.key === 'Enter') {
+      e.preventDefault();
+    }
+  }
 
   return (
     <CardLayout title="Where Do You Thrive?">
@@ -39,9 +63,8 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
         name="thrifter-onboarding-location-details"
         onChange={() => setError('')}
         onFinish={handleSubmit}
-        initialValues={{
-          address: currentUser?.address,
-        }}
+        form={form}
+        initialValues={{ address: currentUser?.address }}
       >
         <Form.Item
           label="Address"
@@ -53,11 +76,16 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
             },
           ]}
         >
-          <Input />
+          <Input.Search
+            placeholder="Enter your address"
+            ref={(c) => placesWidgetRef.current = c?.input }
+            onKeyDown={handleKeyDown}
+            autoComplete='off'
+          />
         </Form.Item>
         <Form.Item>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Button type="text" onClick={onPrev}>Back</Button>
+            <Button type="link" onClick={onPrev} style={{padding: 0}}>Back</Button>
             <Button type="primary" htmlType="submit" disabled={submitting}>
               {submitting ? 'Saving...' : 'Save'}
             </Button>

@@ -1,11 +1,15 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import { tokenProvider } from '../../api';
+import { useCurrentUser } from '../../api';
 
 const NotAuthenticated = () => {
-  const token = tokenProvider.getToken();
+  const { data: currentUser, isLoading } = useCurrentUser();
 
-  if (token) {
+  if (isLoading) {
+    return null;
+  }
+
+  if (currentUser) {
     return <Navigate to="/" />;
   }
 
