@@ -1,15 +1,92 @@
 import React from 'react';
-import { Card, Button } from 'antd';
+import { Alert, Button, Form, App } from 'antd';
 import CardLayout from '../../shared/CardLayout';
+import Typography from 'antd/es/typography/Typography';
+import { stripeAccounts } from '../../../api';
+import { useSearchParams } from 'react-router-dom';
+
+const isAccountEnabled = (account) => {
+  return account.capabilities.transfers === 'active' &&
+    account.payoutsEnabled &&
+    account.detailsSubmitted
+}
 
 const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
+  const [error, setError] = React.useState(null);
+  const [submitting, setSubmitting] = React.useState(false);
+  const [searchParams] = useSearchParams();
+  const { message } = App.useApp();
+
+  React.useEffect(() => {
+    if (!searchParams) return;
+
+    (async () => {
+      if (searchParams.get('via') === 'refreshUrl') {
+        sendToStripe();
+      }
+
+      // The user can return, but still not have allowed tranfers to their connected account
+      // If they have, we can move on
+      // If they haven't we need to show an error and prevent them from moving on
+      if (searchParams.get('via') === 'returnUrl') {
+        const { data, error } = await stripeAccounts.currentStripeAccount();
+
+        if (error) {
+          setError(error.message);
+          return;
+        }
+
+        if (data && isAccountEnabled(data)) {
+          message.success('Payment information saved!');
+          onNext();
+        } else {
+          setError('You must allow transfers to your connected account to continue.');
+        }
+      }
+    })()
+  }, [searchParams]);
+
+  const sendToStripe = async () => {
+    const { data, error } = await stripeAccounts.createAccountLink({
+      refreshUrl: `${window.location.href}?via=refreshUrl`,
+      returnUrl: `${window.location.href}?via=returnUrl`
+    })
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    window.location.href = data.url;
+  }
+
+
+  const handleSubmit = async () => {
+    try {
+      sendToStripe();
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <CardLayout title="Getting Paid for Your Finds">
-      <div>
-        ThrifterOnboardingPaymentInformation
-      </div>
-      <Button onClick={onPrev}>Back</Button>
-      <Button onClick={onNext}>Next</Button>
+      <Typography.Paragraph>
+        Securely add your payment information.
+        This ensures you're compensated for your thrifting prowess.
+      </Typography.Paragraph>
+
+      <Typography.Paragraph>
+        We use Stripe to securely process payments. Your information is never stored on our servers.
+        The link below will take you to Stripe's secure payment form. From there, you can select how you'd like to be paid.
+      </Typography.Paragraph>
+
+      <Form onFinish={handleSubmit}>
+        <Button type="primary" htmlType="submit" disabled={submitting}>
+          Get Paid with Stripe
+        </Button>
+      </Form>
+      {error && <Alert message={error} type="error" />}
     </CardLayout>
   );
 }
