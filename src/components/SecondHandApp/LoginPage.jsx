@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Form, Typography, Alert, Input } from 'antd';
-import { auth } from '../../api';
+import { auth, users } from '../../api';
 import { useNavigate } from 'react-router-dom';
 import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
 import ForgotPasswordLink from '../shared/ForgotPasswordLink';
@@ -16,8 +16,9 @@ const LoginPage = () => {
     setSubmitting(true);
     try {
       const { error } = await auth.login(form.email, form.password);
+      await users.current();
       if (error) { throw error; }
-      navigate('dashboard');
+      navigate('/');
     } catch (error) {
       setError(error);
     } finally {
