@@ -11,7 +11,7 @@ const AccountPage = () => {
   const [submitMessage, setSubmitMessage] = React.useState({ type: '', message: '' });
   const [submitting, setSubmitting] = React.useState(false);
   const [form] = Form.useForm();
-  const { data: currentUser, isLoading } = useCurrentUser();
+  const { currentUser, isLoading } = useCurrentUser();
 
   const resetForm = () => {
     form.setFieldsValue({

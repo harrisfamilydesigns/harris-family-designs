@@ -5,7 +5,7 @@ import Typography from 'antd/es/typography/Typography';
 import { useCurrentUser, users } from '../../../api';
 
 const ThrifterOnboardingThriftingPreferences = ({ onNext, onPrev }) => {
-  const { data: currentUser, isLoading } = useCurrentUser();
+  const { currentUser, isLoading } = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const { message } = App.useApp();

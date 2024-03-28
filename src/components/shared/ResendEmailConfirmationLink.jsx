@@ -6,7 +6,7 @@ import { auth } from '../../api';
 // Link that opens a modal to resend the email confirmation link
 const ResendEmailConfirmationLink = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
-  const { data: currentUser, isLoading } = useCurrentUser();
+  const { currentUser, isLoading } = useCurrentUser();
   const [submitting, setSubmitting] = React.useState(false);
   const [response, setResponse] = React.useState({
     type: '',

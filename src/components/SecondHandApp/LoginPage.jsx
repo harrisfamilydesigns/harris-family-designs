@@ -17,7 +17,7 @@ const LoginPage = () => {
     try {
       const { error } = await auth.login(form.email, form.password);
       if (error) { throw error; }
-      navigate('/');
+      navigate('dashboard');
     } catch (error) {
       setError(error);
     } finally {

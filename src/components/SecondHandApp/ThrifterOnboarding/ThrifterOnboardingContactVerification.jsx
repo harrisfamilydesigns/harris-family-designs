@@ -5,7 +5,7 @@ import PhoneNumberInput from '../../shared/PhoneNumberInput';
 import { users, useCurrentUser } from '../../../api';
 
 const ThrifterOnboardingContactVerification = ({onNext, onPrev}) => {
-  const {data: currentUser, isLoading} = useCurrentUser();
+  const { currentUser, isLoading} = useCurrentUser();
   const [verifying, setVerifying] = React.useState(false);
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);

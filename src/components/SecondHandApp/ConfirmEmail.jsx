@@ -9,7 +9,7 @@ const ConfirmEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
-  const {data: currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const { currentUser, isLoading: isUserLoading } = useCurrentUser();
 
   useEffect(() => {
     const confirmEmail = async () => {

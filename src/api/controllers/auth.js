@@ -1,11 +1,15 @@
 import { mutate } from "swr";
-import { post, patch, destroy } from "../request";
-import tokenProvider from "../tokenProvider";
+import { request } from "../request";
+import { tokenProvider } from "../tokenProvider";
+
+const _clearCache = async () => {
+  return mutate(/* match all keys */() => true, undefined, false)
+}
 
 // Also returns user data
 const login = async (email, password) => {
   const path = '/users/sign_in';
-  const response = await post(path, { user: { email, password } }, false);
+  const response = await request.post(path, { user: { email, password } }, false);
 
   if (response.error) {
     return response;
@@ -18,20 +22,16 @@ const login = async (email, password) => {
   return response;
 }
 
-const clearCache = async () => {
-  return mutate(/* match all keys */() => true, undefined, false)
-}
-
 const logout = async () => {
-  await destroy('/users/sign_out');
+  await request.destroy('/users/sign_out');
   tokenProvider.removeToken();
-  await clearCache();
+  await _clearCache();
   return { data: null, error: null };
 }
 
 const register = async (email, password, passwordConfirmation) => {
   const path = '/users';
-  const response = await post(path, { user: { email, password, passwordConfirmation } }, false);
+  const response = await request.post(path, { user: { email, password, passwordConfirmation } }, false);
 
   if (response.error) {
     return response;
@@ -44,17 +44,17 @@ const register = async (email, password, passwordConfirmation) => {
 
 const sendEmailConfirmation = async (email) => {
   const path = '/users/confirmation';
-  return post(path, { user: { email } }, false);
+  return request.post(path, { user: { email } }, false);
 }
 
 const sendForgotPasswordEmail = async (email) => {
   const path = '/users/password';
-  return post(path, { user: { email } }, false);
+  return request.post(path, { user: { email } }, false);
 }
 
 const resetPassword = async (password, passwordConfirmation, token) => {
   const path = '/users/password';
-  return patch(path, { user: { password, passwordConfirmation, token } }, false);
+  return request.patch(path, { user: { password, passwordConfirmation, token } }, false);
 }
 
 export const auth = {

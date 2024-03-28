@@ -5,7 +5,7 @@ import { row } from '../../styles';
 import CardLayout from '../shared/CardLayout';
 
 const UserDashboardPage = () => {
-  const { data: currentUser, error, isLoading } = useCurrentUser();
+  const { currentUser, error, isLoading } = useCurrentUser();
 
   return (
     <CardLayout title="User Dashboard">

@@ -1,14 +1,14 @@
-import { get, post } from "../request";
+import { request } from "../request";
 
-const currentStripeAccount = async () => {
-  return get(`/stripe_accounts/current`);
+const current = async () => {
+  return request.get(`/stripe_accounts/current`);
 }
 
 const createAccountLink = async ({ refreshUrl, returnUrl }) => {
-  return post(`/stripe_accounts/account_link`, { stripeAccountLink: { refreshUrl, returnUrl } });
+  return request.post(`/stripe_accounts/account_link`, { stripeAccountLink: { refreshUrl, returnUrl } });
 }
 
 export const stripeAccounts = {
-  currentStripeAccount,
+  current,
   createAccountLink
 }

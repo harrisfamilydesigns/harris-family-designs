@@ -1,9 +1,11 @@
 import React from 'react';
-import { Alert, Button, Form, App } from 'antd';
+import { Alert, Button, Form, App, Spin } from 'antd';
 import CardLayout from '../../shared/CardLayout';
 import Typography from 'antd/es/typography/Typography';
 import { stripeAccounts } from '../../../api';
 import { useSearchParams } from 'react-router-dom';
+import { LoadingOutlined } from '@ant-design/icons';
+import { useCurrentStripeAccount } from '../../../api';
 
 const isAccountEnabled = (account) => {
   return account.capabilities.transfers === 'active' &&
@@ -16,7 +18,10 @@ const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
   const [submitting, setSubmitting] = React.useState(false);
   const [searchParams] = useSearchParams();
   const { message } = App.useApp();
+  const { currentStripeAccount, isLoading } = useCurrentStripeAccount();
 
+  // For handling returnUrl and refreshUrl back to this page
+  // Auto redirect contingent upon searchParams
   React.useEffect(() => {
     if (!searchParams) return;
 
@@ -29,7 +34,7 @@ const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
       // If they have, we can move on
       // If they haven't we need to show an error and prevent them from moving on
       if (searchParams.get('via') === 'returnUrl') {
-        const { data, error } = await stripeAccounts.currentStripeAccount();
+        const { data, error } = await stripeAccounts.current();
 
         if (error) {
           setError(error.message);
@@ -62,11 +67,8 @@ const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
 
 
   const handleSubmit = async () => {
-    try {
-      sendToStripe();
-    } finally {
-      setSubmitting(false);
-    }
+    setSubmitting(true);
+    await sendToStripe();
   }
 
   return (
@@ -82,10 +84,23 @@ const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
       </Typography.Paragraph>
 
       <Form onFinish={handleSubmit}>
-        <Button type="primary" htmlType="submit" disabled={submitting}>
-          Get Paid with Stripe
+        <Button type={ currentStripeAccount ? 'link' : 'primary' } htmlType="submit" disabled={submitting} style={{ padding: currentStripeAccount ? 0 : 'inherit' }}>
+          { submitting ? (
+            <>
+              <LoadingOutlined/>
+              <span style={{marginLeft: 5}}>Redirecting to Stripe...</span>
+            </>
+          ) : currentStripeAccount ? 'Update Stripe connection' : 'Connect your Stripe account' }
         </Button>
       </Form>
+      {
+        currentStripeAccount && (
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button onClick={onPrev} style={{marginTop: 10}}>Back</Button>
+            <Button type="primary" onClick={onNext} style={{marginTop: 10}}>Next</Button>
+          </div>
+        )
+      }
       {error && <Alert message={error} type="error" />}
     </CardLayout>
   );

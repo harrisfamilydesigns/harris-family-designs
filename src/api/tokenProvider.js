@@ -15,5 +15,3 @@ export const tokenProvider = {
   setToken,
   removeToken,
 };
-
-export default tokenProvider;

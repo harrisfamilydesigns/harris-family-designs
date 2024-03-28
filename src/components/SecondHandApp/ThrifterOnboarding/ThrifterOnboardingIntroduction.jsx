@@ -4,7 +4,7 @@ import { useCurrentUser, users } from '../../../api';
 import CardLayout from '../../shared/CardLayout';
 
 const ThrifterOnboardingIntroduction = ({onNext}) => {
-  const {data: currentUser, isLoading} = useCurrentUser();
+  const { currentUser, isLoading} = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const { message } = App.useApp();

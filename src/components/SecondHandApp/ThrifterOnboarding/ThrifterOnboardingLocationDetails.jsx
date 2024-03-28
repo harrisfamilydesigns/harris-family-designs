@@ -8,7 +8,7 @@ import { usePlacesWidget } from 'react-google-autocomplete';
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
-  const {data: currentUser, isLoading: isUserLoading}  = useCurrentUser();
+  const { currentUser, isLoading: isUserLoading}  = useCurrentUser();
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const { message } = App.useApp();
