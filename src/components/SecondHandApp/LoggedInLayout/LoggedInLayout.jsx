@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Layout, Menu } from 'antd';
+import { Button, Layout, Menu, Space, Tabs } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { auth } from '../../api';
-import { AppstoreOutlined, DashboardOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { auth, useCurrentUser } from '../../../api';
+import { AppstoreOutlined, ArrowDownOutlined, CaretDownOutlined, DashboardOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import './LoggedInLayout.css';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -11,6 +12,8 @@ const LoggedInLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = React.useState(false);
+  const [mobile, setMobile] = React.useState(false);
+  const { currentUser, isLoading } = useCurrentUser();
 
   const isActiveItem = (item) => {
     if (item.type === 'group') {
@@ -97,7 +100,7 @@ const LoggedInLayout = () => {
   const headerMenuItems = [
     {
       key: 'account',
-      label: <Link to="/account">My Account</Link>,
+      label: <Link to="/account">{isLoading ? 'Loading...' : currentUser?.email}</Link>,
     },
     {
       key: 'logout',
@@ -128,7 +131,13 @@ const LoggedInLayout = () => {
         collapsed={collapsed}
         trigger={null}
         breakpoint='lg'
-        onBreakpoint={broken => setCollapsed(broken)}
+        onBreakpoint={broken => {
+          setCollapsed(broken)
+          setMobile(broken)
+        }}
+        style={{
+          display: mobile ? 'none' : 'block',
+        }}
         theme='light'
       >
         <div style={{
@@ -167,7 +176,39 @@ const LoggedInLayout = () => {
         <Content>
           <Outlet />
         </Content>
-        <Footer style={{ textAlign: 'center' }}>2ndHandFix ©{new Date().getFullYear()} Created by You</Footer>
+        {
+          mobile ? (
+            <div style={{
+              position: 'sticky',
+              bottom: 0,
+              zIndex: 100,
+              backgroundColor: 'white',
+              border: '1px solid #f0f0f0',
+              borderTop: 'none',
+            }}>
+              <Tabs tabPosition='bottom' tabBarStyle={{marginTop: 0}}>
+                <Tabs.TabPane
+                  tab={
+                    <Link to="/">
+                      <UserOutlined />
+                    </Link>
+                  }
+                  key="customer"
+                />
+                <Tabs.TabPane
+                  tab={
+                    <Link to="/thrift/onboarding">
+                      <ShopOutlined />
+                    </Link>
+                  }
+                  key="thrift"
+                />
+              </Tabs>
+            </div>
+          ) : (
+            <Footer style={{ textAlign: 'center' }}>2ndHandFix ©{new Date().getFullYear()} Created by You</Footer>
+          )
+        }
       </Layout>
     </Layout>
   );

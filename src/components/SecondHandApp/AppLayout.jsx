@@ -1,6 +1,6 @@
 import React from 'react'
 import { useCurrentUser } from '../../api';
-import LoggedInLayout from './LoggedInLayout';
+import LoggedInLayout from './LoggedInLayout/LoggedInLayout';
 import LoggedOutLayout from './LoggedOutLayout';
 
 const AppLayout = () => {

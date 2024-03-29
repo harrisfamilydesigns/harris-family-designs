@@ -47,7 +47,7 @@ const AccountPage = () => {
   }
 
   return (
-    <CardLayout title="My Account">
+    <CardLayout title="Personal Details">
       <Form
         name="userInfo"
         layout="vertical"
