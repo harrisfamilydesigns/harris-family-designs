@@ -137,6 +137,12 @@ const LoggedInLayout = () => {
         }}
         style={{
           display: mobile ? 'none' : 'block',
+          overflow: 'auto',
+          height: '100vh',
+          position: 'sticky',
+          top: 0,
+          left: 0,
+          zIndex: 100,
         }}
         theme='light'
       >
@@ -164,7 +170,7 @@ const LoggedInLayout = () => {
       </Sider>
 
       <Layout>
-        <Header style={{ background: 'transparent', padding: 0}}>
+        <Header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'transparent', padding: 0}}>
           <Menu
             theme='light'
             mode="horizontal"
