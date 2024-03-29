@@ -1,9 +1,10 @@
 import React from 'react';
-import { Button, Layout, Menu, Space, Tabs } from 'antd';
+import { Button, Flex, Layout, Menu, Space, Tabs, Typography } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { auth, useCurrentUser } from '../../../api';
-import { AppstoreOutlined, ArrowDownOutlined, CaretDownOutlined, DashboardOutlined, DollarCircleOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, CaretDownOutlined, DashboardOutlined, DollarCircleOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import './LoggedInLayout.css';
+import logo from '../../../assets/secondhand-logo.webp';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -35,50 +36,50 @@ const LoggedInLayout = () => {
           icon: <DashboardOutlined />,
           onClick: () => navigate('/'),
         },
-        {
-          key: 'orders',
-          label: 'Orders',
-          icon: <ShoppingCartOutlined />,
-          onClick: () => navigate('/orders'),
-        },
-        {
-          key: 'subscription',
-          label: 'Subscription',
-          icon: <DollarCircleOutlined />,
-          onClick: () => navigate('/subscription'),
-        },
-        {
-          key: 'thrifters',
-          label: 'My Thrifters',
-          icon: <TeamOutlined />,
-          onClick: () => navigate('/thrifters'),
-        },
+        // {
+        //   key: 'orders',
+        //   label: 'Orders',
+        //   icon: <ShoppingCartOutlined />,
+        //   onClick: () => navigate('/orders'),
+        // },
+        // {
+        //   key: 'subscription',
+        //   label: 'Subscription',
+        //   icon: <DollarCircleOutlined />,
+        //   onClick: () => navigate('/subscription'),
+        // },
+        // {
+        //   key: 'thrifters',
+        //   label: 'My Thrifters',
+        //   icon: <TeamOutlined />,
+        //   onClick: () => navigate('/thrifters'),
+        // },
       ]
     },
     {
       key: 'thrift',
       icon: 'user',
-      label: !collapsed && 'Thrift',
+      label: !collapsed && 'Thrifter',
       type: 'group',
       children: [
         {
           key: 'thrift/onboarding',
-          label: 'Onboarding',
+          label: 'Thrift with us!',
           icon: <SolutionOutlined />,
           onClick: () => navigate('/thrift/onboarding'),
         },
-        {
-          key: 'inventory',
-          label: 'Inventory',
-          icon: <AppstoreOutlined />,
-          onClick: () => navigate('/inventory'),
-        },
-        {
-          key: 'customers',
-          label: 'My Customers',
-          icon: <UsergroupAddOutlined />,
-          onClick: () => navigate('/customers'),
-        },
+        // {
+        //   key: 'inventory',
+        //   label: 'Inventory',
+        //   icon: <AppstoreOutlined />,
+        //   onClick: () => navigate('/inventory'),
+        // },
+        // {
+        //   key: 'customers',
+        //   label: 'My Customers',
+        //   icon: <UsergroupAddOutlined />,
+        //   onClick: () => navigate('/customers'),
+        // },
       ]
     },
   ]
@@ -96,20 +97,6 @@ const LoggedInLayout = () => {
   }).flat();
 
   siderActiveKeys = siderActiveKeys.length ? siderActiveKeys : ['dashboard'];
-
-  const headerMenuItems = [
-    {
-      key: 'account',
-      label: <Link to="/account">{isLoading ? 'Loading...' : currentUser?.email}</Link>,
-    },
-    {
-      key: 'logout',
-      label: 'Logout',
-      onClick: () => logout(),
-    }
-  ]
-
-  const headerActiveKeys = headerMenuItems.filter(item => isActiveItem(item)).map(item => item.key);
 
   const logout = async () => {
     await auth.logout();
@@ -171,13 +158,35 @@ const LoggedInLayout = () => {
 
       <Layout>
         <Header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'transparent', padding: 0}}>
-          <Menu
-            theme='light'
-            mode="horizontal"
-            selectedKeys={headerActiveKeys}
-            items={headerMenuItems}
-            style={{display: 'flex', justifyContent: 'flex-end', flex: 1, paddingRight: 20}}
-          />
+          <Flex justify='space-between'>
+            <div style={{ background: 'white', display: 'flex', alignItems: 'center' }}>
+              <img src={logo} alt="2ndHandFix" style={{height: 50, marginLeft: 10, borderRadius: '50%'}} />
+              <Typography.Title level={4} style={{margin: 0, marginLeft: 10}}>2ndHandFix</Typography.Title>
+            </div>
+            <Menu
+              theme='light'
+              mode="horizontal"
+              selectedKeys={isActiveItem({key: 'user'}) ? ['user'] : []}
+              style={{flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 20}}
+            >
+              <Menu.SubMenu key="user" style={{padding: 0}} title={
+                <Space>
+                  {isLoading ? 'Loading...' : currentUser?.email}
+                  <CaretDownOutlined />
+                </Space>
+              }>
+                <Menu.Item key="account">
+                  <Link to="/account">Edit</Link>
+                </Menu.Item>
+                <Menu.Item key="logout" onClick={logout}>
+                  <Flex align='center' justify='space-between'>
+                    Logout
+                    <LogoutOutlined />
+                  </Flex>
+                </Menu.Item>
+              </Menu.SubMenu>
+            </Menu>
+          </Flex>
         </Header>
         <Content>
           <Outlet />
