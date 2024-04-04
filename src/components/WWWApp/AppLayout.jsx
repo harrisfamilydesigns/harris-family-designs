@@ -3,12 +3,14 @@ import { Layout, Menu } from 'antd';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
 import { auth, tokenProvider } from '../../api';
+import { useTheme } from '../../contexts/ThemePreferenceContext';
 
 const AppLayout = () => {
   const [current, setCurrent] = React.useState('about');
   const token = tokenProvider.getToken();
   const location = useLocation();
   const navigate = useNavigate();
+  const { themePreference, setThemePreference } = useTheme();
 
   React.useEffect(() => {
     const pathKeyMap = {
@@ -65,7 +67,7 @@ const AppLayout = () => {
     >
       <Header>
         <div className="logo" />
-        <Menu onClick={e => setCurrent(e.key)} theme="dark" mode="horizontal" selectedKeys={[current]} items={menuItems} />
+        <Menu onClick={e => setCurrent(e.key)} theme={themePreference} mode="horizontal" selectedKeys={[current]} items={menuItems} />
       </Header>
       <Content style={{ padding: '0 50px' }}>
         <Outlet />

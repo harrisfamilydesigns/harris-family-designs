@@ -1,18 +1,22 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import FullPageSpinner from './components/shared/FullPageSpinner';
 import { App, ConfigProvider } from 'antd';
-import theme from './theme';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ConfirmEmail from './components/SecondHandApp/ConfirmEmail';
-import ResetPasswordPage from './components/shared/ResetPasswordPage';
-import LoggedOutLayout from './components/SecondHandApp/LoggedOutLayout';
+import { combineTheme } from './theme/combineTheme';
+import { useTheme } from './contexts/ThemePreferenceContext';
 
 // Lazy load the apps
 const WWWApp = lazy(() => import('./components/WWWApp/Root'));
 const SecondHandApp = lazy(() => import('./components/SecondHandApp/Root'));
+const ConfirmEmail = lazy(() => import('./components/SecondHandApp/ConfirmEmail'))
+const ResetPasswordPage = lazy(() => import('./components/shared/ResetPasswordPage'));
+const LoggedOutLayout = lazy(() => import('./components/SecondHandApp/LoggedOutLayout'));
 
 const Root = () => {
   const [subdomain, setSubdomain] = useState('');
+  const { themePreference, theme } = useTheme();
+  console.log('theme: ', theme)
+  console.log('themePreference: ', themePreference)
 
   useEffect(() => {
     const hostnameArray = window.location.hostname.split('.');

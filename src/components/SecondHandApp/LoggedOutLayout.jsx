@@ -1,12 +1,14 @@
 import React from 'react'
 import { Layout, Menu } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import { useTheme } from '../../contexts/ThemePreferenceContext';
 
 const { Header, Content, Footer } = Layout;
 
 const LoggedOutLayout = () => {
   const [current, setCurrent] = React.useState('login');
   const location = useLocation();
+  const { themePreference, setThemePreference } = useTheme()
 
   React.useEffect(() => {
     const pathKeyMap = {
@@ -35,6 +37,7 @@ const LoggedOutLayout = () => {
         display: 'flex',
         flexDirection: 'column'
       }}
+      theme={themePreference}
     >
       <Header
         style={{
@@ -45,11 +48,12 @@ const LoggedOutLayout = () => {
           display: 'flex',
           alignItems: 'center',
         }}
+        theme={themePreference}
       >
         <div className="logo" />
         <Menu
           onClick={e => setCurrent(e.key)}
-          theme="dark"
+          theme={themePreference}
           mode="horizontal"
           selectedKeys={[current]}
           items={menuItems}

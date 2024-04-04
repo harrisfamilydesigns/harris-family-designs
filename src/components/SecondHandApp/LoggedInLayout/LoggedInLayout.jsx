@@ -1,10 +1,11 @@
 import React from 'react';
-import { Button, Flex, Layout, Menu, Space, Tabs, Typography } from 'antd';
+import { Button, Flex, Layout, Menu, Space, Switch, Tabs, Typography } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { auth, useCurrentUser } from '../../../api';
 import { AppstoreOutlined, CaretDownOutlined, DashboardOutlined, DollarCircleOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import './LoggedInLayout.css';
 import logo from '../../../assets/secondhand-logo.webp';
+import { useTheme } from '../../../contexts/ThemePreferenceContext'
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -15,6 +16,7 @@ const LoggedInLayout = () => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobile, setMobile] = React.useState(false);
   const { currentUser, isLoading } = useCurrentUser();
+  const { themePreference, setThemePreference, theme } = useTheme();
 
   const isActiveItem = (item) => {
     if (item.type === 'group') {
@@ -131,17 +133,17 @@ const LoggedInLayout = () => {
           left: 0,
           zIndex: 100,
         }}
-        theme='light'
+        // theme={themePreference}
       >
         <div style={{
           display: 'flex',
           justifyContent: collapsed ? 'center' : 'flex-end',
           alignItems: 'center',
-          backgroundColor: 'white',
+          backgroundColor: theme.components.Layout.headerBg,
           borderRight: siderBorderRight,
           padding: collapsed ? '10px 0' : '10px 10px 0 0'
         }}>
-          <Button type='text' size='large' onClick={() => setCollapsed(!collapsed)}>
+          <Button style={{ color: theme.components.Layout.headerColor }} type='text' size='large' onClick={() => setCollapsed(!collapsed)}>
             {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
           </Button>
         </div>
@@ -152,6 +154,7 @@ const LoggedInLayout = () => {
           items={[
             ...siderMenuItems
           ]}
+          // theme={themePreference}
         >
         </Menu>
       </Sider>
@@ -159,12 +162,19 @@ const LoggedInLayout = () => {
       <Layout>
         <Header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'transparent', padding: 0}}>
           <Flex justify='space-between'>
-            <div style={{ background: 'white', display: 'flex', alignItems: 'center' }}>
+            <div style={{ background: theme.components.Layout.headerBg, display: 'flex', alignItems: 'center' }}>
               <img src={logo} alt="2ndHandFix" style={{height: 50, marginLeft: 10, borderRadius: '50%'}} />
-              <Typography.Title level={4} style={{margin: 0, marginLeft: 10}}>2ndHandFix</Typography.Title>
+              <Typography.Title level={4} style={{margin: 0, marginLeft: 10, color: theme.components.Layout.headerColor}}>2ndHandFix</Typography.Title>
+            </div>
+            <div style={{ background: theme.components.Layout.headerBg, display: 'flex', alignItems: 'center', paddingLeft: 20 }}>
+              <Switch
+                defaultValue={themePreference === 'light'}
+                title={themePreference === 'light' ? 'Light' : 'Dark'}
+                onChange={isLight => setThemePreference(isLight ? 'light' : 'dark')}
+              />
             </div>
             <Menu
-              theme='light'
+              // theme={themePreference}
               mode="horizontal"
               selectedKeys={isActiveItem({key: 'user'}) ? ['user'] : []}
               style={{flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 20}}
@@ -197,7 +207,7 @@ const LoggedInLayout = () => {
               position: 'sticky',
               bottom: 0,
               zIndex: 100,
-              backgroundColor: 'white',
+              backgroundColor: theme.components.Layout.headerBg,
               border: '1px solid #f0f0f0',
               borderTop: 'none',
             }}>

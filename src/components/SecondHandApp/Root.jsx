@@ -3,10 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import FullPageSpinner from '../shared/FullPageSpinner';
 import SearchParamsAlert from '../shared/SearchParamsAlert';
 
+const AppLayout = lazy(() => import('./AppLayout'));
 const UserDashboardPage = lazy(() => import('./UserDashboardPage'));
 const LoginPage = lazy(() => import('./LoginPage'));
 const RegisterPage = lazy(() => import('./RegisterPage'));
-const AppLayout = lazy(() => import('./AppLayout'));
 const AccountPage = lazy(() => import('./AccountPage'));
 const Authenticated = lazy(() => import('./Authenticated'));
 const NotAuthenticated = lazy(() => import('./NotAuthenticated'));
