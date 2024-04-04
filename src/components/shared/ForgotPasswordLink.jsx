@@ -1,7 +1,6 @@
-import { Button, Form, Modal, Alert, Input } from 'antd';
+import { Button, Form, Modal, Alert, Input, Typography } from 'antd';
 import React from 'react';
 import { auth } from '../../api';
-import Typography from 'antd/es/typography/Typography';
 import { useSearchParams } from 'react-router-dom';
 
 const ForgotPasswordLink = () => {
