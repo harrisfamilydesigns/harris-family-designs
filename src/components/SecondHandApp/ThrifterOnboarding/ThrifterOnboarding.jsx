@@ -16,7 +16,7 @@ const { Step } = Steps;
 
 const OnboardingSteps = [
   { path: 'introduction', title: "Introduction", component: ThrifterOnboardingIntroduction },
-  // { path: 'contact-verification', title: "Contact Verification", component: ThrifterOnboardingContactVerification },
+  // // { path: 'contact-verification', title: "Contact Verification", component: ThrifterOnboardingContactVerification },
   { path: 'location-details', title: "Location Details", component: ThrifterOnboardingLocationDetails },
   { path: 'thrifting-preferences', title: "Thrifting Preferences", component: ThrifterOnboardingThriftingPreferences },
   { path: 'experience-level', title: "Experience Level", component: ThrifterOnboardingExperienceLevel },
@@ -25,7 +25,7 @@ const OnboardingSteps = [
   { path: 'confirmation', title: "Confirmation", component: ThrifterOnboardingConfirmation },
 ];
 
-const Onboarding = () => {
+const ThrifterOnboarding = () => {
   const { message } = App.useApp();
   let navigate = useNavigate();
   const screens = useBreakpoint();
@@ -82,4 +82,4 @@ const Onboarding = () => {
   );
 };
 
-export default Onboarding;
+export default ThrifterOnboarding;

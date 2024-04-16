@@ -71,6 +71,20 @@ const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
     await sendToStripe();
   }
 
+  const ConnectStripeButton = () => {
+    if (isLoading) return <Spin style={{marginTop: 16}}/>;
+    return (
+      <Button type={ currentStripeAccount ? 'link' : 'primary' } htmlType="submit" disabled={submitting} style={{ padding: currentStripeAccount ? 0 : 'inherit' }}>
+        { submitting ? (
+          <>
+            <LoadingOutlined/>
+            <span style={{marginLeft: 5}}>Redirecting to Stripe...</span>
+          </>
+        ) : currentStripeAccount ? 'Update Stripe connection' : 'Connect your Stripe account' }
+      </Button>
+    )
+  }
+
   return (
     <CardLayout title="Getting Paid for Your Finds">
       <Typography.Paragraph>
@@ -84,14 +98,7 @@ const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
       </Typography.Paragraph>
 
       <Form onFinish={handleSubmit}>
-        <Button type={ currentStripeAccount ? 'link' : 'primary' } htmlType="submit" disabled={submitting} style={{ padding: currentStripeAccount ? 0 : 'inherit' }}>
-          { submitting ? (
-            <>
-              <LoadingOutlined/>
-              <span style={{marginLeft: 5}}>Redirecting to Stripe...</span>
-            </>
-          ) : currentStripeAccount ? 'Update Stripe connection' : 'Connect your Stripe account' }
-        </Button>
+        <ConnectStripeButton />
       </Form>
       {
         currentStripeAccount && (

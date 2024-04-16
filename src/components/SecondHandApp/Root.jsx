@@ -10,7 +10,7 @@ const AppLayout = lazy(() => import('./AppLayout'));
 const AccountPage = lazy(() => import('./AccountPage'));
 const Authenticated = lazy(() => import('./Authenticated'));
 const NotAuthenticated = lazy(() => import('./NotAuthenticated'));
-const ThrifterOnboarding = lazy(() => import('./ThrifterOnboarding/ThrifterOnoarding'));
+const ThrifterOnboarding = lazy(() => import('./ThrifterOnboarding/ThrifterOnboarding'));
 
 const Root = () => {
   return (
