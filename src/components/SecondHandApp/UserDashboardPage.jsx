@@ -3,7 +3,7 @@ import React from 'react';
 import { useCurrentUser } from '../../api';
 import { row } from '../../styles';
 import CardLayout from '../shared/CardLayout';
-import CustomerOnboardingCTA from './CustomerOnboarding/CustomerOnboardingCTA';
+import { Navigate } from 'react-router-dom';
 
 const UserDashboardPage = () => {
   const { currentUser, error, isLoading } = useCurrentUser();
@@ -15,12 +15,17 @@ const UserDashboardPage = () => {
     </div>
   )
 
+  if (isLoading) {
+    return <Loading />
+  }
+
+  if (noAccountSetUp) {
+    return <Navigate to="/customer/onboarding" />
+  }
+
   return (
     <CardLayout title="User Dashboard">
-      { isLoading && <Loading /> }
-      { noAccountSetUp ? <CustomerOnboardingCTA /> : (
-        <Typography>Hey {currentUser?.firstName || 'there'}!</Typography>
-      )}
+      <Typography>Hey {currentUser?.firstName || 'there'}!</Typography>
       { error && <Alert message={error.message} type="error" /> }
     </CardLayout>
   );

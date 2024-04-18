@@ -36,11 +36,15 @@ const ThrifterOnboarding = () => {
     return currentStepIndex >= 0 ? currentStepIndex : 0;
   };
 
+  const navigateToStep = (path) => {
+    navigate(`/thrift/onboarding/${path}`);
+  }
+
   const currentStep = findCurrentStepIndex();
 
   const nextStep = () => {
     if (currentStep < OnboardingSteps.length - 1) {
-      navigate(`/thrift/onboarding/${OnboardingSteps[currentStep + 1].path}`);
+      navigateToStep(OnboardingSteps[currentStep + 1].path);
     } else {
       message.success('Onboarding completed!');
     }
@@ -48,7 +52,7 @@ const ThrifterOnboarding = () => {
 
   const prevStep = () => {
     if (currentStep > 0) {
-      navigate(`/thrift/onboarding/${OnboardingSteps[currentStep - 1].path}`);
+      navigateToStep(OnboardingSteps[currentStep - 1].path);
     }
   };
 
@@ -73,7 +77,11 @@ const ThrifterOnboarding = () => {
             direction='vertical'
           >
             {OnboardingSteps.map(({ title, path }, index) => (
-              <Step key={title} title={title} onClick={() => navigate(`/thrift/onboarding/${path}`)} style={{ cursor: 'pointer' }}/>
+              <Step
+                key={title}
+                title={title}
+                onClick={() => navigateToStep(path)}
+                style={{ cursor: 'pointer' }}/>
             ))}
           </Steps>
         </Col>
