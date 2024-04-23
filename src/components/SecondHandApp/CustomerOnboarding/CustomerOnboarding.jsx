@@ -1,5 +1,6 @@
 import { App, Col, Grid, Row, Steps } from "antd";
 import CustomerOnboardingIntroduction from "./CustomerOnboardingIntroduction";
+import CustomerOnboardingStyle from "./CustomerOnboardingStyle";
 import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 const { useBreakpoint } = Grid;
@@ -8,6 +9,7 @@ const { Step } = Steps;
 
 const OnboardingSteps = [
   { path: 'introduction', title: "Introduction", component: CustomerOnboardingIntroduction },
+  { path: 'style', title: "Tell Us About Your Style", component: CustomerOnboardingStyle },
   // // { path: 'contact-verification', title: "Contact Verification", component: ThrifterOnboardingContactVerification },
   // { path: 'location-details', title: "Location Details", component: ThrifterOnboardingLocationDetails },
   // { path: 'thrifting-preferences', title: "Thrifting Preferences", component: ThrifterOnboardingThriftingPreferences },

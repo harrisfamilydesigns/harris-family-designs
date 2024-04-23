@@ -168,23 +168,34 @@ const LoggedInLayout = () => {
               mode="horizontal"
               selectedKeys={isActiveItem({key: 'user'}) ? ['user'] : []}
               style={{flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', paddingRight: 20}}
+              items={[
+                {
+                  key: 'user',
+                  label: (
+                    <Space>
+                      {isLoading ? 'Loading...' : currentUser?.email}
+                      <CaretDownOutlined />
+                    </Space>
+                  ),
+                  children: [
+                    {
+                      key: 'account',
+                      label: <Link to="/account">Edit</Link>,
+                    },
+                    {
+                      key: 'logout',
+                      label: (
+                        <Flex align='center' justify='space-between'>
+                          Logout
+                          <LogoutOutlined />
+                        </Flex>
+                      ),
+                      onClick: logout,
+                    },
+                  ],
+                },
+              ]}
             >
-              <Menu.SubMenu key="user" style={{padding: 0}} title={
-                <Space>
-                  {isLoading ? 'Loading...' : currentUser?.email}
-                  <CaretDownOutlined />
-                </Space>
-              }>
-                <Menu.Item key="account">
-                  <Link to="/account">Edit</Link>
-                </Menu.Item>
-                <Menu.Item key="logout" onClick={logout}>
-                  <Flex align='center' justify='space-between'>
-                    Logout
-                    <LogoutOutlined />
-                  </Flex>
-                </Menu.Item>
-              </Menu.SubMenu>
             </Menu>
           </Flex>
         </Header>

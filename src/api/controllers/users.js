@@ -16,14 +16,16 @@ const confirmEmail = async (token) => {
 
 // Requires currentPassword
 const update = async (data) => {
-  await request.patch('/users', { user: data });
-  return mutate('/users/current');
+  const response = await request.patch('/users', { user: data });
+  mutate('/users/current');
+  return response;
 }
 
 // Does not require currentPassword, but can't update email, or password
 const updateCurrent = async (data) => {
-  await request.patch('/users/current', { user: data });
-  return mutate('/users/current');
+  const response = await request.patch('/users/current', { user: data });
+  mutate('/users/current');
+  return response;
 }
 
 export const users = {

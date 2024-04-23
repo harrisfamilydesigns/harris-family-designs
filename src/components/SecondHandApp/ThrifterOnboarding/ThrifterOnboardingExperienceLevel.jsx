@@ -2,10 +2,12 @@ import React from 'react';
 import { Button, Form, Select, Alert, Spin, App } from 'antd';
 import CardLayout from '../../shared/CardLayout';
 import Typography from 'antd/es/typography/Typography';
-import { useCurrentUser, users } from '../../../api';
+import { useCurrentUser, useThrifter, thrifters } from '../../../api';
 
 const ThrifterOnboardingExperienceLevel = ({onNext, onPrev}) => {
-  const { currentUser, isLoading } = useCurrentUser();
+  const { currentUser, isLoading: isUserLoading } = useCurrentUser();
+  const { thrifter, isLoading: isThrifterLoading } = useThrifter(currentUser?.thrifterId);
+  const isLoading = isUserLoading || isThrifterLoading;
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const { message } = App.useApp();
@@ -13,7 +15,7 @@ const ThrifterOnboardingExperienceLevel = ({onNext, onPrev}) => {
   const handleSubmit = async ({ experienceLevel }) => {
     setSubmitting(true);
     try {
-      const { error } = await users.updateCurrent({ experienceLevel });
+      const { error } = await thrifters.update(thrifter.id, { experienceLevel });
       if (error) throw new Error(error);
       message.success('Your experience level has been saved!');
       onNext();
@@ -46,7 +48,7 @@ const ThrifterOnboardingExperienceLevel = ({onNext, onPrev}) => {
         name="thrifter-onboarding-experience-level"
         onFinish={handleSubmit}
         initialValues={{
-          experienceLevel: currentUser?.experienceLevel,
+          experienceLevel: thrifter?.experienceLevel,
         }}
         onChange={() => setError('')}
       >

@@ -2,13 +2,15 @@ import React from 'react';
 import { Button, Form, Input, Alert, Spin, App } from 'antd';
 import CardLayout from '../../shared/CardLayout';
 import Typography from 'antd/es/typography/Typography';
-import { useCurrentUser, users } from '../../../api';
+import { useCurrentUser, useThrifter, thrifters } from '../../../api';
 import { usePlacesWidget } from 'react-google-autocomplete';
 
 const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
   const { currentUser, isLoading: isUserLoading}  = useCurrentUser();
+  const { thrifter, isLoading: isThrifterLoading } = useThrifter(currentUser?.thrifterId);
+  const isLoading = isUserLoading || isThrifterLoading;
   const [error, setError] = React.useState('');
   const [submitting, setSubmitting] = React.useState(false);
   const { message } = App.useApp();
@@ -17,7 +19,7 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
   const handleSubmit = async ({address}) => {
     setSubmitting(true);
     try {
-      const {error} = await users.updateCurrent({address});
+      const { error } = await thrifters.update(thrifter.id, {address});
       if (error) throw new Error(error);
       message.success('Your address has been saved!');
       onNext();
@@ -39,7 +41,7 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
     },
   });
 
-  if (isUserLoading) return (
+  if (isLoading) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <Spin size="large" style={{marginTop: 16}}/>
     </div>
@@ -64,7 +66,7 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
         onChange={() => setError('')}
         onFinish={handleSubmit}
         form={form}
-        initialValues={{ address: currentUser?.address }}
+        initialValues={{ address: thrifter?.address }}
       >
         <Form.Item
           label="Address"
