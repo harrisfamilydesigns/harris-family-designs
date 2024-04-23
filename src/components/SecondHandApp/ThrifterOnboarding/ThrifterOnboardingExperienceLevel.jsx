@@ -16,7 +16,7 @@ const ThrifterOnboardingExperienceLevel = ({onNext, onPrev}) => {
     setSubmitting(true);
     try {
       const { error } = await thrifters.update(thrifter.id, { experienceLevel });
-      if (error) throw new Error(error);
+      if (error) throw new Error(error.message);
       message.success('Your experience level has been saved!');
       onNext();
     } catch (error) {

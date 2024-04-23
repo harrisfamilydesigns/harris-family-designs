@@ -23,7 +23,7 @@ const ThrifterOnboardingProfilePhotoAndBio = ({onNext, onPrev}) => {
     setSubmitting(true);
     try {
       const {error} = await thrifters.update(thrifter.id, {avatarUrl, bio});
-      if (error) throw new Error(error);
+      if (error) throw new Error(error.message);
       message.success('Your profile photo and bio have been saved!');
       onNext();
     } catch (error) {

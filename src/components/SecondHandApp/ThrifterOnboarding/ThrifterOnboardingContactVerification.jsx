@@ -14,7 +14,7 @@ const ThrifterOnboardingContactVerification = ({onNext, onPrev}) => {
     setSubmitting(true);
     try {
       // const [error] = await users.sendPhoneVerification(unverifiedPhone);
-      if (error) throw new Error(error);
+      if (error) throw new Error(error.message);
       setVerifying(true);
     } catch (error) {
       setError(error.message);

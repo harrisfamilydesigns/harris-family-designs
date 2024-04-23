@@ -13,7 +13,7 @@ const ThrifterOnboardingIntroduction = ({onNext}) => {
     try {
       setSubmitting(true);
       const {error} = await users.updateCurrent(form);
-      if (error) throw new Error(error);
+      if (error) throw new Error(error.message);
       message.success('Your name has been saved!');
       onNext();
     } catch (error) {

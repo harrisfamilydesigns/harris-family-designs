@@ -20,7 +20,7 @@ const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
     setSubmitting(true);
     try {
       const { error } = await thrifters.update(thrifter.id, {address});
-      if (error) throw new Error(error);
+      if (error) throw new Error(error.message);
       message.success('Your address has been saved!');
       onNext();
     } catch (error) {

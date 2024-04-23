@@ -17,7 +17,7 @@ const ThrifterOnboardingThriftingPreferences = ({ onNext, onPrev }) => {
     setSubmitting(true);
     try {
       const { error } = await thrifters.update(thrifter.id, { preferences });
-      if (error) throw new Error(error);
+      if (error) throw new Error(error.message);
       message.success('Your thrifting preferences have been saved!');
       onNext();
     } catch (error) {
