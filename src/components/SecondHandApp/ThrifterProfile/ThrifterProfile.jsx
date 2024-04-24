@@ -5,6 +5,9 @@ import { preferenceSections } from '../../../data/thrifterPreferences';
 import { humanize } from '../../../utils/humanize';
 import { ExperimentOutlined } from '@ant-design/icons';
 import { IconGlobe } from '@tabler/icons-react';
+import ThriftingPreferences from './ThriftingPreferences';
+import ChangeAvatar from './ChangeAvatar';
+import ChangeName from './ChangeName';
 
 const ThrifterProfile = () => {
   const { currentUser, isLoading: isUserLoading } = useCurrentUser();
@@ -21,8 +24,8 @@ const ThrifterProfile = () => {
     <>
       <Row>
         <Col span={24} md={12} lg={8}>
-          <Avatar src={thrifter?.avatarUrl} size={150} />
-          <Typography.Title level={2} style={{ margin: 0 }}>{[currentUser.firstName, currentUser.lastName].join(' ')}</Typography.Title>
+          <ChangeAvatar />
+          <ChangeName />
           <Typography.Text type="secondary" style={{ margin: 0 }}>{currentUser.email}</Typography.Text>
         </Col>
         <Col span={24} md={12} lg={16}>
@@ -50,32 +53,7 @@ const ThrifterProfile = () => {
       </Row>
 
       <Divider />
-
-      <Typography.Title level={3}>Thrifting Preferences</Typography.Title>
-      <Row>
-        {
-          preferenceSections.map(({ title, key, icon, options }) => (
-            thrifter.preferences[key].length > 0 && (
-              <Col key={key} style={{marginLeft: 5, marginRight: 5}}>
-                <Card style={{ marginBottom: 16 }} title={(
-                  <Space align='start'>
-                    {React.createElement(icon)}
-                    <Typography.Text>{title}</Typography.Text>
-                  </Space>
-                )}>
-                  <Space direction="vertical">
-                    {
-                      thrifter.preferences[key].map((preference) => (
-                        <Typography.Text key={preference}>{humanize(preference)}</Typography.Text>
-                      ))
-                    }
-                  </Space>
-                </Card>
-              </Col>
-            )
-          ))
-        }
-      </Row>
+      <ThriftingPreferences />
     </>
   )
 };
