@@ -1,9 +1,10 @@
 import React from 'react';
 import { useCurrentUser, useThrifter } from '../../../api';
-import { Avatar, Card, Col, Collapse, Divider, Flex, Row, Space, Spin, Typography } from 'antd';
+import { Avatar, Card, Col, Collapse, Divider, Flex, Row, Space, Spin, Tag, Typography } from 'antd';
 import { preferenceSections } from '../../../data/thrifterPreferences';
 import { humanize } from '../../../utils/humanize';
-import { ExperimentOutlined, GlobalOutlined } from '@ant-design/icons';
+import { ExperimentOutlined } from '@ant-design/icons';
+import { IconGlobe } from '@tabler/icons-react';
 
 const ThrifterProfile = () => {
   const { currentUser, isLoading: isUserLoading } = useCurrentUser();
@@ -20,13 +21,13 @@ const ThrifterProfile = () => {
     <>
       <Row>
         <Col span={24} md={12} lg={8}>
-          <Avatar src={thrifter.avatarUrl} size={150} />
+          <Avatar src={thrifter?.avatarUrl} size={150} />
           <Typography.Title level={2} style={{ margin: 0 }}>{[currentUser.firstName, currentUser.lastName].join(' ')}</Typography.Title>
           <Typography.Text type="secondary" style={{ margin: 0 }}>{currentUser.email}</Typography.Text>
         </Col>
         <Col span={24} md={12} lg={16}>
           <Typography.Paragraph>
-            <GlobalOutlined /> {thrifter.address}
+            <IconGlobe size={14}/> {thrifter.address}
           </Typography.Paragraph>
 
           <Typography.Paragraph>
@@ -40,29 +41,41 @@ const ThrifterProfile = () => {
             {thrifter.bio}
           </Typography.Paragraph>
 
+          <Tag color={thrifter.stripeAccountId ? 'green' : 'default'}>
+            <Typography.Text>
+              {thrifter.stripeAccountId ? 'Connected to Stripe' : 'Not connected to Stripe'}
+            </Typography.Text>
+          </Tag>
         </Col>
       </Row>
 
       <Divider />
 
       <Typography.Title level={3}>Thrifting Preferences</Typography.Title>
-      <Collapse
-        items={
-          Object.keys(thrifter.preferences).
-            sort((a, b) => a.toLowerCase() < b.toLowerCase() ? -1 : 1).
-            filter((category) => thrifter.preferences[category].length > 0).
-            map((category) => ({
-              key: category,
-              label: humanize(category),
-              children: thrifter.preferences[category].
-                sort((a, b) => a.toLowerCase() < b.toLowerCase() ? -1 : 1).
-                map((preference) => (
-                <p>{humanize(preference)}</p>
-              )),
-            }))
+      <Row>
+        {
+          preferenceSections.map(({ title, key, icon, options }) => (
+            thrifter.preferences[key].length > 0 && (
+              <Col key={key} style={{marginLeft: 5, marginRight: 5}}>
+                <Card style={{ marginBottom: 16 }} title={(
+                  <Space align='start'>
+                    {React.createElement(icon)}
+                    <Typography.Text>{title}</Typography.Text>
+                  </Space>
+                )}>
+                  <Space direction="vertical">
+                    {
+                      thrifter.preferences[key].map((preference) => (
+                        <Typography.Text key={preference}>{humanize(preference)}</Typography.Text>
+                      ))
+                    }
+                  </Space>
+                </Card>
+              </Col>
+            )
+          ))
         }
-      >
-      </Collapse>
+      </Row>
     </>
   )
 };

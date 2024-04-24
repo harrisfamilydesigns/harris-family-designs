@@ -3,6 +3,10 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import FullPageSpinner from '../shared/FullPageSpinner';
 import SearchParamsAlert from '../shared/SearchParamsAlert';
 
+const ThrifterDashboardPage = lazy(() => import('./ThrifterPages/ThrifterDashboardPage'));
+const ThrifterOrdersPage = lazy(() => import('./ThrifterPages/ThrifterOrdersPage'));
+const ThrifterInventoryPage = lazy(() => import('./ThrifterPages/ThrifterInventoryPage'));
+const ThrifterCustomersPage = lazy(() => import('./ThrifterPages/ThrifterCustomersPage'));
 const UserDashboardPage = lazy(() => import('./UserDashboardPage'));
 const LoginPage = lazy(() => import('./LoginPage'));
 const RegisterPage = lazy(() => import('./RegisterPage'));
@@ -23,7 +27,13 @@ const Root = () => {
             <Route index element={<UserDashboardPage />} />
             <Route path="account" element={<AccountPage/>} />
             <Route path="customer/onboarding/*" element={<CustomerOnboarding />} />
-            <Route path="thrift/onboarding/*" element={<ThrifterOnboarding />} />
+            <Route path="thrifter">
+              <Route path="dashboard" element={<ThrifterDashboardPage />} />
+              <Route path="orders" element={<ThrifterOrdersPage />} />
+              <Route path="inventory" element={<ThrifterInventoryPage />} />
+              <Route path="customers" element={<ThrifterCustomersPage />} />
+              <Route path="onboarding/*" element={<ThrifterOnboarding />} />
+            </Route>
           </Route>
 
           <Route path="login" element={<NotAuthenticated/>}>

@@ -74,13 +74,13 @@ const ThrifterOnboardingPaymentInformation = ({onNext, onPrev}) => {
   const ConnectStripeButton = () => {
     if (isLoading) return <Spin style={{marginTop: 16}}/>;
     return (
-      <Button type={ currentStripeAccount ? 'link' : 'primary' } htmlType="submit" disabled={submitting} style={{ padding: currentStripeAccount ? 0 : 'inherit' }}>
+      <Button type={ currentStripeAccount ? 'link' : 'primary' } htmlType="submit" disabled={submitting} style={currentStripeAccount && { padding: 0 }}>
         { submitting ? (
           <>
             <LoadingOutlined/>
             <span style={{marginLeft: 5}}>Redirecting to Stripe...</span>
           </>
-        ) : currentStripeAccount ? 'Update Stripe connection' : 'Connect your Stripe account' }
+        ) : currentStripeAccount ? 'Update Stripe account' : 'Connect to Stripe' }
       </Button>
     )
   }

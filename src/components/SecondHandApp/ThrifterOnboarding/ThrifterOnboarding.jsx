@@ -37,7 +37,7 @@ const ThrifterOnboarding = () => {
   };
 
   const navigateToStep = (path) => {
-    navigate(`/thrift/onboarding/${path}`);
+    navigate(`/thrifter/onboarding/${path}`);
   }
 
   const currentStep = findCurrentStepIndex();
@@ -64,7 +64,8 @@ const ThrifterOnboarding = () => {
             {OnboardingSteps.map(({ path, component: Component }) => (
               <Route key={path} path={`/${path}`} element={<Component onNext={nextStep} onPrev={prevStep} />} />
             ))}
-            <Route path="/" element={<Navigate replace to={`/thrift/onboarding/${OnboardingSteps[0].path}`} />} />
+            <Route path="/" element={<Navigate replace to={`/thrifter/onboarding/${OnboardingSteps[0].path}`} />} />
+            <Route path="*" element={<Navigate replace to={`/thrifter/onboarding/${OnboardingSteps[0].path}`} />} />
           </Routes>
         </Col>
 
