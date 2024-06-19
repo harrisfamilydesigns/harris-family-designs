@@ -8,7 +8,7 @@ const _clearCache = async () => {
 
 // Also returns user data
 const login = async (email, password) => {
-  const path = '/users/sign_in';
+  const path = '/d/sign_in';
   const response = await request.post(path, { user: { email, password } }, false);
 
   if (response.error) {
@@ -23,7 +23,7 @@ const login = async (email, password) => {
 }
 
 const logout = async () => {
-  await request.destroy('/users/sign_out');
+  await request.destroy('/d/sign_out');
   tokenProvider.removeToken();
   await _clearCache();
   return { data: null, error: null };
@@ -43,17 +43,17 @@ const register = async (email, password, passwordConfirmation) => {
 }
 
 const sendEmailConfirmation = async (email) => {
-  const path = '/users/confirmation';
+  const path = '/d/confirmation';
   return request.post(path, { user: { email } }, false);
 }
 
 const sendForgotPasswordEmail = async (email) => {
-  const path = '/users/password';
+  const path = '/d/password';
   return request.post(path, { user: { email } }, false);
 }
 
 const resetPassword = async (password, passwordConfirmation, token) => {
-  const path = '/users/password';
+  const path = '/d/password';
   return request.patch(path, { user: { password, passwordConfirmation, token } }, false);
 }
 
