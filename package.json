@@ -9,7 +9,7 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "deploy-gcloud": "gsutil -m rsync -r dist gs://hfd-fe",
+    "deploy-gcloud": "gcloud storage rsync -r dist gs://hfd-fe",
     "deploy": "yarn build && yarn deploy-gcloud"
   },
   "dependencies": {
