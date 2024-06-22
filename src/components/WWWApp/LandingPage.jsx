@@ -22,10 +22,9 @@ function LandingPage() {
         </Paragraph>
       </section>
 
-      <section id="products">
+      {/* <section id="products">
         <Title level={2}>Our Products</Title>
-        {/* Product items will be added here */}
-      </section>
+      </section> */}
     </div>
   );
 }
