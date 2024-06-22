@@ -6,6 +6,7 @@ import AdminDashboardPage from './AdminDashboardPage';
 import AppLayout from './AppLayout';
 import FullPageSpinner from '../shared/FullPageSpinner';
 import SearchParamsAlert from '../shared/SearchParamsAlert';
+import ProjectsPage from './ProjectsPage';
 
 const Root = () => {
   return (
@@ -15,7 +16,7 @@ const Root = () => {
         <Route path="/" element={<AppLayout/>}>
           <Route index element={<LandingPage/>} />
           <Route path="about" element={<LandingPage/>} />
-          <Route path="products" element={<LandingPage/>} />
+          <Route path="projects" element={<ProjectsPage/>} />
           <Route path="contact" element={<LandingPage/>} />
 
           <Route path="admin_login" element={<AdminLoginPage/>} />

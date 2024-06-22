@@ -13,7 +13,7 @@ const AppLayout = () => {
   React.useEffect(() => {
     const pathKeyMap = {
       '/about': 'about',
-      '/products': 'product',
+      '/projects': 'project',
       '/contact': 'contact',
       '/admin': 'admin',
     };
@@ -31,8 +31,8 @@ const AppLayout = () => {
       label: <Link to="/about">About Us</Link>,
     },
     {
-      key: 'product',
-      label: <Link to="/products">Our Products</Link>,
+      key: 'project',
+      label: <Link to="/projects">Our Projects</Link>,
     },
     {
       key: 'contact',
