@@ -2,7 +2,6 @@ import React from 'react';
 import { Button, App, Typography, Form, Upload, Input, Spin, Alert } from 'antd';
 import CardLayout from '../../shared/CardLayout';
 import { useCurrentUser, useThrifter, thrifters, uploads, tokenProvider } from '../../../api';
-import { urlForPath } from '../../../api/request/utils';
 
 // Card 8: Profile Photo and Bio
 // Title: "Showcase Your Thrifter Persona"
@@ -77,7 +76,7 @@ const ThrifterOnboardingProfilePhotoAndBio = ({onNext, onPrev}) => {
               url: thrifter.avatarUrl,
             }] : []}
             headers={{ Authorization: `Bearer ${tokenProvider.getToken()}` }}
-            action={urlForPath(uploads.uploadPath)}
+            action={uploads.uploadPath}
             onChange={async ({ file, fileList, event }) => {
               if (file.status === 'done') {
                 const url = file?.response?.url;

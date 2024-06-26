@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Avatar, Button, Spin, Upload } from "antd"
 import { thrifters, tokenProvider, uploads, useCurrentUser, useThrifter } from '../../../api';
-import { urlForPath } from '../../../api/request/utils';
 
 const ChangeAvatar = () => {
   const { currentUser, isLoading: isUserLoading } = useCurrentUser();
@@ -28,7 +27,7 @@ const ChangeAvatar = () => {
     <Upload
       name="file"
       maxCount={1}
-      action={urlForPath(uploads.uploadPath)}
+      action={uploads.uploadPath}
       headers={{Authorization: `Bearer ${tokenProvider.getToken()}`}}
       onChange={({ file }) => {
         if (file.status === 'uploading') {

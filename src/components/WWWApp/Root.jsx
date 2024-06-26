@@ -16,7 +16,7 @@ const Root = () => {
         <Route path="/" element={<AppLayout/>}>
           <Route index element={<LandingPage/>} />
           <Route path="about" element={<LandingPage/>} />
-          <Route path="projects" element={<ProjectsPage/>} />
+          <Route path="projects/*" element={<ProjectsPage/>} />
           <Route path="contact" element={<LandingPage/>} />
 
           <Route path="admin_login" element={<AdminLoginPage/>} />
