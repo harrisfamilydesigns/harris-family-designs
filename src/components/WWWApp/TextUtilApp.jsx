@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Form, Row, Col, Layout, Menu, Typography } from 'antd';
+import { Input, Form, Row, Col, Layout, Menu, Typography, Select } from 'antd';
 
 const TextUtilApp = () => {
   const [inputText, setInputText] = React.useState('');
@@ -71,12 +71,18 @@ const TextUtilApp = () => {
 
   const updateOutputText = (text) => {
     const newText = textManipulationFunctions[selectedFunction].func(text);
+    console.log('newText:', newText)
     setOutputText(newText);
   }
 
   const processText = (text) => {
     setInputText(text);
     updateOutputText(text);
+  }
+
+  const updateFunction = (funcKey) => {
+    setSelectedFunction(funcKey);
+    updateOutputText(inputText);
   }
 
   React.useEffect(() => {
@@ -86,49 +92,34 @@ const TextUtilApp = () => {
 
   return (
     <div style={{ textAlign: 'left' }}>
-      <Layout>
-        <Layout.Sider width={300} style={{ background: 'white' }}>
-          <div style={{ margin: 20 }}>
-            <Typography.Title level={4}>TextUtil</Typography.Title>
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={[selectedFunction]}
-              onClick={({ key }) => setSelectedFunction(key)}
-            >
-              {Object.keys(textManipulationFunctions).map(funcKey => (
-                <Menu.Item key={funcKey}>{textManipulationFunctions[funcKey].label}</Menu.Item>
-              ))}
-            </Menu>
-          </div>
-        </Layout.Sider>
+      <Select
+        defaultValue="alternateCase"
+        style={{ width: 200, marginBottom: 20 }}
+        onChange={value => updateFunction(value)}
+      >
+        {Object.keys(textManipulationFunctions).map(funcKey => (
+          <Select.Option key={funcKey} value={funcKey}>
+            {textManipulationFunctions[funcKey].label}
+          </Select.Option>
+        ))}
+      </Select>
+      <div>
+        <Typography.Text>Input Text</Typography.Text>
+        <Input.TextArea
+          value={inputText}
+          onChange={e => processText(e.target.value)}
+          placeholder="Enter text here"
+        />
+      </div>
 
-        <Layout.Content>
-          <div style={{margin: 20}}>
-            <Row>
-              <Col span={24}>
-                <Form layout="vertical">
-                  <Form.Item label="Input Text" name="inputText">
-                    <Input.TextArea
-                      value={inputText}
-                      onChange={e => processText(e.target.value)}
-                      placeholder="Enter text here"
-                      style={{ height: 200 }}
-                    />
-                  </Form.Item>
-
-                  <Form.Item label={selectedFunction} name="outputText">
-                    <div style={{ border: '1px solid #d9d9d9', background: 'white', padding: 10, height: 200, overflowY: 'auto' }}>
-                      <Typography.Text style={{ color: !outputText ? '#d9d9d9' : 'black' }}>
-                        {outputText || 'Output will appear here'}
-                      </Typography.Text>
-                    </div>
-                  </Form.Item>
-                </Form>
-              </Col>
-            </Row>
-          </div>
-        </Layout.Content>
-      </Layout>
+      <div style={{marginTop: 10}}>
+        <Typography.Text>Output Text</Typography.Text>
+        <Input.TextArea
+          value={outputText}
+          readOnly
+          placeholder="Output text will appear here"
+        />
+      </div>
     </div>
   );
 }
