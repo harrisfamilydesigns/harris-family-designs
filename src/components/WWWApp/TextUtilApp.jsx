@@ -71,7 +71,6 @@ const TextUtilApp = () => {
 
   const updateOutputText = (text) => {
     const newText = textManipulationFunctions[selectedFunction].func(text);
-    console.log('newText:', newText)
     setOutputText(newText);
   }
 

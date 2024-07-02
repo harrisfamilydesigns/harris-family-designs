@@ -1,26 +1,31 @@
 import React, { Suspense } from 'react';
-import { Typography, Card } from 'antd';
+import { Typography, Card, Tag } from 'antd';
 import { Routes, Route, Navigate, Link, Outlet } from 'react-router-dom';
 import BlankApp from './BlankApp';
 import FinePrintApp from './FinePrintApp';
 import TextUtilApp from './TextUtilApp';
 import { useLocation } from 'react-router-dom';
+import { CheckCircleFilled, WarningFilled } from '@ant-design/icons';
+import { useTheme } from '../../hooks/useTheme';
 
 const projects = [
-  {name: 'Fitness Tracker', description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', route: '/fitness_tracker', element: <BlankApp/>},
-  {name: 'Piano App', description: 'A piano app that helps you learn how to play the piano.', route: '/piano_app', element: <BlankApp/>},
-  {name: 'Recipe Book', description: 'A recipe book app that helps you keep track of your favorite recipes.', route: '/recipe_book', element: <BlankApp/>},
-  {name: 'Fine Print', description: 'An app that helps you read the fine print on contracts.', route: '/fine_print', element: <FinePrintApp/>},
-  {name: "TextUtil", description: "An app that helps you manipulate text.", route: "/text_util", element: <TextUtilApp/>},
+  {name: "TextUtil", status: 'active', description: "An app that helps you manipulate text.", route: "/text_util", element: <TextUtilApp/>},
+  {name: 'Fitness Tracker', status: 'unstarted', description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', route: '/fitness_tracker', element: <BlankApp/>},
+  {name: 'Piano App', status: 'unstarted', description: 'A piano app that helps you learn how to play the piano.', route: '/piano_app', element: <BlankApp/>},
+  {name: 'Recipe Book', status: 'unstarted', description: 'A recipe book app that helps you keep track of your favorite recipes.', route: '/recipe_book', element: <BlankApp/>},
+  {name: 'Fine Print', status: 'unstarted', description: 'An app that helps you read the fine print on contracts.', route: '/fine_print', element: <FinePrintApp/>},
 ]
 
 const Layout = () => {
   const location = useLocation();
-  const [selectedProject, setSelectedProject] = React.useState(null);
+  const [selectedProject, setSelectedProject] = React.useState(projects[0]);
+  const theme = useTheme();
 
   React.useEffect(() => {
     const project = projects.find(project => location.pathname.startsWith('/projects' + project.route));
-    setSelectedProject(project);
+    if (project) {
+      setSelectedProject(project);
+    }
   }, [location.pathname]);
 
   return (
@@ -29,7 +34,15 @@ const Layout = () => {
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {projects.map(project => (
           <Link key={project.route} to={'/projects' + project.route}>
-            <Card title={project.name} style={{ width: 300, margin: 10, boxShadow: selectedProject === project ? '0 0 10px #1890ff' : 'none' }}>
+            <Card title={
+              <>
+                <span style={{ marginRight: 5 }}>
+                  { project.status === 'unstarted' && <WarningFilled style={{ color: theme.colorWarning }}/>}
+                  { project.status === 'active' && <CheckCircleFilled style={{ color: theme.colorSuccess }}/>}
+                </span>
+                {project.name}
+              </>
+            } style={{ width: 300, margin: 10, boxShadow: selectedProject === project ? '0 0 10px #1890ff' : 'none' }}>
               <p>{project.description}</p>
             </Card>
           </Link>
