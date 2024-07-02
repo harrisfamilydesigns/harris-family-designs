@@ -1,15 +1,20 @@
+import { useNavigate } from 'react-router-dom';
 import { useCurrentUser } from '../../api';
-import LoginPage from '../SecondHandApp/LoginPage';
+import LoginPage from '../shared/LoginPage';
 
 export const BudgetTracker = () => {
   const { currentUser, isLoading } = useCurrentUser();
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
   if (!currentUser) {
-    return <LoginPage />;
+    // TODO: use router and more advanced login and dashboard routing
+    // Pull more Auth logic out of SecondHandApp into shared components
+    // Currently doesn't reload current user, etc.
+    return <LoginPage onSuccess={() => navigate('/projects/budget_tracker')}/>;
   }
 
   return (

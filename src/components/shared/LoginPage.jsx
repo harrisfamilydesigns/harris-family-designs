@@ -2,11 +2,11 @@ import React from 'react';
 import { Button, Form, Typography, Alert, Input } from 'antd';
 import { auth, users } from '../../api';
 import { useNavigate } from 'react-router-dom';
-import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
-import ForgotPasswordLink from '../shared/ForgotPasswordLink';
-import CardLayout from '../shared/CardLayout';
+import ResendEmailConfirmationLink from './ResendEmailConfirmationLink';
+import ForgotPasswordLink from './ForgotPasswordLink';
+import CardLayout from './CardLayout';
 
-const LoginPage = () => {
+const LoginPage = ({ onSuccess }) => {
   const [form, setForm] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState(null);
   const [submitting, setSubmitting] = React.useState(false);
@@ -18,7 +18,8 @@ const LoginPage = () => {
       const { error } = await auth.login(form.email, form.password);
       await users.current();
       if (error) { throw error; }
-      navigate('/');
+      if (onSuccess) { return onSuccess(); }
+      else { navigate('/'); }
     } catch (error) {
       setError(error);
     } finally {
