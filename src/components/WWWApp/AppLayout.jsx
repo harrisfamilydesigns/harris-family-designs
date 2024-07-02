@@ -2,11 +2,11 @@ import React from 'react'
 import { Layout, Menu } from 'antd';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 const { Header, Content, Footer } = Layout;
-import { auth, tokenProvider } from '../../api';
+import { auth, useCurrentUser } from '../../api';
 
 const AppLayout = () => {
   const [current, setCurrent] = React.useState('about');
-  const token = tokenProvider.getToken();
+  const { currentUser } = useCurrentUser();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -40,11 +40,13 @@ const AppLayout = () => {
     },
   ];
 
-  if (token) {
-    menuItems.push({
-      key: 'admin',
-      label: <Link to="/admin">Admin</Link>,
-    });
+  if (currentUser) {
+    if (currentUser.admin) {
+      menuItems.push({
+        key: 'admin',
+        label: <Link to="/admin">Admin</Link>,
+      });
+    }
 
     menuItems.push({
       key: 'logout',

@@ -1,15 +1,17 @@
 import React, { Suspense } from 'react';
 import { Typography, Card, Tag } from 'antd';
-import { Routes, Route, Navigate, Link, Outlet } from 'react-router-dom';
+import { Routes, Route, Navigate, Link, Outlet, useNavigate } from 'react-router-dom';
 import BlankApp from './BlankApp';
 import FinePrintApp from './FinePrintApp';
 import TextUtilApp from './TextUtilApp';
 import { useLocation } from 'react-router-dom';
-import { CheckCircleFilled, WarningFilled } from '@ant-design/icons';
+import { CheckCircleFilled, ToolFilled, WarningFilled } from '@ant-design/icons';
 import { useTheme } from '../../hooks/useTheme';
+import { BudgetTracker } from '../BudgetTracker/BudgetTracker';
 
 const projects = [
   {name: "TextUtil", status: 'active', description: "An app that helps you manipulate text.", route: "/text_util", element: <TextUtilApp/>},
+  {name: 'Budget Tracker', status: 'in_progress', description: 'Set up your weekly safe-to-spend and track transactions.', route: '/budget_tracker', element: <BudgetTracker/>},
   {name: 'Fitness Tracker', status: 'unstarted', description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', route: '/fitness_tracker', element: <BlankApp/>},
   {name: 'Piano App', status: 'unstarted', description: 'A piano app that helps you learn how to play the piano.', route: '/piano_app', element: <BlankApp/>},
   {name: 'Recipe Book', status: 'unstarted', description: 'A recipe book app that helps you keep track of your favorite recipes.', route: '/recipe_book', element: <BlankApp/>},
@@ -18,12 +20,15 @@ const projects = [
 
 const Layout = () => {
   const location = useLocation();
-  const [selectedProject, setSelectedProject] = React.useState(projects[0]);
+  const [selectedProject, setSelectedProject] = React.useState(null);
   const theme = useTheme();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const project = projects.find(project => location.pathname.startsWith('/projects' + project.route));
-    if (project) {
+    if (!project) {
+      navigate('/projects' + projects[0].route);
+    } else {
       setSelectedProject(project);
     }
   }, [location.pathname]);
@@ -38,6 +43,7 @@ const Layout = () => {
               <>
                 <span style={{ marginRight: 5 }}>
                   { project.status === 'unstarted' && <WarningFilled style={{ color: theme.colorWarning }}/>}
+                  { project.status === 'in_progress' && <ToolFilled style={{ color: theme.colorInfo }}/>}
                   { project.status === 'active' && <CheckCircleFilled style={{ color: theme.colorSuccess }}/>}
                 </span>
                 {project.name}
