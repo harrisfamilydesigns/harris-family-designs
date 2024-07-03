@@ -9,25 +9,38 @@ import LoginPage from '../shared/LoginPage';
 import RegisterPage from '../shared/RegisterPage';
 import BudgetDashboardPage from './BudgetDashboardPage';
 
-const Root = () => (
-  <Suspense fallback={<FullPageSpinner />}>
-    <SearchParamsAlert />
-    <Routes>
-      <Route path="/" element={<AppLayout title={'BudgetTracker'} logo={null} footerLabel={`BudgetTracker ©${new Date().getFullYear()}`}/>}>
-        <Route path="/" element={<Authenticated />}>
-          <Route index element={<BudgetDashboardPage />} />
-        </Route>
-        <Route path="login" element={<NotAuthenticated />}>
-          <Route index element={<LoginPage />} />
-        </Route>
-        <Route path="register" element={<NotAuthenticated />}>
-          <Route index element={<RegisterPage />} />
-        </Route>
-      </Route>
+const Root = () => {
+  // TODO: Make this so it doesn't have to be defined in every app
+  const [collapsed, setCollapsed] = React.useState(false);
+  const siderMenuItems = [];
 
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
-  </Suspense>
-)
+  return (
+    <Suspense fallback={<FullPageSpinner />}>
+      <SearchParamsAlert />
+      <Routes>
+        <Route path="/" element={<AppLayout
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+          title='BudgetTracker'
+          logo={null}
+          footerLabel={`BudgetTracker ©${new Date().getFullYear()}`}
+          siderMenuItems={siderMenuItems}
+        />}>
+          <Route path="/" element={<Authenticated />}>
+            <Route index element={<BudgetDashboardPage />} />
+          </Route>
+          <Route path="login" element={<NotAuthenticated />}>
+            <Route index element={<LoginPage />} />
+          </Route>
+          <Route path="register" element={<NotAuthenticated />}>
+            <Route index element={<RegisterPage />} />
+          </Route>
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Suspense>
+  )
+}
 
 export default Root;

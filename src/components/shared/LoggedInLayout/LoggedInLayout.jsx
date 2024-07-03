@@ -7,15 +7,12 @@ import './LoggedInLayout.css';
 
 const { Sider, Content, Footer, Header } = Layout;
 
-const LoggedInLayout = ({ title, logo, footerLabel }) => {
-  console.log('loggedInLayout rendered')
+const LoggedInLayout = ({ collapsed, setCollapsed, title, logo, footerLabel, siderMenuItems } = { siderMenuItems: [] }) => {
   // const [current, setCurrent] = React.useState('dashboard');
   const location = useLocation();
   const navigate = useNavigate();
-  const [collapsed, setCollapsed] = React.useState(false);
   const [mobile, setMobile] = React.useState(false);
   const { currentUser, isLoading } = useCurrentUser();
-  const { thrifter } = currentUser?.thrifterId ? useThrifter(currentUser.thrifterId) : { thrifter: null };
 
   const isActiveItem = (item) => {
     if (item.type === 'group') {
@@ -23,92 +20,6 @@ const LoggedInLayout = ({ title, logo, footerLabel }) => {
     }
     return location.pathname.includes(item.key);
   }
-
-  const thrifterMenuItems = thrifter && thrifter.status === 'active' ? [
-    {
-      key: 'thrifter',
-      icon: 'user',
-      label: !collapsed && 'Thrifter',
-      type: 'group',
-      children: [
-        {
-          key: 'dashboard',
-          label: 'Dashboard',
-          icon: <DashboardOutlined />,
-          onClick: () => navigate('/thrifter/dashboard'),
-        },
-        {
-          key: 'orders',
-          label: 'Orders',
-          icon: <ShoppingCartOutlined />,
-          onClick: () => navigate('/thrifter/orders'),
-        },
-        {
-          key: 'inventory',
-          label: 'Inventory',
-          icon: <AppstoreOutlined />,
-          onClick: () => navigate('/thrifter/inventory'),
-        },
-        {
-          key: 'customers',
-          label: 'My Customers',
-          icon: <UsergroupAddOutlined />,
-          onClick: () => navigate('/thrifter/customers'),
-        },
-      ]
-    }
-  ] : [
-    {
-      key: 'thrifter',
-      icon: 'user',
-      label: !collapsed && 'Thrifter',
-      type: 'group',
-      children: [
-        {
-          key: 'thrifter/onboarding',
-          label: 'Thrift with us!',
-          icon: <SolutionOutlined />,
-          onClick: () => navigate('/thrifter/onboarding'),
-        },
-      ]
-    },
-  ];
-
-  const siderMenuItems = [
-    {
-      key: 'customer',
-      icon: 'user',
-      label: !collapsed && 'Customer',
-      type: 'group',
-      children: [
-        {
-          key: 'dashboard',
-          label: 'Dashboard',
-          icon: <DashboardOutlined />,
-          onClick: () => navigate('/'),
-        },
-        // {
-        //   key: 'orders',
-        //   label: 'Orders',
-        //   icon: <ShoppingCartOutlined />,
-        //   onClick: () => navigate('/orders'),
-        // },
-        // {
-        //   key: 'subscription',
-        //   label: 'Subscription',
-        //   icon: <DollarCircleOutlined />,
-        //   onClick: () => navigate('/subscription'),
-        // },
-        // {
-        //   key: 'thrifters',
-        //   label: 'My Thrifters',
-        //   icon: <TeamOutlined />,
-        //   onClick: () => navigate('/thrifters'),
-        // },
-      ]
-    },
-    ...thrifterMenuItems
-  ]
 
   let siderActiveKeys = siderMenuItems.filter(item => {
     if (item.type === 'group') {
@@ -226,7 +137,7 @@ const LoggedInLayout = ({ title, logo, footerLabel }) => {
         <Content>
           <Outlet />
         </Content>
-        {/* {
+        {
           mobile ? (
             <div style={{
               position: 'sticky',
@@ -258,7 +169,7 @@ const LoggedInLayout = ({ title, logo, footerLabel }) => {
           ) : (
             <Footer style={{ textAlign: 'center' }}>{footerLabel}</Footer>
           )
-        } */}
+        }
       </Layout>
     </Layout>
   );

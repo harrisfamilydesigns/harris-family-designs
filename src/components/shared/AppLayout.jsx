@@ -1,15 +1,15 @@
 import React from 'react'
 import { useCurrentUser } from '../../api';
-import LoggedInLayout from '../SecondHandApp/LoggedInLayout/LoggedInLayout';
+import LoggedInLayout from './LoggedInLayout/LoggedInLayout';
 import LoggedOutLayout from './LoggedOutLayout';
 
-const AppLayout = ({ title, logo, footerLabel }) => {
+const AppLayout = ({ ...props }) => {
   const { currentUser, isLoading } = useCurrentUser();
 
   if (isLoading) return null;
 
   return currentUser ?
-    <LoggedInLayout title={title} logo={logo} footerLabel={footerLabel} /> :
+    <LoggedInLayout {...props} /> :
     <LoggedOutLayout footerLabel={footerLabel} />;
 }
 
