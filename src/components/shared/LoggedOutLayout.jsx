@@ -4,7 +4,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 
 const { Header, Content, Footer } = Layout;
 
-const LoggedOutLayout = () => {
+const LoggedOutLayout = ({ footerLabel }) => {
   const [current, setCurrent] = React.useState('login');
   const location = useLocation();
 
@@ -59,7 +59,7 @@ const LoggedOutLayout = () => {
       <Content>
         <Outlet />
       </Content>
-      <Footer style={{ textAlign: 'center' }}>2ndHandFix ©{new Date().getFullYear()} Created by You</Footer>
+      <Footer style={{ textAlign: 'center' }}>{footerLabel}</Footer>
       {/* <Footer
         style={{
           position: 'sticky',

@@ -2,7 +2,7 @@ import { Button, Typography, Form, Alert, Input } from 'antd';
 import React from 'react';
 import { auth } from '../../api';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import CardLayout from '../shared/CardLayout';
+import CardLayout from './CardLayout';
 
 // TODO: Placeholder for the register page
 const RegisterPage = () => {

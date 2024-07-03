@@ -8,21 +8,22 @@ const ThrifterOrdersPage = lazy(() => import('./ThrifterPages/ThrifterOrdersPage
 const ThrifterInventoryPage = lazy(() => import('./ThrifterPages/ThrifterInventoryPage'));
 const ThrifterCustomersPage = lazy(() => import('./ThrifterPages/ThrifterCustomersPage'));
 const UserDashboardPage = lazy(() => import('./UserDashboardPage'));
-const LoginPage = lazy(() => import('./LoginPage'));
-const RegisterPage = lazy(() => import('./RegisterPage'));
-const AppLayout = lazy(() => import('./AppLayout'));
+const LoginPage = lazy(() => import('../shared/LoginPage'));
+const RegisterPage = lazy(() => import('../shared/RegisterPage'));
+const AppLayout = lazy(() => import('../shared/AppLayout'));
 const AccountPage = lazy(() => import('./AccountPage'));
-const Authenticated = lazy(() => import('./Authenticated'));
-const NotAuthenticated = lazy(() => import('./NotAuthenticated'));
+const Authenticated = lazy(() => import('../shared/Authenticated'));
+const NotAuthenticated = lazy(() => import('../shared/NotAuthenticated'));
 const ThrifterOnboarding = lazy(() => import('./ThrifterOnboarding/ThrifterOnboarding'));
 const CustomerOnboarding = lazy(() => import('./CustomerOnboarding/CustomerOnboarding'));
+import logo from '../../assets/secondhand-logo.webp';
 
 const Root = () => {
   return (
     <Suspense fallback={<FullPageSpinner />}> {/* Provide a fallback here */}
       <SearchParamsAlert />
       <Routes>
-        <Route path="/" element={<AppLayout />}>
+        <Route path="/" element={<AppLayout title='2ndHandFix' logo={logo} footerLabel={`2ndHandFix ©${new Date().getFullYear()} Created by You`} />}>
           <Route path="/" element={<Authenticated />}>
             <Route index element={<UserDashboardPage />} />
             <Route path="account" element={<AccountPage/>} />

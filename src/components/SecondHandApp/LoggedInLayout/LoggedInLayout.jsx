@@ -2,20 +2,20 @@ import React from 'react';
 import { Button, Flex, Layout, Menu, Space, Tabs, Typography } from 'antd';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { auth, useCurrentUser, useThrifter } from '../../../api';
-import { AppstoreOutlined, CaretDownOutlined, DashboardOutlined, DollarCircleOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, CaretDownOutlined, DashboardOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import './LoggedInLayout.css';
-import logo from '../../../assets/secondhand-logo.webp';
 
 const { Sider, Content, Footer, Header } = Layout;
 
-const LoggedInLayout = () => {
+const LoggedInLayout = ({ title, logo, footerLabel }) => {
+  console.log('loggedInLayout rendered')
   // const [current, setCurrent] = React.useState('dashboard');
   const location = useLocation();
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = React.useState(false);
   const [mobile, setMobile] = React.useState(false);
   const { currentUser, isLoading } = useCurrentUser();
-  const { thrifter } = useThrifter(currentUser?.thrifterId);
+  const { thrifter } = currentUser?.thrifterId ? useThrifter(currentUser.thrifterId) : { thrifter: null };
 
   const isActiveItem = (item) => {
     if (item.type === 'group') {
@@ -184,8 +184,8 @@ const LoggedInLayout = () => {
         <Header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'transparent', padding: 0}}>
           <Flex justify='space-between'>
             <div style={{ background: 'white', display: 'flex', alignItems: 'center' }}>
-              <img src={logo} alt="2ndHandFix" style={{height: 50, marginLeft: 10, borderRadius: '50%'}} />
-              <Typography.Title level={4} style={{margin: 0, marginLeft: 10}}>2ndHandFix</Typography.Title>
+              {logo && <img src={logo} alt={title} style={{height: 50, marginLeft: 10, borderRadius: '50%'}} />}
+              <Typography.Title level={4} style={{margin: 0, marginLeft: 10}}>{title}</Typography.Title>
             </div>
             <Menu
               theme='light'
@@ -202,10 +202,10 @@ const LoggedInLayout = () => {
                     </Space>
                   ),
                   children: [
-                    {
-                      key: 'account',
-                      label: <Link to="/account">Edit</Link>,
-                    },
+                    // {
+                    //   key: 'account',
+                    //   label: <Link to="/account">Edit</Link>,
+                    // },
                     {
                       key: 'logout',
                       label: (
@@ -226,7 +226,7 @@ const LoggedInLayout = () => {
         <Content>
           <Outlet />
         </Content>
-        {
+        {/* {
           mobile ? (
             <div style={{
               position: 'sticky',
@@ -256,9 +256,9 @@ const LoggedInLayout = () => {
               </Tabs>
             </div>
           ) : (
-            <Footer style={{ textAlign: 'center' }}>2ndHandFix ©{new Date().getFullYear()} Created by You</Footer>
+            <Footer style={{ textAlign: 'center' }}>{footerLabel}</Footer>
           )
-        }
+        } */}
       </Layout>
     </Layout>
   );

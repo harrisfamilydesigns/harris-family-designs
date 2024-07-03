@@ -64,7 +64,6 @@ const FinePrintApp = () => {
             initialValues={{file: ''}}
             layout='vertical'
           >
-            {JSON.stringify(fileList)}
             <Form.Item label="Upload a PDF" name="file">
               <Dragger
                 style={{ backgroundColor: 'white' }}
