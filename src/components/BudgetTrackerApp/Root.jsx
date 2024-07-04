@@ -13,6 +13,8 @@ const Root = () => {
   // TODO: Make this so it doesn't have to be defined in every app
   const [collapsed, setCollapsed] = React.useState(false);
   const siderMenuItems = [];
+  const userDropdownMenuItems = [];
+  const mobileTabItems = [];
 
   return (
     <Suspense fallback={<FullPageSpinner />}>
@@ -25,6 +27,8 @@ const Root = () => {
           logo={null}
           footerLabel={`BudgetTracker ©${new Date().getFullYear()}`}
           siderMenuItems={siderMenuItems}
+          userDropdownMenuItems={userDropdownMenuItems}
+          mobileTabItems={mobileTabItems}
         />}>
           <Route path="/" element={<Authenticated />}>
             <Route index element={<BudgetDashboardPage />} />

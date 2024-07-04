@@ -9,22 +9,23 @@ const LoggedOutLayout = ({ footerLabel }) => {
   const location = useLocation();
 
   React.useEffect(() => {
-    const pathKeyMap = {
-      '/login': 'login',
-      '/register': 'register',
-    };
-    setCurrent(pathKeyMap[location.pathname] || 'dashboard');
+    console.log('location.pathname', location.pathname)
+    if (location.pathname.endsWith('/login')) {
+      setCurrent('login');
+    } else if (location.pathname.endsWith('/register')) {
+      setCurrent('register');
+    }
   }, [location]);
 
 
   const menuItems = [
     {
       key: 'login',
-      label: <Link to="/login">Login</Link>,
+      label: <Link to="./login">Login</Link>,
     },
     {
       key: 'register',
-      label: <Link to="/register">Register</Link>,
+      label: <Link to="./register">Register</Link>,
     }
   ]
 
@@ -60,19 +61,6 @@ const LoggedOutLayout = ({ footerLabel }) => {
         <Outlet />
       </Content>
       <Footer style={{ textAlign: 'center' }}>{footerLabel}</Footer>
-      {/* <Footer
-        style={{
-          position: 'sticky',
-          bottom: 0,
-          zIndex: 1,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        Contact us at info@harrisfamilydesigns.com
-      </Footer> */}
     </Layout>
   );
 }

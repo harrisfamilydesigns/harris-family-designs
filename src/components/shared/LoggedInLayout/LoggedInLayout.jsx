@@ -7,7 +7,7 @@ import './LoggedInLayout.css';
 
 const { Sider, Content, Footer, Header } = Layout;
 
-const LoggedInLayout = ({ collapsed, setCollapsed, title, logo, footerLabel, siderMenuItems } = { siderMenuItems: [] }) => {
+const LoggedInLayout = ({ collapsed, setCollapsed, title, logo, footerLabel, siderMenuItems, userDropdownMenuItems, mobileTabItems }) => {
   // const [current, setCurrent] = React.useState('dashboard');
   const location = useLocation();
   const navigate = useNavigate();
@@ -113,10 +113,7 @@ const LoggedInLayout = ({ collapsed, setCollapsed, title, logo, footerLabel, sid
                     </Space>
                   ),
                   children: [
-                    // {
-                    //   key: 'account',
-                    //   label: <Link to="/account">Edit</Link>,
-                    // },
+                    ...userDropdownMenuItems,
                     {
                       key: 'logout',
                       label: (
@@ -138,34 +135,8 @@ const LoggedInLayout = ({ collapsed, setCollapsed, title, logo, footerLabel, sid
           <Outlet />
         </Content>
         {
-          mobile ? (
-            <div style={{
-              position: 'sticky',
-              bottom: 0,
-              zIndex: 100,
-              backgroundColor: 'white',
-              border: '1px solid #f0f0f0',
-              borderTop: 'none',
-            }}>
-              <Tabs tabPosition='bottom' tabBarStyle={{marginTop: 0}}>
-                <Tabs.TabPane
-                  tab={
-                    <Link to="/">
-                      <UserOutlined />
-                    </Link>
-                  }
-                  key="customer"
-                />
-                <Tabs.TabPane
-                  tab={
-                    <Link to="/thrifter/onboarding">
-                      <ShopOutlined />
-                    </Link>
-                  }
-                  key="thrift"
-                />
-              </Tabs>
-            </div>
+          mobile && mobileTabItems?.length > 0 ? (
+              <Tabs tabPosition='bottom' tabBarStyle={{marginTop: 0}} items={mobileTabItems} />
           ) : (
             <Footer style={{ textAlign: 'center' }}>{footerLabel}</Footer>
           )

@@ -1,10 +1,10 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
 import FullPageSpinner from '../shared/FullPageSpinner';
 import SearchParamsAlert from '../shared/SearchParamsAlert';
 import logo from '../../assets/secondhand-logo.webp';
 import { useCurrentUser, useThrifter } from '../../api';
-import { AppstoreOutlined, DashboardOutlined, ShoppingCartOutlined, SolutionOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { AppstoreOutlined, DashboardOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 
 const ThrifterDashboardPage = lazy(() => import('./ThrifterPages/ThrifterDashboardPage'));
 const ThrifterOrdersPage = lazy(() => import('./ThrifterPages/ThrifterOrdersPage'));
@@ -111,18 +111,40 @@ const Root = () => {
     ...thrifterMenuItems
   ]
 
+  const userDropdownMenuItems = [
+    {
+      key: 'account',
+      label: <Link to="./account">Edit</Link>,
+    },
+  ]
+
+  const mobileTabItems = [
+    {
+      key: 'customer',
+      label: <Link to="./"><UserOutlined /></Link>,
+    },
+    {
+      key: 'thrift',
+      label: <Link to="../thrifter/onboarding"><ShopOutlined /></Link>,
+    },
+  ]
+
   return (
     <Suspense fallback={<FullPageSpinner />}> {/* Provide a fallback here */}
       <SearchParamsAlert />
       <Routes>
-        <Route path="/" element={<AppLayout
-          siderMenuItems={siderMenuItems}
-          collapsed={collapsed}
-          setCollapsed={setCollapsed}
-          title='2ndHandFix'
-          logo={logo}
-          footerLabel={`2ndHandFix ©${new Date().getFullYear()} Created by You`}
-        />}>
+        <Route path="/" element={
+          <AppLayout
+            siderMenuItems={siderMenuItems}
+            userDropdownMenuItems={userDropdownMenuItems}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+            title='2ndHandFix'
+            logo={logo}
+            footerLabel={`2ndHandFix ©${new Date().getFullYear()} Created by You`}
+            mobileTabItems={mobileTabItems}
+          />
+        }>
           <Route path="/" element={<Authenticated />}>
             <Route index element={<UserDashboardPage />} />
             <Route path="account" element={<AccountPage/>} />

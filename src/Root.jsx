@@ -25,7 +25,7 @@ const Root = () => {
               <Route path="/password/reset" element={<LoggedOutLayout />} >
                 <Route index element={<ResetPasswordPage />} />
               </Route>
-              <Route path="/budget_tracker" element={<BudgetTrackerApp />} />
+              <Route path="/budget_tracker/*" element={<BudgetTrackerApp />} />
               <Route path="/2ndhandfix/*" element={<SecondHandApp />} />
               <Route path="*" element={<WWWApp />} />
             </Routes>

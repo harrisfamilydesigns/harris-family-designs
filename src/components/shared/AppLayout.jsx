@@ -10,7 +10,7 @@ const AppLayout = ({ ...props }) => {
 
   return currentUser ?
     <LoggedInLayout {...props} /> :
-    <LoggedOutLayout footerLabel={footerLabel} />;
+    <LoggedOutLayout {...props} />;
 }
 
 export default AppLayout;
