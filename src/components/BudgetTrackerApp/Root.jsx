@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import FullPageSpinner from '../shared/FullPageSpinner';
 import SearchParamsAlert from '../shared/SearchParamsAlert';

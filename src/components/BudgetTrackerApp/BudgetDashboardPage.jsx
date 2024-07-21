@@ -1,4 +1,6 @@
+import { Typography } from 'antd';
 import { useCurrentUser } from '../../api';
+import CardLayout from '../shared/CardLayout';
 
 const BudgetDashboardPage = () => {
   const { currentUser, isLoading } = useCurrentUser();
@@ -8,10 +10,10 @@ const BudgetDashboardPage = () => {
   }
 
   return (
-    <div>
-      <h1>Welcome {currentUser.email}</h1>
-      <p>This is a budget tracker app</p>
-    </div>
+    <CardLayout title="Welcome">
+      <Typography.Text>Hey {currentUser?.firstName || 'there'}!</Typography.Text>
+      <Typography.Paragraph>This is a budget tracker app.</Typography.Paragraph>
+    </CardLayout>
   )
 };
 
