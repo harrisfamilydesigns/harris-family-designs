@@ -8,9 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "deploy-gcloud": "gcloud storage rsync -r dist gs://hfd-fe",
-    "deploy": "yarn build && yarn deploy-gcloud"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.3",
