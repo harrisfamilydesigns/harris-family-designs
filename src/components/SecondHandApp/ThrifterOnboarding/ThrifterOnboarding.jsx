@@ -36,15 +36,11 @@ const ThrifterOnboarding = () => {
     return currentStepIndex >= 0 ? currentStepIndex : 0;
   };
 
-  const navigateToStep = (path) => {
-    navigate(`thrifter/onboarding/${path}`);
-  }
-
   const currentStep = findCurrentStepIndex();
 
   const nextStep = () => {
     if (currentStep < OnboardingSteps.length - 1) {
-      navigateToStep(OnboardingSteps[currentStep + 1].path);
+      navigate(OnboardingSteps[currentStep + 1].path);
     } else {
       message.success('Onboarding completed!');
     }
@@ -52,7 +48,7 @@ const ThrifterOnboarding = () => {
 
   const prevStep = () => {
     if (currentStep > 0) {
-      navigateToStep(OnboardingSteps[currentStep - 1].path);
+      navigate(OnboardingSteps[currentStep - 1].path);
     }
   };
 

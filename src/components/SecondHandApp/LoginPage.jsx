@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Form, Typography, Alert, Input } from 'antd';
 import { auth, users } from '../../api';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
 import ForgotPasswordLink from '../shared/ForgotPasswordLink';
 import CardLayout from '../shared/CardLayout';
@@ -18,7 +18,7 @@ const LoginPage = () => {
       const { error } = await auth.login(form.email, form.password);
       await users.current();
       if (error) { throw error; }
-      navigate('/');
+      navigate('');
     } catch (error) {
       setError(error);
     } finally {
@@ -69,9 +69,9 @@ const LoginPage = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="link" onClick={() => navigate('/register')} style={{padding: 0}}>
+          <Link to="../register">
             Create an account
-          </Button>
+          </Link>
         </Form.Item>
       </Form>
       <div>

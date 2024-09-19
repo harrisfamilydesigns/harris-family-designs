@@ -1,7 +1,7 @@
 import { App, Col, Grid, Row, Steps } from "antd";
 import CustomerOnboardingIntroduction from "./CustomerOnboardingIntroduction";
 import CustomerOnboardingStyle from "./CustomerOnboardingStyle";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 const { useBreakpoint } = Grid;
 
@@ -32,21 +32,18 @@ const CustomerOnboarding = () => {
 
   const currentStep = findCurrentStepIndex();
 
-  const navigateToStep = (path) => {
-    navigate(`/customer/onboarding/${path}`);
-  }
-
   const nextStep = () => {
     if (currentStep < OnboardingSteps.length - 1) {
-      navigateToStep(OnboardingSteps[currentStep + 1].path);
+      navigate(OnboardingSteps[currentStep + 1].path);
     } else {
       message.success('Onboarding completed!');
+      // TODO: Redirect to main dashboard or something
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
-      navigateToStep(OnboardingSteps[currentStep - 1].path);
+      navigate(OnboardingSteps[currentStep - 1].path);
     }
   };
 
@@ -70,11 +67,10 @@ const CustomerOnboarding = () => {
             size="small"
             direction="vertical"
           >
-            {OnboardingSteps.map(({ title }, index) => (
+            {OnboardingSteps.map(({ title, path }) => (
               <Step
                 key={title}
-                title={title}
-                onClick={() => navigateToStep(OnboardingSteps[index].path)}
+                title={<Link to={path}>{title}</Link>}
                 style={{cursor: 'pointer'}} />
             ))}
           </Steps>

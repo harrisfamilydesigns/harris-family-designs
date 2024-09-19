@@ -1,7 +1,7 @@
 import { Button, Typography, Form, Alert, Input } from 'antd';
 import React from 'react';
 import { auth } from '../../api';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import CardLayout from '../shared/CardLayout';
 
 // TODO: Placeholder for the register page
@@ -16,7 +16,7 @@ const RegisterPage = () => {
     try {
       const { error } = await auth.register(form.email, form.password, form.passwordConfirmation);
       if (error) { throw error; }
-      navigate(`/?${createSearchParams({ success: 'Account created, please check your email for a confirmation link' })}`);
+      navigate(`?${createSearchParams({ success: 'Account created, please check your email for a confirmation link' })}`);
     } catch (error) {
       setError(error);
     } finally {
@@ -81,9 +81,9 @@ const RegisterPage = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button type="link" onClick={() => navigate('/login')} style={{padding: 0}}>
+          <Link to="../login">
             or Login
-          </Button>
+          </Link>
         </Form.Item>
       </Form>
       {error && <Alert message="Error" description={error.message} type="error" showIcon />}
