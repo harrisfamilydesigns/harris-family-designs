@@ -5,6 +5,7 @@ import { auth, useCurrentUser, useThrifter } from '../../../api';
 import { AppstoreOutlined, CaretDownOutlined, DashboardOutlined, DollarCircleOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ShopOutlined, ShoppingCartOutlined, SolutionOutlined, TeamOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
 import './LoggedInLayout.css';
 import logo from '../../../assets/secondhand-logo.webp';
+import { SECOND_HAND_ROOT } from '../../../Routes';
 
 const { Sider, Content, Footer, Header } = Layout;
 
@@ -120,7 +121,7 @@ const LoggedInLayout = () => {
 
   const logout = async () => {
     await auth.logout();
-    navigate('/login');
+    navigate(SECOND_HAND_ROOT + '/login');
   }
 
   const siderBorderRight = '1px solid #f0f0f0';

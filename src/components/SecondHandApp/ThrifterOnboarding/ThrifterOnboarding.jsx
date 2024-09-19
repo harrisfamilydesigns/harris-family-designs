@@ -73,10 +73,7 @@ const ThrifterOnboarding = () => {
             direction='vertical'
           >
             {OnboardingSteps.map(({ title, path }, index) => (
-              <Step
-                key={title}
-                title={<Link to={path}>{title}</Link>}
-                style={{ cursor: 'pointer' }}/>
+              <Step key={title} title={<Link to={path}>{title}</Link>} />
             ))}
           </Steps>
         </Col>

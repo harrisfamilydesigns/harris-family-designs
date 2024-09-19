@@ -5,11 +5,13 @@ import ResetPasswordPage from './components/shared/ResetPasswordPage'
 import WWWApp from './components/WWWApp/Root'
 import SecondHandApp from './components/SecondHandApp/Root'
 
+export const SECOND_HAND_ROOT = '/second_hand';
+
 const Routes = () =>
   useRoutes([
     { path: '/email/confirm', element: <ConfirmEmail /> },
     { path: '/password/reset', element: <ResetPasswordPage /> },
-    { path: '/second_hand/*', element: <SecondHandApp /> },
+    { path: `${SECOND_HAND_ROOT}/*`, element: <SecondHandApp /> },
     { path: '*', element: <WWWApp /> }
   ])
 

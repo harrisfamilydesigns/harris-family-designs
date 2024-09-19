@@ -1,16 +1,22 @@
 import React from 'react';
-import { Button, Form, Typography, Alert, Input } from 'antd';
-import { auth, users } from '../../api';
+import { Button, Form, Alert, Input } from 'antd';
+import { auth, useCurrentUser, users } from '../../api';
 import { Link, useNavigate } from 'react-router-dom';
 import ResendEmailConfirmationLink from '../shared/ResendEmailConfirmationLink';
 import ForgotPasswordLink from '../shared/ForgotPasswordLink';
 import CardLayout from '../shared/CardLayout';
+import { SECOND_HAND_ROOT } from '../../Routes';
 
 const LoginPage = () => {
   const [form, setForm] = React.useState({ email: '', password: '' });
   const [error, setError] = React.useState(null);
   const [submitting, setSubmitting] = React.useState(false);
   const navigate = useNavigate();
+  const { currentUser } = useCurrentUser();
+
+  React.useEffect(() => {
+    if (currentUser) navigate(SECOND_HAND_ROOT)
+  }, [currentUser])
 
   const login = async () => {
     setSubmitting(true);
@@ -18,7 +24,7 @@ const LoginPage = () => {
       const { error } = await auth.login(form.email, form.password);
       await users.current();
       if (error) { throw error; }
-      navigate('');
+      navigate('/second_hand');
     } catch (error) {
       setError(error);
     } finally {

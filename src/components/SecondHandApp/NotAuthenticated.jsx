@@ -10,7 +10,8 @@ const NotAuthenticated = () => {
   }
 
   if (currentUser) {
-    return <Navigate to="" />;
+    console.log('currentUser: ', currentUser)
+    // return <Navigate to="" replace />;
   }
 
   return (

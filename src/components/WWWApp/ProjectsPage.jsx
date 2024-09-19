@@ -11,20 +11,18 @@ import { BudgetTracker } from '../BudgetTracker/BudgetTracker';
 import SecondHandApp from '../SecondHandApp/Root';
 
 const projects = [
-  {name: "TextUtil", status: 'active', description: "An app that helps you manipulate text.", link: "/projects/text_util", element: <TextUtilApp />},
-  {name: 'SecondHand', status: 'active', description: 'An app that helps you buy and sell second-hand items.', link: '/second_hand', element: <SecondHandApp/>},
-  {name: 'Budget Tracker', status: 'in_progress', description: 'Set up your weekly safe-to-spend and track transactions.', link: '/projects/budget_tracker', element: <BudgetTracker/>},
-  {name: 'Fitness Tracker', status: 'unstarted', description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', link: '/projects/fitness_tracker', element: <BlankApp/>},
-  {name: 'Piano App', status: 'unstarted', description: 'A piano app that helps you learn how to play the piano.', link: '/projects/piano_app', element: <BlankApp/>},
-  {name: 'Recipe Book', status: 'unstarted', description: 'A recipe book app that helps you keep track of your favorite recipes.', link: '/projects/recipe_book', element: <BlankApp/>},
-  {name: 'Fine Print', status: 'unstarted', description: 'An app that helps you read the fine print on contracts.', link: '/projects/fine_print', element: <FinePrintApp/>},
+  {name: "TextUtil", status: 'active', description: "An app that helps you manipulate text.", path: "text_util", element: <TextUtilApp />},
+  {name: 'SecondHand', status: 'active', description: 'An app that helps you buy and sell second-hand items.', path: '/second_hand', element: <SecondHandApp/>},
+  {name: 'Budget Tracker', status: 'in_progress', description: 'Set up your weekly safe-to-spend and track transactions.', path: 'budget_tracker', element: <BudgetTracker/>},
+  {name: 'Fitness Tracker', status: 'unstarted', description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker', element: <BlankApp/>},
+  {name: 'Piano App', status: 'unstarted', description: 'A piano app that helps you learn how to play the piano.', path: 'piano_app', element: <BlankApp/>},
+  {name: 'Recipe Book', status: 'unstarted', description: 'A recipe book app that helps you keep track of your favorite recipes.', path: 'recipe_book', element: <BlankApp/>},
+  {name: 'Fine Print', status: 'unstarted', description: 'An app that helps you read the fine print on contracts.', path: 'fine_print', element: <FinePrintApp/>},
 ]
 
 const ProjectsPage = () =>
   useRoutes([
-    // Has subroutes
     { path: '/', element: <Layout />, children: [
-      // No subroutes
       { path: 'fine_print', element: <FinePrintApp /> },
       { path: 'text_util', element: <TextUtilApp /> },
       { path: 'budget_tracker', element: <BudgetTracker /> },
@@ -36,14 +34,14 @@ const ProjectsPage = () =>
 
 const Layout = () => {
   const location = useLocation();
-  const [selectedProject, setSelectedProject] = React.useState(null);
+  const [selectedProject, setSelectedProject] = React.useState(projects[0]);
   const theme = useTheme();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const project = projects.find(project => location.pathname.startsWith('/projects' + project.link));
+    const project = projects.find(project => location.pathname.includes(project.path));
     if (!project) {
-      navigate(projects[0].link);
+      navigate(projects[0].path, { replace: true });
     } else {
       setSelectedProject(project);
     }
@@ -54,7 +52,7 @@ const Layout = () => {
       <Typography.Title level={2}>Our Projects</Typography.Title>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {projects.map(project => (
-          <Link key={project.link} to={project.link}>
+          <Link key={project.path} to={project.path}>
             <Card title={
               <>
                 <span style={{ marginRight: 5 }}>
@@ -64,7 +62,7 @@ const Layout = () => {
                 </span>
                 {project.name}
               </>
-            } style={{ width: 300, margin: 10, boxShadow: selectedProject === project ? '0 0 10px #1890ff' : 'none' }}>
+            } style={{ width: 300, margin: 10, boxShadow: selectedProject.path === project.path ? '0 0 10px #1890ff' : 'none' }}>
               <p>{project.description}</p>
             </Card>
           </Link>

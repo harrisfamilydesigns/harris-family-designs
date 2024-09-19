@@ -34,7 +34,7 @@ const Root = () => (
           ]},
           { path: 'login', element: <LoginPage /> },
           { path: 'register', element: <RegisterPage /> },
-          { path: '*', element: <Navigate to="" /> }
+          { path: '*', element: <Navigate to="" replace/> }
         ]
       }
     ])}
