@@ -17,6 +17,7 @@ const ThrifterOnboardingProfilePhotoAndBio = ({onNext, onPrev}) => {
   const [submitting, setSubmitting] = React.useState(false);
   const {message} = App.useApp();
   const [form] = Form.useForm();
+  const {fileList, setFileList} = React.useState([]);
 
   const handleSubmit = async ({avatarUrl, bio}) => {
     setSubmitting(true);
@@ -69,6 +70,7 @@ const ThrifterOnboardingProfilePhotoAndBio = ({onNext, onPrev}) => {
             accept="image/*"
             maxCount={1}
             name="file"
+            fileList={fileList}
             defaultFileList={thrifter?.avatarUrl ? [{
               uid: '-1',
               name: 'image.png',
@@ -82,6 +84,7 @@ const ThrifterOnboardingProfilePhotoAndBio = ({onNext, onPrev}) => {
                 const url = file?.response?.url;
                 form.setFieldsValue({ avatarUrl: url });
               }
+              setFileList(fileList);
             }
           }
           >

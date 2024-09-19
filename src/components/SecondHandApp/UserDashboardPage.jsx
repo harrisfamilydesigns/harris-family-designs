@@ -3,7 +3,7 @@ import React from 'react';
 import { useCurrentUser } from '../../api';
 import { row } from '../../styles';
 import CardLayout from '../shared/CardLayout';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 const UserDashboardPage = () => {
   const { currentUser, error, isLoading } = useCurrentUser();
@@ -20,7 +20,7 @@ const UserDashboardPage = () => {
   }
 
   if (noAccountSetUp) {
-    return <Navigate to="/customer/onboarding" />
+    return <Navigate to="customer/onboarding" />
   }
 
   return (

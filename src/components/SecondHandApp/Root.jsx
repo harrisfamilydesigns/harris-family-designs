@@ -1,52 +1,44 @@
-import React, { Suspense, lazy } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import FullPageSpinner from '../shared/FullPageSpinner';
+import React from 'react';
 import SearchParamsAlert from '../shared/SearchParamsAlert';
+import { Navigate, useRoutes } from 'react-router-dom';
+import ThrifterDashboardPage from './ThrifterPages/ThrifterDashboardPage';
+import ThrifterOrdersPage from './ThrifterPages/ThrifterOrdersPage';
+import ThrifterInventoryPage from './ThrifterPages/ThrifterInventoryPage';
+import ThrifterCustomersPage from './ThrifterPages/ThrifterCustomersPage';
+import UserDashboardPage from './UserDashboardPage';
+import LoginPage from './LoginPage';
+import RegisterPage from './RegisterPage';
+import AppLayout from './AppLayout';
+import AccountPage from './AccountPage';
+import Authenticated from './Authenticated';
+import ThrifterOnboarding from './ThrifterOnboarding/ThrifterOnboarding';
+import CustomerOnboarding from './CustomerOnboarding/CustomerOnboarding';
 
-const ThrifterDashboardPage = lazy(() => import('./ThrifterPages/ThrifterDashboardPage'));
-const ThrifterOrdersPage = lazy(() => import('./ThrifterPages/ThrifterOrdersPage'));
-const ThrifterInventoryPage = lazy(() => import('./ThrifterPages/ThrifterInventoryPage'));
-const ThrifterCustomersPage = lazy(() => import('./ThrifterPages/ThrifterCustomersPage'));
-const UserDashboardPage = lazy(() => import('./UserDashboardPage'));
-const LoginPage = lazy(() => import('./LoginPage'));
-const RegisterPage = lazy(() => import('./RegisterPage'));
-const AppLayout = lazy(() => import('./AppLayout'));
-const AccountPage = lazy(() => import('./AccountPage'));
-const Authenticated = lazy(() => import('./Authenticated'));
-const NotAuthenticated = lazy(() => import('./NotAuthenticated'));
-const ThrifterOnboarding = lazy(() => import('./ThrifterOnboarding/ThrifterOnboarding'));
-const CustomerOnboarding = lazy(() => import('./CustomerOnboarding/CustomerOnboarding'));
-
-const Root = () => {
-  return (
-    <Suspense fallback={<FullPageSpinner />}> {/* Provide a fallback here */}
-      <SearchParamsAlert />
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route path="/" element={<Authenticated />}>
-            <Route index element={<UserDashboardPage />} />
-            <Route path="account" element={<AccountPage/>} />
-            <Route path="customer/onboarding/*" element={<CustomerOnboarding />} />
-            <Route path="thrifter">
-              <Route path="dashboard" element={<ThrifterDashboardPage />} />
-              <Route path="orders" element={<ThrifterOrdersPage />} />
-              <Route path="inventory" element={<ThrifterInventoryPage />} />
-              <Route path="customers" element={<ThrifterCustomersPage />} />
-              <Route path="onboarding/*" element={<ThrifterOnboarding />} />
-            </Route>
-          </Route>
-
-          <Route path="login" element={<NotAuthenticated/>}>
-            <Route index element={<LoginPage />} />
-          </Route>
-          <Route path="register" element={<NotAuthenticated />}>
-            <Route index element={<RegisterPage />} />
-          </Route>
-        </Route>
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </Suspense>
-  );
-}
+const Root = () => (
+  <>
+    <SearchParamsAlert />
+    {useRoutes([
+      {
+        route: '/', element: <AppLayout />, children: [
+          { route: '/', element: <Authenticated />, children: [
+            { index: true, element: <UserDashboardPage /> },
+            { path: 'account', element: <AccountPage /> },
+            { path: 'customer/onboarding/*', element: <CustomerOnboarding /> },
+            { path: 'thrifter', children: [
+              { path: 'dashboard', element: <ThrifterDashboardPage /> },
+              { path: 'orders', element: <ThrifterOrdersPage /> },
+              { path: 'inventory', element: <ThrifterInventoryPage /> },
+              { path: 'customers', element: <ThrifterCustomersPage /> },
+              { path: 'onboarding/*', element: <ThrifterOnboarding /> },
+            ]},
+          ]},
+          { path: 'login', element: <LoginPage /> },
+          { path: 'register', element: <RegisterPage /> },
+          { path: '*', element: <Navigate to="" /> }
+        ]
+      }
+    ])}
+  </>
+)
 
 export default Root;

@@ -23,7 +23,7 @@ const Root = () => {
           <Route path="admin" element={<AdminDashboardPage/>} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path="*" element={<Navigate to="" />} />
       </Routes>
     </Suspense>
   )

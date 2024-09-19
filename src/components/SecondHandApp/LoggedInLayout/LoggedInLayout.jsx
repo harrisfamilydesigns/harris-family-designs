@@ -33,27 +33,23 @@ const LoggedInLayout = () => {
       children: [
         {
           key: 'dashboard',
-          label: 'Dashboard',
+          label: <Link to="thrifter/dashboard">Dashboard</Link>,
           icon: <DashboardOutlined />,
-          onClick: () => navigate('/thrifter/dashboard'),
         },
         {
           key: 'orders',
-          label: 'Orders',
+          label: <Link to="thrifter/orders">Orders</Link>,
           icon: <ShoppingCartOutlined />,
-          onClick: () => navigate('/thrifter/orders'),
         },
         {
           key: 'inventory',
-          label: 'Inventory',
+          label: <Link to="thrifter/inventory">Inventory</Link>,
           icon: <AppstoreOutlined />,
-          onClick: () => navigate('/thrifter/inventory'),
         },
         {
           key: 'customers',
-          label: 'My Customers',
+          label: <Link to="thrifter/customers">My Customers</Link>,
           icon: <UsergroupAddOutlined />,
-          onClick: () => navigate('/thrifter/customers'),
         },
       ]
     }
@@ -66,9 +62,8 @@ const LoggedInLayout = () => {
       children: [
         {
           key: 'thrifter/onboarding',
-          label: 'Thrift with us!',
+          label: <Link to="thrifter/onboarding">Thrift with us!</Link>,
           icon: <SolutionOutlined />,
-          onClick: () => navigate('/thrifter/onboarding'),
         },
       ]
     },
@@ -83,9 +78,8 @@ const LoggedInLayout = () => {
       children: [
         {
           key: 'dashboard',
-          label: 'Dashboard',
+          label: <Link to=''>Dashboard</Link>,
           icon: <DashboardOutlined />,
-          onClick: () => navigate('/'),
         },
         // {
         //   key: 'orders',
@@ -204,7 +198,7 @@ const LoggedInLayout = () => {
                   children: [
                     {
                       key: 'account',
-                      label: <Link to="/account">Edit</Link>,
+                      label: <Link to="account">Edit</Link>,
                     },
                     {
                       key: 'logout',
@@ -239,7 +233,7 @@ const LoggedInLayout = () => {
               <Tabs tabPosition='bottom' tabBarStyle={{marginTop: 0}}>
                 <Tabs.TabPane
                   tab={
-                    <Link to="/">
+                    <Link to="">
                       <UserOutlined />
                     </Link>
                   }
@@ -247,7 +241,7 @@ const LoggedInLayout = () => {
                 />
                 <Tabs.TabPane
                   tab={
-                    <Link to="/thrifter/onboarding">
+                    <Link to="thrifter/onboarding">
                       <ShopOutlined />
                     </Link>
                   }

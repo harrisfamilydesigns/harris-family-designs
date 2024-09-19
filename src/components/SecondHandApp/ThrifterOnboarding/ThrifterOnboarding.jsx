@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, Link } from 'react-router-dom';
 import { Grid, Col, Row, Steps, App } from 'antd';
 import ThrifterOnboardingIntroduction from './ThrifterOnboardingIntroduction';
 // import ThrifterOnboardingContactVerification from './ThrifterOnboardingContactVerification';
@@ -37,7 +37,7 @@ const ThrifterOnboarding = () => {
   };
 
   const navigateToStep = (path) => {
-    navigate(`/thrifter/onboarding/${path}`);
+    navigate(`thrifter/onboarding/${path}`);
   }
 
   const currentStep = findCurrentStepIndex();
@@ -62,10 +62,9 @@ const ThrifterOnboarding = () => {
         <Col xs={24} sm={{ flex: 'auto'}} style={{...(!screens.xs && { maxWidth: 'calc(100% - 200px)'}) }}>
           <Routes>
             {OnboardingSteps.map(({ path, component: Component }) => (
-              <Route key={path} path={`/${path}`} element={<Component onNext={nextStep} onPrev={prevStep} />} />
+              <Route key={path} path={path} element={<Component onNext={nextStep} onPrev={prevStep} />} />
             ))}
-            <Route path="/" element={<Navigate replace to={`/thrifter/onboarding/${OnboardingSteps[0].path}`} />} />
-            <Route path="*" element={<Navigate replace to={`/thrifter/onboarding/${OnboardingSteps[0].path}`} />} />
+            <Route path="*" element={<Navigate replace to={OnboardingSteps[0].path} />} />
           </Routes>
         </Col>
 
@@ -80,8 +79,7 @@ const ThrifterOnboarding = () => {
             {OnboardingSteps.map(({ title, path }, index) => (
               <Step
                 key={title}
-                title={title}
-                onClick={() => navigateToStep(path)}
+                title={<Link to={path}>{title}</Link>}
                 style={{ cursor: 'pointer' }}/>
             ))}
           </Steps>

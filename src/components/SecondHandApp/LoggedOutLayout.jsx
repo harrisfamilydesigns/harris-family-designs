@@ -20,11 +20,11 @@ const LoggedOutLayout = () => {
   const menuItems = [
     {
       key: 'login',
-      label: <Link to="/login">Login</Link>,
+      label: <Link to="login">Login</Link>,
     },
     {
       key: 'register',
-      label: <Link to="/register">Register</Link>,
+      label: <Link to="register">Register</Link>,
     }
   ]
 

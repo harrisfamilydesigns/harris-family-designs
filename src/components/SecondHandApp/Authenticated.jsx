@@ -8,7 +8,7 @@ const Authenticated = () => {
   if (isLoading) return null;
 
   if (!currentUser) {
-    return <Navigate to="/login" />;
+    return <Navigate to="login" />;
   }
 
   return (

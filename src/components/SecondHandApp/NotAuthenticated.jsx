@@ -10,7 +10,7 @@ const NotAuthenticated = () => {
   }
 
   if (currentUser) {
-    return <Navigate to="/" />;
+    return <Navigate to="" />;
   }
 
   return (

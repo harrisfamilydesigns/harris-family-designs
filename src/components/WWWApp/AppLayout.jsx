@@ -28,15 +28,15 @@ const AppLayout = () => {
   let menuItems = [
     {
       key: 'about',
-      label: <Link to="/about">About Us</Link>,
+      label: <Link to="about">About Us</Link>,
     },
     {
       key: 'project',
-      label: <Link to="/projects">Our Projects</Link>,
+      label: <Link to="projects">Our Projects</Link>,
     },
     {
       key: 'contact',
-      label: <Link to="/contact">Contact Us</Link>,
+      label: <Link to="contact">Contact Us</Link>,
     },
   ];
 
@@ -44,7 +44,7 @@ const AppLayout = () => {
     if (currentUser.admin) {
       menuItems.push({
         key: 'admin',
-        label: <Link to="/admin">Admin</Link>,
+        label: <Link to="admin">Admin</Link>,
       });
     }
 
