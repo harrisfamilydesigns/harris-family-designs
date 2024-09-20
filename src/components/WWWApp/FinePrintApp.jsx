@@ -37,6 +37,7 @@ const FinePrintApp = () => {
   return (
     <div>
       <h1>Read the Fine Print</h1>
+      <p>Copy & paste or upload something with legalese and we'll summarize it for you.</p>
       <Row>
         <Col span={12} style={{ paddingRight: 10 }}>
           <Form
@@ -64,7 +65,6 @@ const FinePrintApp = () => {
             initialValues={{file: ''}}
             layout='vertical'
           >
-            {JSON.stringify(fileList)}
             <Form.Item label="Upload a PDF" name="file">
               <Dragger
                 style={{ backgroundColor: 'white' }}
