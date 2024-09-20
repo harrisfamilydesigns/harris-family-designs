@@ -11,13 +11,8 @@ const AppLayout = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const pathKeyMap = {
-      '/about': 'about',
-      '/projects': 'project',
-      '/contact': 'contact',
-      '/admin': 'admin',
-    };
-    setCurrent(pathKeyMap[location.pathname] || 'about');
+    const key = location.pathname.split('/')[1]
+    setCurrent(key || 'about');
   }, [location]);
 
   const handleLogout = () => {
@@ -31,7 +26,7 @@ const AppLayout = () => {
       label: <Link to="about">About Us</Link>,
     },
     {
-      key: 'project',
+      key: 'projects',
       label: <Link to="projects">Our Projects</Link>,
     },
     {
