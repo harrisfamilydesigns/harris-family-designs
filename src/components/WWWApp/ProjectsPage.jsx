@@ -48,7 +48,7 @@ const Layout = () => {
   }, [location.pathname]);
 
   return (
-    <div className="mt-5">
+    <>
       <Typography.Title level={2}>Our Projects</Typography.Title>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {projects.map(project => (
@@ -72,7 +72,7 @@ const Layout = () => {
       <div style={{ marginTop: 20 }}>
         <Outlet />
       </div>
-    </div>
+    </>
   )
 }
 

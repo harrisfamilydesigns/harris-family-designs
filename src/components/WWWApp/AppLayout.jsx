@@ -60,12 +60,14 @@ const AppLayout = () => {
         textAlign: 'center'
       }}
     >
-      <Header>
+      <Header className="sticky top-0">
         <div className="logo" />
         <Menu onClick={e => setCurrent(e.key)} theme="dark" mode="horizontal" selectedKeys={[current]} items={menuItems} />
       </Header>
-      <Content style={{ padding: '0 50px' }}>
-        <Outlet />
+      <Content className="md:container md:mx-auto">
+        <div className="mt-5">
+          <Outlet />
+        </div>
       </Content>
       <Footer style={{ textAlign: 'center' }}>
         Contact us at info@harrisfamilydesigns.com

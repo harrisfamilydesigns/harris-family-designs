@@ -9,11 +9,7 @@ const LoggedOutLayout = () => {
   const location = useLocation();
 
   React.useEffect(() => {
-    const pathKeyMap = {
-      '/login': 'login',
-      '/register': 'register',
-    };
-    setCurrent(pathKeyMap[location.pathname] || 'dashboard');
+    setCurrent(location.pathname.split('/')[2] || 'login');
   }, [location]);
 
 
