@@ -12,7 +12,9 @@ export default defineConfig({
       styles: '/src/styles',
       hooks: '/src/hooks',
       constants: '/src/constants',
-      api: '/src/api'
+      api: '/src/api',
+      utils: '/src/utils',
+      helpers: '/src/helpers',
     }
   }
 })
