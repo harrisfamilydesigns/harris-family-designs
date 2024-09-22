@@ -1,7 +1,8 @@
 import React from 'react';
 import { Button, Form, Input, Modal } from 'antd';
-import { CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, EditOutlined, UndoOutlined } from '@ant-design/icons';
 import { useGetClubs, useUpdateClub, useAddClub, useDeleteClub } from 'api/resources/GolfShotApp/clubs';
+import { useResetDefaultClubs } from '../../api/resources/GolfShotApp/clubs';
 
 const ClubSelector = ({ selectedClub, onSelectClub }) => {
   const [addClubModalOpen, setAddClubModalOpen] = React.useState(false);
@@ -11,6 +12,7 @@ const ClubSelector = ({ selectedClub, onSelectClub }) => {
   const { updateClub } = useUpdateClub();
   const { addClub } = useAddClub();
   const { deleteClub } = useDeleteClub();
+  const { resetDefaultClubs } = useResetDefaultClubs();
 
   const openAddClubModal = () => {
     setEditClubModalOpen(false);
@@ -62,18 +64,21 @@ const ClubSelector = ({ selectedClub, onSelectClub }) => {
 
   return (
     <>
-      <div style={styles.container}>
+      <div className="border p-3 rounded bg-slate-100">
         <div className="flex flex-row justify-between items-center">
           <h4>Select Club</h4>
           <Button onClick={openAddClubModal}>Add Club</Button>
         </div>
-        <ul className="mt-3" style={styles.list}>
+        <div>
+          {/* Reset */}
+          <Button type="link" onClick={() => resetDefaultClubs()} icon={<UndoOutlined />}/>
+        </div>
+        <ul className="mt-3">
           {clubs.map((club) => (
             <li
               key={club.id}
-              style={{
-                ...styles.item,
-                backgroundColor: Number.parseInt(selectedClub.id) === Number.parseInt(club.id) ? 'lightgray' : 'white',
+              className="border p-2 cursor-pointer mt-1 rounded"
+              style={{backgroundColor: Number.parseInt(selectedClub.id) === Number.parseInt(club.id) ? 'lightgray' : 'white',
               }}
               onClick={() => onSelectClub(club)}
             >
@@ -154,30 +159,6 @@ const ClubSelector = ({ selectedClub, onSelectClub }) => {
       </Modal>
     </>
   );
-};
-
-const styles = {
-  container: {
-    position: 'absolute',
-    top: '10%',
-    left: '10px',
-    backgroundColor: 'white',
-    padding: '10px',
-    border: '1px solid black',
-    zIndex: 10,
-    borderRadius: '8px',
-  },
-  list: {
-    listStyleType: 'none',
-    padding: 0,
-  },
-  item: {
-    cursor: 'pointer',
-    padding: '8px 12px',
-    marginBottom: '5px',
-    border: '1px solid black',
-    borderRadius: '4px',
-  },
 };
 
 export default ClubSelector;

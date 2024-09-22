@@ -4,6 +4,7 @@ import {
   addClub,
   updateClub,
   deleteClub,
+  resetDefaultClubs
 } from 'controllers/GolfShotApp/clubs';
 
 // Fetch clubs
@@ -50,7 +51,6 @@ export const useAddClub = (options = {}) => {
 // Delete club
 export const useDeleteClub = (options = {}) => {
   const del = async (id) => {
-    console.log('id: ', id);
     try {
       // Perform deletion
       await deleteClub(id);
@@ -62,4 +62,19 @@ export const useDeleteClub = (options = {}) => {
   };
 
   return { deleteClub: del }
+}
+
+export const useResetDefaultClubs = (options = {}) => {
+  const reset = async () => {
+    try {
+      // Perform reset
+      await resetDefaultClubs();
+      // Mutate the `/clubs` cache to revalidate
+      await mutate(`/clubs`);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
+  return { resetDefaultClubs: reset }
 }

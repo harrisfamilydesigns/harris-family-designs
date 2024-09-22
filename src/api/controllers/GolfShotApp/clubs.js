@@ -51,7 +51,6 @@ export const updateClub = async (id, params) => {
   const validParams = Object.entries(params).filter(([key, value]) => clubAttributes.includes(key));
   const clubToUpdate = clubs.find((club) => Number.parseInt(club.id) === Number.parseInt(id));
   const updatedClub = {...clubToUpdate, ...Object.fromEntries(validParams)};
-  console.log('updatedClub', updatedClub);
   const updatedClubs = clubs.map((club) => {
     if (Number.parseInt(club.id) === Number.parseInt(id)) {
       return updatedClub;
@@ -63,11 +62,13 @@ export const updateClub = async (id, params) => {
 }
 
 export const deleteClub = async (id) => {
-  console.log('is delete getting called?', id)
   const clubs = await getClubs();
-  console.log('clubs', clubs);
   const updatedClubs = clubs.filter((club) => Number.parseInt(club.id) !== Number.parseInt(id));
-  console.log('updatedClubs', updatedClubs);
   localStorage.setItem('clubs', JSON.stringify(updatedClubs));
   return updatedClubs;
+}
+
+export const resetDefaultClubs = async () => {
+  localStorage.setItem('clubs', JSON.stringify(defaultClubs));
+  return defaultClubs;
 }
