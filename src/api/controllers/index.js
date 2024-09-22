@@ -4,3 +4,4 @@ export * from './thrifters';
 export * from './stripeAccounts';
 export * from './uploads';
 export * from './summaries';
+export * from './GolfShotApp/clubs';

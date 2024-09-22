@@ -15,6 +15,7 @@ export default defineConfig({
       api: '/src/api',
       utils: '/src/utils',
       helpers: '/src/helpers',
+      controllers: '/src/api/controllers',
     }
   }
 })

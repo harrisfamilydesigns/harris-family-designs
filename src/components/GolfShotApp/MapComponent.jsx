@@ -10,23 +10,29 @@ import {
   OverlayViewF,
 } from '@react-google-maps/api';
 import useGeolocation from 'hooks/useGeolocation';
-import { calculateDestination, clubs, direction, calculateTangentBearings, feetToMeters, calculateBearing } from 'helpers/GolfShotApp/ShotHelpers';
+import { calculateDestination, direction, calculateTangentBearings, yardsToMeters, calculateBearing } from 'helpers/GolfShotApp/ShotHelpers';
 import ClubSelector from './ClubSelector';
+import { useGetClubs } from 'api/resources/GolfShotApp/clubs';
 
 const MapComponent = () => {
   const { location, error, loading } = useGeolocation();
   const [map, setMap] = React.useState(null);
-  const [zoomLevel, setZoomLevel] = React.useState(20);
-  const [selectedClub, setSelectedClub] = React.useState(clubs[0]);
+  const [zoomLevel, setZoomLevel] = React.useState(18);
   const [markerPosition, setMarkerPosition] = React.useState(null);
   const [destination, setDestination] = React.useState(null);
   const [bearing, setBearing] = React.useState(direction('E'));
+  const { data: clubs, isLoading: clubsLoading } = useGetClubs();
+  const [selectedClub, setSelectedClub] = React.useState(null);
 
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: apiKey,
   });
+
+  React.useEffect(() => {
+    if (clubs && !selectedClub) setSelectedClub(clubs[0]);
+  }, [clubs])
 
   React.useEffect(() => {
     if (location) {
@@ -36,7 +42,7 @@ const MapComponent = () => {
 
   React.useEffect(() => {
     if (markerPosition) {
-      setDestination(calculateDestination(markerPosition, selectedClub.distanceInFeet, bearing));
+      setDestination(calculateDestination(markerPosition, selectedClub.carryDistanceYards, bearing));
     }
   }, [markerPosition, selectedClub, bearing]);
 
@@ -49,13 +55,13 @@ const MapComponent = () => {
     height: '100vh',
   };
 
-  // Calculate tangent angles for diffusion circle
-  const tangentAngle = calculateTangentBearings(selectedClub.distanceInFeet, selectedClub.diffusionRadius);
+  // Calculate tangent angles for dispersion circle
+  const tangentAngle = calculateTangentBearings(selectedClub.carryDistanceYards, selectedClub.dispersionRadiusYardsPlusMinus);
 
-  // Calculate the tangent points on the diffusion circle
+  // Calculate the tangent points on the dispersion circle
   const tangentPoints = [
-    calculateDestination(markerPosition, selectedClub.distanceInFeet, bearing - tangentAngle), // Left tangent
-    calculateDestination(markerPosition, selectedClub.distanceInFeet, bearing + tangentAngle), // Right tangent
+    calculateDestination(markerPosition, selectedClub.carryDistanceYards, bearing - tangentAngle), // Left tangent
+    calculateDestination(markerPosition, selectedClub.carryDistanceYards, bearing + tangentAngle), // Right tangent
   ];
 
   const handleMarkerDragEnd = (event) => {
@@ -112,15 +118,15 @@ const MapComponent = () => {
           }}
         />
 
-        {/* Diffusion lines */}
+        {/* dispersion lines */}
         {tangentPoints.map((point, index) => (
           <PolylineF
             key={index}
-            path={[markerPosition, point]} // Tangent lines to the edge of the diffusion circle
+            path={[markerPosition, point]} // Tangent lines to the edge of the dispersion circle
             options={{
               strokeOpacity: 1,
               strokeWeight: 1,
-              strokeColor: 'orange', // Color for diffusion lines
+              strokeColor: 'orange', // Color for dispersion lines
             }}
           />
         ))}
@@ -128,7 +134,7 @@ const MapComponent = () => {
         {/* Landing area circle */}
         <CircleF
           center={destination}
-          radius={feetToMeters(selectedClub.diffusionRadius)} // Circle radius in meters
+          radius={yardsToMeters(selectedClub.dispersionRadiusYardsPlusMinus)} // Circle radius in meters
           options={{
             strokeColor: 'red',
             strokeOpacity: 0.8,
@@ -141,7 +147,7 @@ const MapComponent = () => {
         />
 
         {/* Club name overlay */}
-        <OverlayViewF
+        {/* <OverlayViewF
           position={destination} // Position overlay in the center of the circle
           mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET} // Ensures it's clickable
         >
@@ -161,7 +167,7 @@ const MapComponent = () => {
           }}>
             {selectedClub.name.substring(0, 2).toUpperCase()}
           </div>
-        </OverlayViewF>
+        </OverlayViewF> */}
       </GoogleMap>
     </div>
   );

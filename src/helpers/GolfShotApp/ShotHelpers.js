@@ -1,16 +1,17 @@
-const earthRadiusFeet = 20902230; // Earth's radius in feet
+const EARTH_RADIUS_YARDS = 6967410; // Earth's radius in yards
+const YARDS_TO_METERS = 0.9144; // Conversion factor from yards to meters
 
 /**
  * Calculates the destination point from a given latitude, longitude, distance, and bearing.
  * @param {number} lat - Latitude of the starting point.
  * @param {number} lng - Longitude of the starting point.
- * @param {number} distanceInFeet - Distance to the destination point in feet.
+ * @param {number} carryDistanceYards - Distance to the destination point in feet.
  * @param {number} bearingInDegrees - Bearing in degrees (0 = North, 90 = East, etc.).
  * @returns {{ lat: number, lng: number }} - The destination point's latitude and longitude.
  */
-export const calculateDestination = (startingLocation, distanceInFeet, bearingInDegrees) => {
+export const calculateDestination = (startingLocation, carryDistanceYards, bearingInDegrees) => {
   const { lat, lng } = startingLocation;
-  const distanceInRadians = distanceInFeet / earthRadiusFeet;
+  const distanceInRadians = carryDistanceYards / EARTH_RADIUS_YARDS;
   const bearingInRadians = (bearingInDegrees * Math.PI) / 180;
 
   const latInRadians = (lat * Math.PI) / 180;
@@ -34,36 +35,14 @@ export const calculateDestination = (startingLocation, distanceInFeet, bearingIn
   return { lat: destLat, lng: destLng };
 };
 
-export const calculateTangentBearings = (distance, diffusionRadius) => {
+export const calculateTangentBearings = (distance, dispersionRadiusYardsPlusMinus) => {
   // Using small angle approximation for precision
-  const tangentAngleInRadians = Math.atan(diffusionRadius / distance);
+  const tangentAngleInRadians = Math.atan(dispersionRadiusYardsPlusMinus / distance);
   const tangentAngleInDegrees = tangentAngleInRadians * (180 / Math.PI); // Convert to degrees
   return tangentAngleInDegrees;
 };
 
-export const feetToMeters = (feet) => feet * 0.3048;
-
-export const clubs = [
-  {name: 'driver', distanceInFeet: 220, diffusionRadius: 50},
-  {name: '3w', distanceInFeet: 210, diffusionRadius: 40},
-  {name: '5w', distanceInFeet: 190, diffusionRadius: 35},
-  {name: '3h', distanceInFeet: 180, diffusionRadius: 30},
-  {name: '4h', distanceInFeet: 170, diffusionRadius: 25},
-  {name: '5h', distanceInFeet: 160, diffusionRadius: 20},
-  {name: '6h', distanceInFeet: 150, diffusionRadius: 20},
-  {name: '7h', distanceInFeet: 140, diffusionRadius: 15},
-  {name: '8h', distanceInFeet: 130, diffusionRadius: 15},
-  {name: '9h', distanceInFeet: 120, diffusionRadius: 10},
-  {name: 'pw', distanceInFeet: 110, diffusionRadius: 10},
-  {name: 'gw', distanceInFeet: 100, diffusionRadius: 8},
-  {name: 'sw', distanceInFeet: 90, diffusionRadius: 8},
-  {name: 'lw', distanceInFeet: 80, diffusionRadius: 5},
-];
-
-// TODO: Make this personalizable based on user input
-export const clubDistance = (club) => {
-  return clubMap[club];
-};
+export const yardsToMeters = (yards) => yards * YARDS_TO_METERS;
 
 export const direction = (str) => {
   const directionMap = {
