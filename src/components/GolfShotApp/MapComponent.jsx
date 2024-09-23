@@ -7,6 +7,8 @@ import {
 import useGeolocation from 'hooks/useGeolocation';
 import ClubSelector from './ClubSelector';
 import GolfShotMapMarker from './GolfShotMapMarker';
+import { Button } from 'antd';
+import { CompassOutlined } from '@ant-design/icons';
 
 const MapComponent = () => {
   const { location, error, loading } = useGeolocation();
@@ -14,6 +16,7 @@ const MapComponent = () => {
   const [zoomLevel, setZoomLevel] = React.useState(18);
   const [markerPosition, setMarkerPosition] = React.useState(null);
   const [selectedClub, setSelectedClub] = React.useState(null);
+  const [initialMidpoint, setInitialMidpoint] = React.useState(null);
 
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({
@@ -26,6 +29,12 @@ const MapComponent = () => {
       setMarkerPosition(location); // Set initial marker position to geolocation
     }
   }, [location]);
+
+  const handleMidpointChange = (midpoint) => {
+    if (midpoint && !initialMidpoint) {
+      setInitialMidpoint(midpoint);
+    }
+  };
 
   if (!isLoaded) return <p>Loading map...</p>
   if (loading || !location || !location.lat || !location.lng || !markerPosition || !markerPosition.lat || !markerPosition.lng) return <p>Fetching location...</p>;
@@ -40,14 +49,25 @@ const MapComponent = () => {
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '100%'}}
           zoom={zoomLevel}
-          center={location}
-          mapTypeId="satellite"
+          center={initialMidpoint || location}
           onLoad={map => setMap(map)}
           onDblClick={async event => {
             setMarkerPosition({ lat: event.latLng.lat(), lng: event.latLng.lng() })
           }}
+          options={{
+            disableDefaultUI: true,
+            mapTypeId: 'satellite',
+          }}
         >
-          <GolfShotMapMarker selectedClub={selectedClub} position={markerPosition} />
+          {/* Absolute position button */}
+          <Button
+            type="default"
+            style={{ position: 'absolute', top: 10, right: 10 }}
+            onClick={() => map.setCenter(location)}
+            icon={<CompassOutlined/>}
+          >
+          </Button>
+          <GolfShotMapMarker selectedClub={selectedClub} position={markerPosition} onMidpointChange={handleMidpointChange}/>
         </GoogleMap>
       </div>
     </div>

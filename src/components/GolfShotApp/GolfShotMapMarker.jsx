@@ -12,16 +12,28 @@ import {
   PolylineF,
 } from '@react-google-maps/api';
 
-const GolfShotMapMarker = ({ selectedClub, position }) => {
+const GolfShotMapMarker = ({ selectedClub, position, onMidpointChange }) => {
   const [markerPosition, setMarkerPosition] = React.useState(position);
   const [destination, setDestination] = React.useState(null);
   const [bearing, setBearing] = React.useState(direction('E'));
 
   React.useEffect(() => {
-    if (markerPosition) {
+    if (markerPosition && selectedClub && bearing) {
       setDestination(calculateDestination(markerPosition, selectedClub.carryDistanceYards, bearing));
     }
   }, [markerPosition, selectedClub, bearing]);
+
+  React.useEffect(() => {
+    if (markerPosition && destination) {
+      const midpoint = {
+        lat: (markerPosition.lat + destination.lat) / 2,
+        lng: (markerPosition.lng + destination.lng) / 2,
+      };
+      onMidpointChange(midpoint);
+    }
+  }, [markerPosition, destination]);
+
+  if (!selectedClub || !destination || !bearing) return null;
 
   const handleMarkerDrag = (event) => {
     const newPosition = {

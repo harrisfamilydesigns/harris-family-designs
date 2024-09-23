@@ -15,12 +15,22 @@ const ClubSelector = ({ selectedClub: propSelectedClub, onSelectClub }) => {
   const { deleteClub } = useDeleteClub();
   const { resetDefaultClubs } = useResetDefaultClubs();
 
+  const handleSelectClub = (club) => {
+    setSelectedClub(clubs[0]);
+    onSelectClub(clubs[0]);
+  };
+
   React.useEffect(() => {
     if (clubs && !selectedClub) {
-      setSelectedClub(clubs[0]);
-      onSelectClub(clubs[0]);
+      handleSelectClub(clubs[0]);
     }
   }, [clubs])
+
+  React.useEffect(() => {
+    if (propSelectedClub) {
+      setSelectedClub(propSelectedClub);
+    }
+  }, [propSelectedClub])
 
   const openAddClubModal = () => {
     setEditClubModalOpen(false);
