@@ -4,7 +4,8 @@ import { CloseOutlined, DeleteOutlined, EditOutlined, UndoOutlined } from '@ant-
 import { useGetClubs, useUpdateClub, useAddClub, useDeleteClub } from 'api/resources/GolfShotApp/clubs';
 import { useResetDefaultClubs } from '../../api/resources/GolfShotApp/clubs';
 
-const ClubSelector = ({ selectedClub, onSelectClub }) => {
+const ClubSelector = ({ selectedClub: propSelectedClub, onSelectClub }) => {
+  const [selectedClub, setSelectedClub] = React.useState(propSelectedClub);
   const [addClubModalOpen, setAddClubModalOpen] = React.useState(false);
   const [editClubModalOpen, setEditClubModalOpen] = React.useState(false);
   const [editClub, setEditClub] = React.useState(null);
@@ -13,6 +14,13 @@ const ClubSelector = ({ selectedClub, onSelectClub }) => {
   const { addClub } = useAddClub();
   const { deleteClub } = useDeleteClub();
   const { resetDefaultClubs } = useResetDefaultClubs();
+
+  React.useEffect(() => {
+    if (clubs && !selectedClub) {
+      setSelectedClub(clubs[0]);
+      onSelectClub(clubs[0]);
+    }
+  }, [clubs])
 
   const openAddClubModal = () => {
     setEditClubModalOpen(false);
@@ -60,7 +68,7 @@ const ClubSelector = ({ selectedClub, onSelectClub }) => {
     }
   };
 
-  if (!clubs || clubsLoading) return <p>Loading clubs...</p>;
+  if (!clubs || !selectedClub || clubsLoading) return <p>Loading clubs...</p>;
 
   return (
     <>
@@ -68,10 +76,6 @@ const ClubSelector = ({ selectedClub, onSelectClub }) => {
         <div className="flex flex-row justify-between items-center">
           <h4>Select Club</h4>
           <Button onClick={openAddClubModal}>Add Club</Button>
-        </div>
-        <div>
-          {/* Reset */}
-          <Button type="link" onClick={() => resetDefaultClubs()} icon={<UndoOutlined />}/>
         </div>
         <ul className="mt-3">
           {clubs.map((club) => (
@@ -104,6 +108,9 @@ const ClubSelector = ({ selectedClub, onSelectClub }) => {
             </li>
           ))}
         </ul>
+        <Button className="mt-3" type="link" onClick={() => resetDefaultClubs()} icon={<UndoOutlined />}>
+          Reset to default clubs
+        </Button>
       </div>
       <Modal title={'Edit club'} open={editClubModalOpen} closeIcon={<CloseOutlined />} footer={null} onCancel={handleEditCancel}>
         <Form
