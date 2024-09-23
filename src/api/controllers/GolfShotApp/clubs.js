@@ -1,4 +1,13 @@
 // This is acting as a pseudo backend for the clubs resource, but just using localstorage for now
+// JSDoc type definitions
+/**
+ * @typedef {Object} Club
+ * @property {number} id
+ * @property {string} name
+ * @property {number} carryDistanceYards
+ * @property {number} totalDistanceYardsPlusMinus
+ * @property {number} dispersionRadiusYardsPlusMinus
+ */
 const defaultClubs = [
   {id: 1, name: 'Driver', carryDistanceYards: 282, totalDistanceYardsPlusMinus: 20, dispersionRadiusYardsPlusMinus: 35},
   {id: 2, name: '3-Wood', carryDistanceYards: 249, totalDistanceYardsPlusMinus: 18, dispersionRadiusYardsPlusMinus: 33},
