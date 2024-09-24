@@ -84,6 +84,7 @@ export const calculateBearing = (start, end) => {
 };
 
 export const calculateDistance = (point1, point2) => {
+  if (!point1 || !point2) return 0;
   const {lat: lat1, lng: lng1} = point1;
   const {lat: lat2, lng: lng2} = point2;
 

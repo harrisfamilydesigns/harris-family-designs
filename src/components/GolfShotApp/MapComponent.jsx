@@ -7,7 +7,7 @@ import {
 import useGeolocation from 'hooks/useGeolocation';
 import ClubSelector from './ClubSelector';
 import GolfShotMapMarker from './GolfShotMapMarker';
-import { Button, Typography } from 'antd';
+import { Button, Modal, Typography } from 'antd';
 import { CompassOutlined } from '@ant-design/icons';
 
 const MapComponent = () => {
@@ -25,15 +25,21 @@ const MapComponent = () => {
     googleMapsApiKey: apiKey,
   });
 
+  // Disable scrolling on the body when the map is open to make mobile experience better
+  React.useEffect(() => {
+    const currentOverflowSetting = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = currentOverflowSetting;
+    }
+  }, []);
+
   React.useEffect(() => {
     if (location) {
       setMarkerPosition(location); // Set initial marker position to geolocation
     }
   }, [location]);
-
-  const handleClubPowerChange = (power) => {
-    setClubPower(power);
-  };
 
   if (!isLoaded) return <p>Loading map...</p>
   if (loading || !location || !location.lat || !location.lng || !markerPosition || !markerPosition.lat || !markerPosition.lng) return <p>Fetching location...</p>;
@@ -41,10 +47,7 @@ const MapComponent = () => {
 
   return (
     <div className="flex min-h-screen">
-      <div className="w-full md:w-1/5 flex-grow max-h-screen overflow-y-auto">
-        <ClubSelector selectedClub={selectedClub} onSelectClub={setSelectedClub} />
-      </div>
-      <div className="w-full md:w-4/5 flex flex-col items-center justify-center flex-grow">
+      <div className="w-full flex flex-col items-center justify-center flex-grow">
         <GoogleMap
           mapContainerStyle={{ width: '100%', height: '100%'}}
           zoom={zoomLevel}
@@ -57,37 +60,50 @@ const MapComponent = () => {
             disableDefaultUI: true,
             mapTypeId: 'satellite',
             disableDoubleClickZoom: true,
+            gestureHandling: 'greedy',
           }}
         >
           {/* Absolute position controls */}
-          <div className="absolute top-0 right-0 p-3 text-right">
-            <Button
-              type="default"
-              onClick={() => map.setCenter(markerPosition)}
-              icon={<CompassOutlined/>}
-            >Re-center</Button>
-            {selectedClub && (
-              <div className="bg-slate-800 bg-opacity-75 rounded-bl-lg p-3 rounded mt-3">
-                <div>
-                  <Typography.Text className="text-white">{selectedClub.name}</Typography.Text>
-                </div>
-                <div>
-                  <Typography.Text className="text-white">{Math.round(selectedClub.carryDistanceYards * clubPower)}yd</Typography.Text>
-                </div>
-                <div>
-                  <Typography.Text className="text-white">{Math.round(clubPower * 100)}%</Typography.Text>
-                </div>
-              </div>
-            )}
+          <div className="absolute top-0 right-0 m-3 text-right">
+
           </div>
           <GolfShotMapMarker
             selectedClub={selectedClub}
             position={markerPosition}
-            onClubPowerChange={handleClubPowerChange}
+            onClubPowerChange={setClubPower}
             onMarkerPositionChange={setMarkerPosition}
             onDestinationChange={setDestination}
           />
         </GoogleMap>
+      </div>
+
+      {/* Club Selector Button at the Bottom */}
+      <div className="absolute bottom-3 right-0 m-3 text-right">
+        <Button
+          type="default"
+          onClick={() => map.setCenter(markerPosition)}
+          icon={<CompassOutlined/>}
+        >Re-center</Button>
+        {selectedClub && (
+          <div className="bg-slate-800 bg-opacity-75 rounded-bl-lg p-3 rounded mt-3">
+            <div>
+              <Typography.Text className="text-white">{selectedClub.name}</Typography.Text>
+            </div>
+            <div>
+              <Typography.Text className="text-white">{Math.round(selectedClub.carryDistanceYards * clubPower)}yd</Typography.Text>
+            </div>
+            <div>
+              <Typography.Text className="text-white">{Math.round(clubPower * 100)}%</Typography.Text>
+            </div>
+          </div>
+        )}
+
+        <div className="mt-3">
+          <ClubSelector
+            selectedClub={selectedClub}
+            onSelectClub={setSelectedClub}
+          />
+        </div>
       </div>
     </div>
   );

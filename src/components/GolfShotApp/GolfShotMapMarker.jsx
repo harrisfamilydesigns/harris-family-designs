@@ -23,34 +23,33 @@ const GolfShotMapMarker = ({
   onClubPowerChange,
   onDestinationChange
 }) => {
-  const [markerPosition, setMarkerPosition] = React.useState(position);
-  const [destination, setDestination] = React.useState(null);
-  const [bearing, setBearing] = React.useState(direction('E'));
-  const [clubPower, setClubPower] = React.useState(1);
+  const [state, setState] = React.useState({
+    markerPosition: position,
+    destination: null,
+    destinationDragCenter: null,
+    bearing: direction('E'),
+    clubPower: 1,
+  });
+  const {markerPosition, destination, destinationDragCenter, bearing, clubPower} = state;
 
-  const handleDestinationChange = (newDestination) => {
-    setDestination(newDestination);
-    if (onDestinationChange) onDestinationChange(newDestination);
-  };
-
-  const handleMarkerPositionChange = (newPosition) => {
-    setMarkerPosition(newPosition); // Update marker position after dragging
-    if (onMarkerPositionChange) onMarkerPositionChange(newPosition); // Notify parent component about the change in marker position
-  };
-
-  const handleClubPowerChange = (newClubPower) => {
-    setClubPower(newClubPower);
-    if (onClubPowerChange) onClubPowerChange(newClubPower);
-  };
+  const throttledUpdate = React.useRef(
+    throttle((newState) => {
+      setState(prev => ({ ...prev, ...newState }));
+    }, 0) // Adjust the delay (in ms) as needed
+  ).current;
 
   // Allow the parent component to update the marker position
   React.useEffect(() => {
     if (position) {
-      handleMarkerPositionChange(position);
+      const updates = {
+        markerPosition: position,
+      };
       if (destination) {
         const newDestination = calculateDestination(position, selectedClub.carryDistanceYards * clubPower, bearing);
-        handleDestinationChange(newDestination);
+        updates.destination = newDestination;
       }
+      // setState(prev => ({ ...prev, ...updates }));
+      throttledUpdate(updates);
     }
   }, [position]);
 
@@ -58,13 +57,12 @@ const GolfShotMapMarker = ({
   React.useEffect(() => {
     if (selectedClub) {
       const newDestination = calculateDestination(markerPosition, selectedClub.carryDistanceYards * clubPower, bearing);
-      handleDestinationChange(newDestination);
+      // setState(prev => ({ ...prev, destination: newDestination }));
+      throttledUpdate({ destination: newDestination });
     }
   }, [selectedClub]);
 
-  if (!selectedClub || !destination || !bearing) return null;
-
-  const handleMarkerDrag = (event) => {
+  const handleMarkerDrag = React.useCallback((event) => {
     // Only update if the new position is a pixel away from the current position
     const newPosition = {
       lat: event.latLng.lat(),
@@ -72,49 +70,80 @@ const GolfShotMapMarker = ({
     };
     const newDestination = calculateDestination(newPosition, selectedClub.carryDistanceYards * clubPower, bearing);
 
-    handleMarkerPositionChange(newPosition);
-    handleDestinationChange(newDestination); // Update destination after dragging
-    onMarkerPositionChange(newPosition); // Notify parent component about the change in marker position
-  };
+    // setState(prev => ({ ...prev, markerPosition: newPosition, destination: newDestination }));
+    throttledUpdate({ markerPosition: newPosition, destination: newDestination });
+    if (onMarkerPositionChange) onMarkerPositionChange(newPosition);
+    if (onDestinationChange) onDestinationChange(newDestination);
+  }, [selectedClub, clubPower, bearing, onMarkerPositionChange, onDestinationChange]);
 
-  const linearScaledDispersionRadius = selectedClub.dispersionRadiusYardsPlusMinus * clubPower;
-  const linearScaledTotalDistanceRadius = (selectedClub.dispersionRadiusYardsPlusMinus * clubPower) + (selectedClub.totalDistanceYardsPlusMinus * clubPower);
-  // Calculate tangent angles for dispersion circle
-  const tangentAngle = calculateTangentBearings(selectedClub.carryDistanceYards * clubPower, linearScaledDispersionRadius);
-
-  // Calculate the tangent points on the dispersion circle
-  const tangentPoints = [
-    calculateDestination(markerPosition, (selectedClub.carryDistanceYards * clubPower), bearing - tangentAngle), // Left tangent
-    calculateDestination(markerPosition, (selectedClub.carryDistanceYards * clubPower), bearing + tangentAngle), // Right tangent
-  ];
-
-  const handleCircleDrag = (event) => {
-    const targetDestination = {
+  const handleCircleDrag = React.useCallback((event, updateBearingOnly) => {
+    // The user is dragging from some offset from the center of the circle (they likely clicked somewhere besides the exact center)
+    // We want to set the targetDestination to the exact center of the circle
+    const mouseDestination = {
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
     };
+    // The destinationDragCenter may not have been set yet
+    const oldCircleCenter = destinationDragCenter || destination;
+
+    if (!oldCircleCenter) return;
+    // Now we need to calculate the offset from the center of the circle to the mouse destination
+    const offsetInMeters = window.google.maps.geometry.spherical.computeDistanceBetween(oldCircleCenter, mouseDestination);
+    const headingFromCenter = window.google.maps.geometry.spherical.computeHeading(oldCircleCenter, mouseDestination);
+    // Calculate the new target destination
+    const targetDestination = calculateDestination(oldCircleCenter, offsetInMeters, headingFromCenter);
+
+    setState(prev => ({ ...prev, destinationDragCenter: targetDestination }));
+    // const offsetInMeters = window.google.maps.geometry.spherical.computeDistanceBetween(circleCenter, event.latLng);
+    // const offsetInYards = metersToYards(offsetInMeters);
 
     // Calculate the new bearing based on the new destination
     const newBearing = calculateBearing(markerPosition, targetDestination);
-    setBearing(newBearing);
-
     // if target destination is further than the club's max carry distance, set it to the max carry distance
     const calculatedDistance = calculateDistance(markerPosition, targetDestination);
-    const maxDistance = selectedClub.carryDistanceYards;
-    const newDestination = calculatedDistance > maxDistance ? calculateDestination(markerPosition, maxDistance, bearing) : targetDestination;
 
-    handleDestinationChange(newDestination); // Update destination after dragging
+    const maxDistance = selectedClub.carryDistanceYards * MAX_CLUB_POWER;
+    const newDestination = calculatedDistance > maxDistance ? calculateDestination(markerPosition, maxDistance, newBearing) : targetDestination;
+    const newClubPower = calculatedDistance > maxDistance ? MAX_CLUB_POWER : calculatedDistance / maxDistance;
 
-    // Calculate the distance from marker to the new destination
-    const distance = calculateDistance(markerPosition, newDestination); // Replace this with an actual distance calculation method
+    if (updateBearingOnly) {
+      throttledUpdate({ bearing: newBearing, /*destination: newDestination, clubPower: newClubPower*/ });
+      return;
+    }
+    // setState(prev => ({ ...prev, bearing: newBearing, destination: newDestination, clubPower: newClubPower }));
+    throttledUpdate({ bearing: newBearing, destination: newDestination, clubPower: newClubPower });
 
-    // Calculate the new club power as a ratio of the dragged distance to the club's max carry distance
-    const newClubPower = Math.min(MAX_CLUB_POWER, distance / selectedClub.carryDistanceYards);
+    if (onDestinationChange) onDestinationChange(newDestination);
+    if (onClubPowerChange) onClubPowerChange(newClubPower);
+  }, [markerPosition, selectedClub, onDestinationChange, onClubPowerChange, destination, destinationDragCenter]);
 
-    handleClubPowerChange(newClubPower);
-  };
+  const linearScaledDispersionRadius = React.useMemo(() => {
+    if (!selectedClub) return null;
+    if (!clubPower) return null;
+    return selectedClub.dispersionRadiusYardsPlusMinus * clubPower;
+  }, [selectedClub, clubPower]);
 
-  const throttledHandleCircleDrag = throttle(handleCircleDrag, 50);
+  const linearScaledTotalDistanceRadius = React.useMemo(() => {
+    if (!selectedClub) return null;
+    if (!clubPower) return null;
+    return linearScaledDispersionRadius + (selectedClub.totalDistanceYardsPlusMinus * clubPower);
+  }, [selectedClub, clubPower, linearScaledDispersionRadius]);
+
+  // Calculate the tangent points on the dispersion circle
+  const tangentPoints = React.useMemo(() => {
+    if (!selectedClub) return null;
+    if (!clubPower) return null;
+
+    // Calculate tangent angles for dispersion circle
+    const tangentAngle = calculateTangentBearings(selectedClub.carryDistanceYards * clubPower, linearScaledDispersionRadius);
+
+    return [
+      calculateDestination(markerPosition, (selectedClub.carryDistanceYards * clubPower), bearing - tangentAngle), // Left tangent
+      calculateDestination(markerPosition, (selectedClub.carryDistanceYards * clubPower), bearing + tangentAngle), // Right tangent
+    ];
+  }, [markerPosition, selectedClub, clubPower, bearing, linearScaledDispersionRadius]);
+
+  if (!selectedClub || !destination || !bearing) return null;
 
   return (
     <>
@@ -154,6 +183,25 @@ const GolfShotMapMarker = ({
         />
       ))}
 
+      {/* Distance (yds) text at 25%, 50%, 75%, and 100% */}
+      {[0.25, 0.5, 0.75, 1].map((percent, index) => {
+        const distance = selectedClub.carryDistanceYards * percent;
+        const point = calculateDestination(markerPosition, distance, bearing);
+        return (
+          <MarkerF
+            key={index}
+            position={point}
+            label={{
+              text: `${Math.round(distance)} yds (${Math.round(percent * 100)}%)`,
+              color: 'white',
+            }}
+            icon={{
+              url: 'https://maps.google.com/mapfiles/ms/icons/blue-pushpin.png',
+            }}
+          />
+        );
+      })}
+
       {/* Total distance circle (dispersionRadiusYardsPlusMinus + totalDistanceYardsPlusMinus) */}
       <CircleF
         center={destination}
@@ -179,10 +227,11 @@ const GolfShotMapMarker = ({
           fillOpacity: 0.35,
         }}
         draggable
-        onDrag={throttledHandleCircleDrag}
+        onDrag={e => handleCircleDrag(e, true)}
+        onDragEnd={e => handleCircleDrag(e, false)}
       />
     </>
   )
 };
 
-export default GolfShotMapMarker;
+export default React.memo(GolfShotMapMarker);
