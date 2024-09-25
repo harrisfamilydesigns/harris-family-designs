@@ -37,7 +37,7 @@ export const calculateDestination = (startingLocation, carryDistanceYards, beari
   return { lat: destLat, lng: destLng };
 };
 
-export const calculateTangentBearings = (distanceInYards, dispersionRadiusYardsPlusMinus) => {
+export const calculateTangentHeading = (distanceInYards, dispersionRadiusYardsPlusMinus) => {
   // Using small angle approximation for precision
   const tangentAngleInRadians = Math.atan(dispersionRadiusYardsPlusMinus / distanceInYards);
   const tangentAngleInDegrees = tangentAngleInRadians * (180 / Math.PI); // Convert to degrees
