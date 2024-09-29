@@ -11,6 +11,7 @@ import {
   CircleF,
   PolylineF,
 } from '@react-google-maps/api';
+import golfBall from 'assets/GolfShotApp/golf-ball.png';
 
 const MAX_CLUB_POWER = 1.0;
 
@@ -19,7 +20,8 @@ const GolfShotMapMarker = ({
   position,
   onMarkerPositionChange,
   onClubPowerChange,
-  onDestinationChange
+  onDestinationChange,
+  standardDistancesVisible,
 }) => {
   const [state, setState] = React.useState({
     markerPosition: position,
@@ -145,7 +147,11 @@ const GolfShotMapMarker = ({
 
   return (
     <>
-      <MarkerF position={markerPosition} draggable onDrag={handleMarkerDrag}/>
+      <MarkerF
+        position={markerPosition}
+        draggable
+        onDrag={handleMarkerDrag}
+      />
       {/* Main shot line */}
       <PolylineF
         path={[markerPosition, destination]}
@@ -181,24 +187,42 @@ const GolfShotMapMarker = ({
         />
       ))}
 
-      {/* Distance (yds) text at 25%, 50%, 75%, and 100% */}
-      {[0.25, 0.5, 0.75, 1].map((percent, index) => {
-        const distance = selectedClub.carryDistanceYards * percent;
-        const point = calculateDestination(markerPosition, distance, heading);
-        return (
-          <MarkerF
-            key={index}
-            position={point}
-            label={{
-              text: `${Math.round(distance)} yds (${Math.round(percent * 100)}%)`,
-              color: 'white',
-            }}
-            icon={{
-              url: 'https://maps.google.com/mapfiles/ms/icons/blue-pushpin.png',
-            }}
-          />
-        );
-      })}
+      {/* Circles for every 50yds until reaching total club distance */}
+      {standardDistancesVisible && Array.from({ length: Math.ceil(selectedClub.carryDistanceYards / 50) }, (_, i) => {
+          const distance = (i + 1) * 50;
+          const radius = yardsToMeters(distance);
+          return (
+            <>
+              <CircleF
+                key={i}
+                center={markerPosition}
+                radius={radius}
+                options={{
+                  strokeColor: i % 2 == 0 ? 'lightgray' : 'white',
+                  strokeOpacity: 0.8,
+                  strokeWeight: i % 2 == 0 ? 1 : 3,
+                  fillOpacity: 0,
+                }}
+              />
+              <MarkerF
+                position={calculateDestination(markerPosition, distance, 0)}
+                label={{
+                  text: `${distance}yd`,
+                  fontSize: '16px',
+                  color: i % 2 == 0 ? 'lightgray' : 'white',
+                  className: 'drop-shadow',
+                }}
+                // No icon for the marker
+                icon={{
+                  url: golfBall,
+                  scaledSize: new window.google.maps.Size(0, 0),
+                  labelOrigin: new window.google.maps.Point(0, 10),
+                }}
+              />
+            </>
+          );
+        })
+      }
 
       {/* Total distance circle (dispersionRadiusYardsPlusMinus + totalDistanceYardsPlusMinus) */}
       <CircleF
@@ -213,6 +237,25 @@ const GolfShotMapMarker = ({
         }}
       />
 
+      <MarkerF
+        position={destination}
+        icon={{
+          url: golfBall,
+          scaledSize: new window.google.maps.Size(28, 28),
+          anchor: new window.google.maps.Point(14, 14),
+        }}
+        draggable
+        onDragStart={handleCircleDragStart}
+        onDrag={handleCircleDrag}
+        onDragEnd={handleCircleDrag}
+        label={{
+          text: `${Math.round(selectedClub.carryDistanceYards * clubPower)}yd`,
+          fontSize: '16px',
+          color: 'white',
+          className: 'mb-10 drop-shadow',
+        }}
+      />
+
       {/* Landing area circle (dispersion circle) */}
       <CircleF
         center={destination}
@@ -223,11 +266,8 @@ const GolfShotMapMarker = ({
           strokeWeight: 2,
           fillColor: 'chartreuse',
           fillOpacity: 0.35,
+          zIndex: 10,
         }}
-        draggable
-        onDragStart={handleCircleDragStart}
-        onDrag={handleCircleDrag}
-        onDragEnd={handleCircleDrag}
       />
     </>
   )

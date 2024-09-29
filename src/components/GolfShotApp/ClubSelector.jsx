@@ -87,14 +87,17 @@ const ClubSelector = ({ selectedClub: propSelectedClub, onSelectClub }) => {
 
   return (
     <>
+      <div>
+        <Button
+          className="drop-shadow"
+          type="primary"
+          onClick={toggleClubSelector}
+        >
+          {selectedClub ? selectedClub.name : 'Select a Club'}
+        </Button>
+      </div>
       {/* Club Selector Modal */}
       {/* Circle button */}
-      <Button
-        type="primary"
-        onClick={toggleClubSelector}
-      >
-        {selectedClub ? selectedClub.name : 'Select a Club'}
-      </Button>
       <Modal
         title="Select a Club"
         open={isClubSelectorVisible}
