@@ -47,21 +47,6 @@ export const calculateTangentHeading = (distanceInYards, dispersionRadiusYardsPl
 export const yardsToMeters = (yards) => yards * YARDS_TO_METERS;
 export const metersToYards = (meters) => meters * METERS_TO_YARDS;
 
-export const direction = (str) => {
-  const directionMap = {
-    N: 0,
-    NE: 45,
-    E: 90,
-    SE: 135,
-    S: 180,
-    SW: 225,
-    W: 270,
-    NW: 315,
-  };
-
-  return directionMap[str];
-}
-
 export const calculateBearing = (start, end) => {
   const toRadians = (degree) => (degree * Math.PI) / 180;
 

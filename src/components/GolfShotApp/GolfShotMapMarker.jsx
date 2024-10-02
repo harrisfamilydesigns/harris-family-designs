@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   calculateDestination,
-  direction,
   calculateTangentHeading,
   yardsToMeters,
   calculateDistance,
@@ -18,6 +17,7 @@ const MAX_CLUB_POWER = 1.0;
 const GolfShotMapMarker = ({
   selectedClub,
   position,
+  destination: initialDestination,
   onMarkerPositionChange,
   onClubPowerChange,
   onDestinationChange,
@@ -26,7 +26,7 @@ const GolfShotMapMarker = ({
   const [state, setState] = React.useState({
     markerPosition: position,
     destination: null,
-    heading: direction('E'),
+    heading: '0', // Heading in degrees "North is 0 degrees"
     clubPower: 1,
   });
   const {markerPosition, destination, heading, clubPower} = state;
@@ -50,6 +50,15 @@ const GolfShotMapMarker = ({
       setState(prev => ({ ...prev, ...updates }));
     }
   }, [position]);
+
+  // Allow the parent component to update the destination
+  React.useEffect(() => {
+    if (initialDestination) {
+      const newHeading = window.google.maps.geometry.spherical.computeHeading(markerPosition, initialDestination);
+      const newClubPower = calculateDistance(markerPosition, initialDestination) / (selectedClub.carryDistanceYards * MAX_CLUB_POWER);
+      setState(prev => ({ ...prev, destination: initialDestination, heading: newHeading, clubPower: newClubPower }));
+    }
+  }, [initialDestination]);
 
   // Allows the parent component to update the selected club
   React.useEffect(() => {

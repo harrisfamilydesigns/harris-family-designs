@@ -10,6 +10,7 @@ import GolfShotMapMarker from './GolfShotMapMarker';
 import { Button, Modal, Typography } from 'antd';
 import { CompassOutlined } from '@ant-design/icons';
 import CirclesIcon from '../shared/CirclesIcon';
+import { set } from 'lodash';
 
 const MapComponent = () => {
   const { location, error, loading } = useGeolocation();
@@ -19,7 +20,7 @@ const MapComponent = () => {
   const [destination, setDestination] = React.useState(null);
   const [selectedClub, setSelectedClub] = React.useState(null);
   const [clubPower, setClubPower] = React.useState(1);
-  const [standardDistancesVisible, setStandardDistancesVisible] = React.useState(true);
+  const [standardDistancesVisible, setStandardDistancesVisible] = React.useState(false);
 
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({
@@ -60,7 +61,8 @@ const MapComponent = () => {
           center={location}
           onLoad={map => setMap(map)}
           onDblClick={async event => {
-            setMarkerPosition({ lat: event.latLng.lat(), lng: event.latLng.lng() })
+            setDestination({ lat: event.latLng.lat(), lng: event.latLng.lng() });
+            // setMarkerPosition({ lat: event.latLng.lat(), lng: event.latLng.lng() })
           }}
           options={{
             disableDefaultUI: true,
@@ -80,6 +82,7 @@ const MapComponent = () => {
           <GolfShotMapMarker
             selectedClub={selectedClub}
             position={markerPosition}
+            destination={destination}
             onClubPowerChange={setClubPower}
             onMarkerPositionChange={setMarkerPosition}
             onDestinationChange={setDestination}
