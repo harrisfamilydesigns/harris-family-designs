@@ -14,7 +14,7 @@ const Root = () => {
       <SearchParamsAlert />
       <Routes>
         <Route path="/" element={<AppLayout/>}>
-          <Route index element={<LandingPage/>} />
+          <Route index element={<Navigate to='projects' />} />
           <Route path="about" element={<LandingPage/>} />
           <Route path="projects/*" element={<ProjectsPage/>} />
           <Route path="contact" element={<LandingPage/>} />

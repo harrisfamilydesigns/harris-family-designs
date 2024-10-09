@@ -13,9 +13,11 @@ import AccountPage from './AccountPage';
 import Authenticated from './Authenticated';
 import ThrifterOnboarding from './ThrifterOnboarding/ThrifterOnboarding';
 import CustomerOnboarding from './CustomerOnboarding/CustomerOnboarding';
+import { ConfigProvider } from 'antd';
+import SecondHandAppTheme from './SecondHandAppTheme';
 
 const Root = () => (
-  <>
+  <ConfigProvider theme={SecondHandAppTheme}>
     <SearchParamsAlert />
     {useRoutes([
       {
@@ -38,7 +40,7 @@ const Root = () => (
         ]
       }
     ])}
-  </>
+  </ConfigProvider>
 )
 
 export default Root;

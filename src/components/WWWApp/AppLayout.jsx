@@ -1,8 +1,8 @@
 import React from 'react'
 import { Layout, Menu } from 'antd';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-const { Header, Content, Footer } = Layout;
-import { auth, useCurrentUser } from '../../api';
+import { auth, useCurrentUser } from 'api';
+import LogoIcon from 'components/shared/LogoIcon';
 
 const AppLayout = () => {
   const [current, setCurrent] = React.useState('about');
@@ -22,17 +22,17 @@ const AppLayout = () => {
 
   let menuItems = [
     {
+      key: 'projects',
+      label: <Link to="projects">Projects</Link>,
+    },
+    {
       key: 'about',
       label: <Link to="about">About Us</Link>,
     },
-    {
-      key: 'projects',
-      label: <Link to="projects">Our Projects</Link>,
-    },
-    {
-      key: 'contact',
-      label: <Link to="contact">Contact Us</Link>,
-    },
+    // {
+    //   key: 'contact',
+    //   label: <Link to="contact">Contact Us</Link>,
+    // },
   ];
 
   if (currentUser) {
@@ -51,27 +51,22 @@ const AppLayout = () => {
   }
 
   return (
-    <Layout
-      className="layout"
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        minHeight: '100vh',
-        textAlign: 'center'
-      }}
-    >
-      <Header className="sticky top-0">
-        <div className="logo" />
-        <Menu onClick={e => setCurrent(e.key)} theme="dark" mode="horizontal" selectedKeys={[current]} items={menuItems} />
-      </Header>
-      <Content className="md:container md:mx-auto">
-        <div className="mt-5">
-          <Outlet />
+    <Layout className="min-h-screen">
+      <Layout.Header className="sticky top-0 z-10 p-0">
+        <div className="flex items-center">
+          <LogoIcon className="bg-white pl-3" />
+          <Menu
+            className="grow"
+            onClick={e => setCurrent(e.key)}
+            mode="horizontal"
+            selectedKeys={[current]}
+            items={[
+              ...menuItems
+            ]}
+          />
         </div>
-      </Content>
-      <Footer style={{ textAlign: 'center' }}>
-        Contact us at info@harrisfamilydesigns.com
-      </Footer>
+      </Layout.Header>
+      <Outlet />
     </Layout>
   )
 }
