@@ -8,9 +8,11 @@ import { useLocation } from 'react-router-dom';
 import { CheckCircleFilled, ExportOutlined, ToolFilled, WarningFilled } from '@ant-design/icons';
 import { useTheme } from '../../hooks/useTheme';
 import { BudgetTracker } from '../BudgetTracker/BudgetTracker';
+import PhotoUtilApp from 'components/PhotoUtilApp/Root';
 
 const projects = [
   {name: "TextUtil", status: 'active', description: "An app that helps you manipulate text.", path: "text_util"},
+  {name: 'PhotoUtil', status: 'inProgress', description: 'An app that helps you manipulate photos.', path: 'photo_util'},
 
   {name: 'Fitness Tracker', status: 'unstarted', description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker'},
   {name: 'Piano App', status: 'unstarted', description: 'A piano app that helps you learn how to play the piano.', path: 'piano_app'},
@@ -27,12 +29,13 @@ const ProjectsPage = () =>
   // These apps are displayed inline on the projects page. Others are redirected to their own page.
   useRoutes([
     { path: '/', element: <Main />, children: [
-      { path: 'fine_print', element: <FinePrintApp /> },
       { path: 'text_util', element: <TextUtilApp /> },
-      { path: 'budget_tracker', element: <BudgetTracker /> },
+      { path: 'photo_util/*', element: <PhotoUtilApp /> },
       { path: 'fitness_tracker', element: <BlankApp /> },
       { path: 'piano_app', element: <BlankApp /> },
       { path: 'recipe_book', element: <BlankApp /> },
+      { path: 'fine_print', element: <FinePrintApp /> },
+      { path: 'budget_tracker', element: <BudgetTracker /> },
     ]}
   ])
 
