@@ -81,7 +81,9 @@ const Main = () => {
 
   return (
     <Layout>
-      <Sider>
+      <Sider
+        breakpoint='md'
+      >
         <Menu
           mode="inline"
           className="h-full"

@@ -5,7 +5,7 @@ const { Title, Paragraph } = Typography;
 function LandingPage() {
   return (
     <>
-      <Layout.Content className="md:container md:mx-auto mt-5">
+      <Layout.Content className="md:container md:mx-auto m-5">
         <Title>Welcome to Harris Family Designs</Title>
         <Paragraph>
           Crafting Beauty, From Wear to Web - The Harris Family Touch

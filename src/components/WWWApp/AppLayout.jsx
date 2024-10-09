@@ -51,7 +51,7 @@ const AppLayout = () => {
   }
 
   return (
-    <Layout className="min-h-screen">
+    <Layout className="min-h-dvh">
       <Layout.Header className="sticky top-0 z-10 p-0">
         <div className="flex items-center">
           <LogoIcon className="bg-white pl-3" />
