@@ -5,6 +5,7 @@
   "type": "module",
   "homepage": "https://harrisfamilydesigns.com",
   "scripts": {
+    "dev:https": "VITE_HTTPS=true vite --host",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
