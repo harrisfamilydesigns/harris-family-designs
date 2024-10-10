@@ -4,6 +4,8 @@ import {
   InboxOutlined,
   DeleteOutlined,
   EditOutlined,
+  DownloadOutlined,
+  UndoOutlined,
 } from '@ant-design/icons';
 import cv from '@techstark/opencv-js';
 
@@ -13,28 +15,6 @@ const RemoveBg = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [srcMat, setSrcMat] = useState(null);
   const [processedImageUrl, setProcessedImageUrl] = useState(null);
-
-  // useEffect(() => {
-  //   // Load OpenCV.js
-  //   const loadOpenCV = () => {
-  //     return new Promise((resolve) => {
-  //       const script = document.createElement('script');
-  //       script.src = 'https://docs.opencv.org/4.x/opencv.js';
-  //       script.async = true;
-  //       script.onload = () => resolve();
-  //       document.body.appendChild(script);
-  //     });
-  //   };
-
-  //   loadOpenCV().then(() => {
-  //     console.log('OpenCV.js is loaded');
-  //   })
-
-  //   return () => {
-  //     // Cleanup
-  //     // cv.delete();
-  //   }
-  // }, []);
 
   const uploadProps = {
     name: 'file',
@@ -83,74 +63,101 @@ const RemoveBg = () => {
     }
   }
 
-  // TODO: Update to use floodFill to remove background in enclosed areas (https://chatgpt.com/c/6706d294-b85c-800a-ae2a-45ce7963ccca)
-  const removeBackground = async () => {
+  const removeBackgroundSimple = async () => {
     if (!srcMat) return;
 
-    const dstMat = new cv.Mat(); // Create an empty Mat to hold the result
-    const gray = new cv.Mat();
-    const binary = new cv.Mat();
+    // Assume pixel at (0, 0) is the background color
+    const bgColor = srcMat.ucharPtr(0, 0);
 
-    // Convert to grayscale
-    cv.cvtColor(srcMat, gray, cv.COLOR_RGBA2GRAY);
-    // Apply a binary threshold to separate the logo from the background
-    cv.threshold(gray, binary, 200, 255, cv.THRESH_BINARY_INV);
-
-    // Create a mask
-    const contours = new cv.MatVector(); // Create a MatVector to hold the contours
-    const hierarchy = new cv.Mat(); // Create a Mat to hold the hierarchy
-    cv.findContours(binary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
-
-    // Create a mask to apply to the original image
-    const mask = new cv.Mat(srcMat.rows, srcMat.cols, cv.CV_8UC1, new cv.Scalar(0)); // Initialize a mask with zeros
-
-    // Draw the contours on the mask
-    for (let i = 0; i < contours.size(); i++) {
-        const color = new cv.Scalar(255); // White color for the mask
-        cv.drawContours(mask, contours, i, color, cv.FILLED); // Fill the contour in the mask
+    // Change all pixels with the background color to transparent
+    for (let i = 0; i < srcMat.rows; i++) {
+      for (let j = 0; j < srcMat.cols; j++) {
+        const pixel = srcMat.ucharPtr(i, j);
+        if (pixel[0] === bgColor[0] && pixel[1] === bgColor[1] && pixel[2] === bgColor[2]) {
+          pixel[3] = 0;
+        }
+      }
     }
 
-    // Apply the mask to the original image
-    srcMat.copyTo(dstMat, mask); // Use the mask to copy the source image to destination
-
-    // Show the result on the canvas
+    // Show the result on a canvas
     const canvas = document.createElement('canvas');
-    canvas.width = dstMat.cols;
-    canvas.height = dstMat.rows;
-    cv.imshow(canvas, dstMat);
+    canvas.width = srcMat.cols;
+    canvas.height = srcMat.rows;
+    cv.imshow(canvas, srcMat);
 
     // Convert the canvas content to a Data URL and update processedImageUrl
     const processedUrl = canvas.toDataURL();
     setProcessedImageUrl(processedUrl);
+  }
 
-    // Cleanup
-    srcMat.delete();
-    gray.delete();
-    binary.delete();
-    hierarchy.delete();
-    mask.delete();
-    dstMat.delete();
-    contours.delete(); // Clean up the contours MatVector
-  };
+  const handleDownload = () => {
+    if (!processedImageUrl) return;
+
+    const link = document.createElement('a');
+    link.href = processedImageUrl;
+    link.download = 'processed-image.png';
+    link.click();
+  }
 
   return (
     <div>
-      <h1>Remove Background</h1>
-      <p>Remove the background from an image.</p>
+      <h1>Make background transparent</h1>
+      <p>Upload an image and click on "Remove Background" to make the background transparent.</p>
 
       {imageUrl && (
         <div className="mt-3 grid grid-cols-12">
-          <div className="col-span-9 flex justify-center">
-          <img src={processedImageUrl || imageUrl} alt="Uploaded preview" style={{ maxWidth: '300px', height: 'auto' }} />
+          <div className="col-span-12 md:col-span-8 flex justify-center">
+            <div
+              className="border border-gray-300 p-1"
+              // checkerboard background
+              style={{
+                backgroundImage: 'linear-gradient(45deg, #eaeaea 25%, transparent 25%, transparent 75%, #eaeaea 75%, #eaeaea 100%), linear-gradient(45deg, #eaeaea 25%, transparent 25%, transparent 75%, #eaeaea 75%, #eaeaea 100%)',
+                backgroundSize: '20px 20px',
+                backgroundPosition: '0 0, 10px 10px',
+              }}
+            >
+              <img src={processedImageUrl || imageUrl} alt="Uploaded preview" style={{ maxWidth: '300px', height: 'auto' }} />
+            </div>
           </div>
-          <div className="col-span-3 flex flex-col items-end">
-            <Button onClick={removeBackground} type="primary" icon={<EditOutlined/>} className="mb-3">
-              Remove Background
-            </Button>
+          <div className="col-span-12 md:col-span-4 grid grid-rows-2 mt-3 md:mt-0 flex flex-col">
+            <div>
+              <Button
+                type="primary"
+                className="mb-3 w-full"
+                icon={<EditOutlined/>}
+                disabled={!!processedImageUrl}
+                onClick={removeBackgroundSimple}>
+                Remove Background
+              </Button>
 
-            <Button onClick={handleRemoveUpload} icon={<DeleteOutlined />} type="default">
-              Delete
-            </Button>
+              <Button
+                type="primary"
+                className="mb-3 w-full"
+                icon={<DownloadOutlined />}
+                disabled={!processedImageUrl}
+                onClick={handleDownload}>
+                Download
+              </Button>
+            </div>
+
+            <div className="md:flex md:flex-col md:justify-end">
+              <Button
+                type="default"
+                className="mb-3 w-full"
+                icon={<UndoOutlined />}
+                disabled={!processedImageUrl}
+                onClick={() => setProcessedImageUrl(null)}>
+                Undo
+              </Button>
+
+              <Button
+                type="default"
+                className="w-full"
+                icon={<DeleteOutlined />}
+                onClick={handleRemoveUpload}>
+                Delete
+              </Button>
+            </div>
           </div>
         </div>
       )}

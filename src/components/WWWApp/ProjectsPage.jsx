@@ -5,24 +5,24 @@ import BlankApp from './BlankApp';
 import FinePrintApp from './FinePrintApp';
 import TextUtilApp from './TextUtilApp';
 import { useLocation } from 'react-router-dom';
-import { CheckCircleFilled, ExportOutlined, ToolFilled, WarningFilled } from '@ant-design/icons';
+import Icon, { CameraOutlined, CheckCircleFilled, ExportOutlined, FontSizeOutlined, ToolFilled, WarningFilled } from '@ant-design/icons';
 import { useTheme } from '../../hooks/useTheme';
 import { BudgetTracker } from '../BudgetTracker/BudgetTracker';
 import PhotoUtilApp from 'components/PhotoUtilApp/Root';
 
 const projects = [
-  {name: "TextUtil", status: 'active', description: "An app that helps you manipulate text.", path: "text_util"},
-  {name: 'PhotoUtil', status: 'inProgress', description: 'An app that helps you manipulate photos.', path: 'photo_util'},
+  {name: 'ImageUtil', status: 'active', icon: <CameraOutlined/>, description: 'An app that helps you manipulate photos.', path: 'photo_util'},
+  {name: "TextUtil", status: 'active', icon: <FontSizeOutlined/>, description: "An app that helps you manipulate text.", path: "text_util"},
 
-  {name: 'Fitness Tracker', status: 'unstarted', description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker'},
-  {name: 'Piano App', status: 'unstarted', description: 'A piano app that helps you learn how to play the piano.', path: 'piano_app'},
-  {name: 'Recipe Book', status: 'unstarted', description: 'A recipe book app that helps you keep track of your favorite recipes.', path: 'recipe_book'},
-  {name: 'Fine Print', status: 'unstarted', description: 'An app that helps you read the fine print on contracts.', path: 'fine_print'},
+  {name: 'Fitness Tracker', status: 'unstarted', icon: <Icon component={() => '🏃‍♂️'} />, description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker'},
+  {name: 'Piano App', status: 'unstarted', icon: <Icon component={() => '🎹'}/>, description: 'A piano app that helps you learn how to play the piano.', path: 'piano_app'},
+  {name: 'Recipe Book', status: 'unstarted', icon: <Icon component={() => '🥩'} />, description: 'A recipe book app that helps you keep track of your favorite recipes.', path: 'recipe_book'},
+  {name: 'Fine Print', status: 'unstarted', icon: <Icon component={() => '📑'}/>, description: 'An app that helps you read the fine print on contracts.', path: 'fine_print'},
 
-  {name: 'Budget Tracker', status: 'inProgress', description: 'Set up your weekly safe-to-spend and track transactions.', path: 'budget_tracker'},
+  {name: 'Budget Tracker', status: 'inProgress', icon: <Icon component={() => '💳'}/>, description: 'Set up your weekly safe-to-spend and track transactions.', path: 'budget_tracker'},
 
-  {name: 'SecondHand', status: 'active', description: 'An app that helps you buy and sell second-hand items.', path: '/second_hand'},
-  {name: 'GolfShot', status: 'inProgress', description: 'Hit the perfect golf shot, every time.', path: '/golf_shot'}
+  {name: 'SecondHand', status: 'active', icon: <Icon component={() => '👔'}/>, description: 'An app that helps you buy and sell second-hand items.', path: '/second_hand'},
+  {name: 'GolfShot', status: 'inProgress', icon: <Icon component={() => '⛳️'}/>, description: 'Hit the perfect golf shot, every time.', path: '/golf_shot'}
 ]
 
 const ProjectsPage = () =>
@@ -96,17 +96,25 @@ const Main = () => {
             key: project.path,
             label: (
               <div className="flex justify-between">
-                <div>{project.name}</div>
+                <div>
+                  {project.name}
+                  <span className="ml-2">
+                    <ProjectStatusIcon status={project.status} />
+                  </span>
+                </div>
                 <ProjectExternalLinkIcon path={project.path} />
               </div>
             ),
-            icon: <ProjectStatusIcon status={project.status} /> }))}
+            icon: project.icon }))}
         />
       </Sider>
       <Content className="md:container md:mx-auto">
-        <div className="m-5">
+        <div className="my-5 max-w-screen-md mx-auto px-5">
           <div className="text-center">
-            <Typography.Title level={2}>{selectedProject?.name}</Typography.Title>
+            <Typography.Title level={2}>
+              <span className="mr-2">{selectedProject?.icon}</span>
+              {selectedProject?.name}
+            </Typography.Title>
           </div>
           <Outlet />
         </div>
