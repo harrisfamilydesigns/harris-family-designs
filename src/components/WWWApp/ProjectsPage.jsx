@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Menu, Layout } from 'antd';
+import { Typography, Menu, Layout, Grid } from 'antd';
 import { Outlet, useNavigate, useRoutes } from 'react-router-dom';
 import BlankApp from './BlankApp';
 import FinePrintApp from './FinePrintApp';
@@ -9,6 +9,9 @@ import Icon, { CameraOutlined, CheckCircleFilled, ExportOutlined, FontSizeOutlin
 import { useTheme } from '../../hooks/useTheme';
 import { BudgetTracker } from '../BudgetTracker/BudgetTracker';
 import PhotoUtilApp from 'components/PhotoUtilApp/Root';
+import { TabBar } from 'antd-mobile';
+import './ProjectsPage.scss';
+const { useBreakpoint } = Grid;
 
 const projects = [
   {name: 'ImageUtil', status: 'active', icon: <CameraOutlined/>, description: 'An app that helps you manipulate photos.', path: 'photo_util'},
@@ -65,7 +68,8 @@ const Main = () => {
   const location = useLocation();
   const [selectedProject, setSelectedProject] = React.useState(projects[0]);
   const navigate = useNavigate();
-  const { Content, Sider } = Layout;
+  const { Content, Sider, Footer } = Layout;
+  const screens = useBreakpoint();
 
   React.useEffect(() => {
     const project = projects.find(project => location.pathname.includes(project.path));
@@ -76,22 +80,22 @@ const Main = () => {
     }
   }, [location.pathname]);
 
-  const handleProjectNavigation = ({ key: path }) => (
+  const handleProjectNavigation = (path) => {
+
     path.startsWith('/') ?
     window.open(path, '_blank') :
     navigate(path)
-  )
+  }
 
   return (
+    <>
     <Layout>
-      <Sider
-        breakpoint='md'
-      >
+      <Sider width={screens.md ? 250 : 0}>
         <Menu
           mode="inline"
           className="h-full"
           selectedKeys={[selectedProject.path]}
-          onClick={handleProjectNavigation}
+          onClick={obj => handleProjectNavigation(obj.key)}
           items={projects.map(project => ({
             key: project.path,
             label: (
@@ -120,6 +124,20 @@ const Main = () => {
         </div>
       </Content>
     </Layout>
+    <TabBar
+      className='md:hidden bg-white tab-bar-horizontal-overflow'
+      activeKey={selectedProject.path}
+      onChange={handleProjectNavigation}
+    >
+      {projects.map(project => (
+        <TabBar.Item
+          key={project.path}
+          title={project.name}
+          icon={project.icon}
+        />
+      ))}
+    </TabBar>
+    </>
   )
 }
 
