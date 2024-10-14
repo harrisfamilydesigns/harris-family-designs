@@ -5,12 +5,12 @@
   "type": "module",
   "homepage": "https://harrisfamilydesigns.com",
   "scripts": {
-    "dev:https": "NEXT_PUBLIC_HTTPS=true next dev --host",
-    "dev": "next dev --port 5173",
+    "print_url": "ifconfig | grep 192.168 | awk '{print $2}' | sed 's/addr://g' | sed 's/$/:5173/g' | sed 's/^/https:///g'",
+    "dev:https": "next dev --experimental-https -H 0.0.0.0 -p 5173",
+    "dev": "next dev -p 5173",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.3",
@@ -30,7 +30,6 @@
   "devDependencies": {
     "@types/react": "^18.2.56",
     "@types/react-dom": "^18.2.19",
-    "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
@@ -39,8 +38,7 @@
     "gh-pages": "^6.1.1",
     "postcss": "^8.4.47",
     "sass": "^1.79.5",
-    "tailwindcss": "^3.4.12",
-    "vite": "^5.1.4"
+    "tailwindcss": "^3.4.12"
   },
   "volta": {
     "node": "18.20.2"
