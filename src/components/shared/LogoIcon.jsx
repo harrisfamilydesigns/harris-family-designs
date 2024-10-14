@@ -3,7 +3,7 @@ import logo from 'assets/hfd.png';
 
 const LogoIcon = ({...props}) => {
   return (
-    <Icon {...props} component={() => <img src={logo} alt="logo" style={{height: '64px'}}/>} />
+    <Icon {...props} component={() => <img src={logo.src} alt="logo" style={{height: '64px'}}/>} />
   );
 }
 

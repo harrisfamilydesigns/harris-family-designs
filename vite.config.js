@@ -5,7 +5,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
-  const useHttps = process.env.VITE_HTTPS === 'true'
+  const useHttps = process.env.NEXT_PUBLIC_HTTPS === 'true'
 
   return {
     server: useHttps ? {

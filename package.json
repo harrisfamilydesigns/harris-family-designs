@@ -5,9 +5,10 @@
   "type": "module",
   "homepage": "https://harrisfamilydesigns.com",
   "scripts": {
-    "dev:https": "VITE_HTTPS=true vite --host",
-    "dev": "vite",
-    "build": "vite build",
+    "dev:https": "NEXT_PUBLIC_HTTPS=true next dev --host",
+    "dev": "next dev --port 5173",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -19,6 +20,7 @@
     "antd": "^5.15.0",
     "antd-mobile": "^5.37.1",
     "lodash": "^4.17.21",
+    "next": "^14.2.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-google-autocomplete": "^2.7.3",

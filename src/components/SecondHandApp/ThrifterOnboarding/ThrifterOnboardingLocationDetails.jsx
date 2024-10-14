@@ -5,7 +5,7 @@ import Typography from 'antd/es/typography/Typography';
 import { useCurrentUser, useThrifter, thrifters } from '../../../api';
 import { usePlacesWidget } from 'react-google-autocomplete';
 
-const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 const ThrifterOnboardingLocationDetails = ({onNext, onPrev}) => {
   const { currentUser, isLoading: isUserLoading}  = useCurrentUser();

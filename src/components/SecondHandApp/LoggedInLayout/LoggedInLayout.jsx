@@ -179,7 +179,7 @@ const LoggedInLayout = () => {
         <Header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'transparent', padding: 0}}>
           <Flex justify='space-between'>
             <div style={{ background: 'white', display: 'flex', alignItems: 'center' }}>
-              <img src={logo} alt="2ndHandFix" style={{height: 50, marginLeft: 10, borderRadius: '50%'}} />
+              <img src={logo.src} alt="2ndHandFix" style={{height: 50, marginLeft: 10, borderRadius: '50%'}} />
               <Typography.Title level={4} style={{margin: 0, marginLeft: 10}}>2ndHandFix</Typography.Title>
             </div>
             <Menu

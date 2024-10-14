@@ -29,3 +29,8 @@ dist-ssr
 
 # certs
 *.pem
+
+# Next.js
+.next
+next-env.d.ts
+dist

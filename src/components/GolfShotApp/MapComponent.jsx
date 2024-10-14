@@ -22,7 +22,7 @@ const MapComponent = () => {
   const [clubPower, setClubPower] = React.useState(1);
   const [standardDistancesVisible, setStandardDistancesVisible] = React.useState(false);
 
-  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: apiKey,

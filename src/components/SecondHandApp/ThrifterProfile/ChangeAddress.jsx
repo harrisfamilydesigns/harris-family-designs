@@ -4,7 +4,7 @@ import { useCurrentUser, useThrifter } from "../../../api";
 import { useState } from "react";
 import { usePlacesWidget } from "react-google-autocomplete";
 
-const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 const ChangeAddress = () => {
   const { currentUser, isLoading: isUserLoading } = useCurrentUser();
