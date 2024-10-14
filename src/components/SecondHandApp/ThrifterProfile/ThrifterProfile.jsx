@@ -1,7 +1,6 @@
 import React from 'react';
 import { useCurrentUser, useThrifter } from '../../../api';
-import { Avatar, Card, Col, Collapse, Divider, Flex, Row, Space, Spin, Tag, Typography } from 'antd';
-import { preferenceSections } from '../../../data/thrifterPreferences';
+import { Col, Divider, Row, Spin, Tag, Typography } from 'antd';
 import { humanize } from '../../../utils/humanize';
 import { ExperimentOutlined } from '@ant-design/icons';
 import { IconGlobe } from '@tabler/icons-react';

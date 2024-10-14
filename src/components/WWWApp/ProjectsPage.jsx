@@ -12,20 +12,31 @@ import PhotoUtilApp from 'components/PhotoUtilApp/Root';
 import { TabBar } from 'antd-mobile';
 import './ProjectsPage.scss';
 const { useBreakpoint } = Grid;
+import {
+  IconCamera,
+  IconLetterCaseToggle,
+  IconHeartbeat,
+  IconPiano,
+  IconChefHat,
+  IconFileText,
+  IconCash,
+  IconRecycle,
+  IconGolf
+} from '@tabler/icons-react';
 
 const projects = [
-  {name: 'ImageUtil', status: 'active', icon: <CameraOutlined/>, description: 'An app that helps you manipulate photos.', path: 'photo_util'},
-  {name: "TextUtil", status: 'active', icon: <FontSizeOutlined/>, description: "An app that helps you manipulate text.", path: "text_util"},
+  {name: 'ImageUtil', status: 'active', icon: <IconCamera/>, description: 'An app that helps you manipulate photos.', path: 'photo_util'},
+  {name: "TextUtil", status: 'active', icon: <IconLetterCaseToggle/>, description: "An app that helps you manipulate text.", path: "text_util"},
 
-  {name: 'Fitness Tracker', status: 'unstarted', icon: <Icon component={() => '🏃‍♂️'} />, description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker'},
-  {name: 'Piano App', status: 'unstarted', icon: <Icon component={() => '🎹'}/>, description: 'A piano app that helps you learn how to play the piano.', path: 'piano_app'},
-  {name: 'Recipe Book', status: 'unstarted', icon: <Icon component={() => '🥩'} />, description: 'A recipe book app that helps you keep track of your favorite recipes.', path: 'recipe_book'},
-  {name: 'Fine Print', status: 'unstarted', icon: <Icon component={() => '📑'}/>, description: 'An app that helps you read the fine print on contracts.', path: 'fine_print'},
+  {name: 'Fitness Tracker', status: 'unstarted', icon: <IconHeartbeat />, description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker'},
+  {name: 'Piano App', status: 'unstarted', icon: <IconPiano />, description: 'A piano app that helps you learn how to play the piano.', path: 'piano_app'},
+  {name: 'Recipe Book', status: 'unstarted', icon: <IconChefHat />, description: 'A recipe book app that helps you keep track of your favorite recipes.', path: 'recipe_book'},
+  {name: 'Fine Print', status: 'unstarted', icon: <IconFileText />, description: 'An app that helps you read the fine print on contracts.', path: 'fine_print'},
 
-  {name: 'Budget Tracker', status: 'inProgress', icon: <Icon component={() => '💳'}/>, description: 'Set up your weekly safe-to-spend and track transactions.', path: 'budget_tracker'},
+  {name: 'Budget Tracker', status: 'inProgress', icon: <IconCash />, description: 'Set up your weekly safe-to-spend and track transactions.', path: 'budget_tracker'},
 
-  {name: 'SecondHand', status: 'active', icon: <Icon component={() => '👔'}/>, description: 'An app that helps you buy and sell second-hand items.', path: '/second_hand'},
-  {name: 'GolfShot', status: 'inProgress', icon: <Icon component={() => '⛳️'}/>, description: 'Hit the perfect golf shot, every time.', path: '/golf_shot'}
+  {name: 'SecondHand', status: 'active', icon: <IconRecycle />, description: 'An app that helps you buy and sell second-hand items.', path: '/second_hand'},
+  {name: 'GolfShot', status: 'inProgress', icon: <IconGolf />, description: 'Hit the perfect golf shot, every time.', path: '/golf_shot'}
 ]
 
 const ProjectsPage = () =>
@@ -68,7 +79,7 @@ const Main = () => {
   const location = useLocation();
   const [selectedProject, setSelectedProject] = React.useState(projects[0]);
   const navigate = useNavigate();
-  const { Content, Sider, Footer } = Layout;
+  const { Content, Sider } = Layout;
   const screens = useBreakpoint();
 
   React.useEffect(() => {
@@ -114,10 +125,10 @@ const Main = () => {
       </Sider>
       <Content className="md:container md:mx-auto">
         <div className="my-5 max-w-screen-md mx-auto px-5">
-          <div className="text-center">
-            <Typography.Title level={2}>
-              <span className="mr-2">{selectedProject?.icon}</span>
-              {selectedProject?.name}
+          <div>
+            <Typography.Title level={2} className="flex justify-center items-center">
+              <div className="mr-2">{selectedProject?.icon}</div>
+              <div>{selectedProject?.name}</div>
             </Typography.Title>
           </div>
           <Outlet />
