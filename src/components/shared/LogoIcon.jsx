@@ -1,5 +1,5 @@
 import Icon from '@ant-design/icons';
-import logo from 'assets/hfd.png';
+import logo from '/hfd.svg';
 
 const LogoIcon = ({...props}) => {
   return (
