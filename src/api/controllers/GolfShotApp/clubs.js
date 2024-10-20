@@ -33,6 +33,12 @@ const clubAttributes = [
   'dispersionRadiusYardsPlusMinus',
 ];
 
+const attributeProcessors = {
+  carryDistanceYards: (value) => Number.parseInt(value),
+  totalDistanceYardsPlusMinus: (value) => Number.parseInt(value),
+  dispersionRadiusYardsPlusMinus: (value) => Number.parseInt(value),
+};
+
 export const getClubs = async () => {
   let clubs = [];
   if (!localStorage.getItem('clubs')) {
@@ -49,7 +55,13 @@ export const addClub = async (params) => {
   const clubs = await getClubs();
   const uniqueId = Math.max(...clubs.map((club) => Number.parseInt(club.id))) + 1;
   const validParams = Object.entries(params).filter(([key, value]) => clubAttributes.includes(key));
-  const newClub = {id: uniqueId, ...Object.fromEntries(validParams)};
+  const processedParams = validParams.map(([key, value]) => {
+    if (attributeProcessors[key]) {
+      return [key, attributeProcessors[key](value)];
+    }
+    return [key, value];
+  });
+  const newClub = {id: uniqueId, ...Object.fromEntries(processedParams)};
   const newClubs = [...clubs, newClub];
   localStorage.setItem('clubs', JSON.stringify(newClubs));
   return newClub;
@@ -58,8 +70,14 @@ export const addClub = async (params) => {
 export const updateClub = async (id, params) => {
   const clubs = await getClubs();
   const validParams = Object.entries(params).filter(([key, value]) => clubAttributes.includes(key));
+  const processedParams = validParams.map(([key, value]) => {
+    if (attributeProcessors[key]) {
+      return [key, attributeProcessors[key](value)];
+    }
+    return [key, value];
+  });
   const clubToUpdate = clubs.find((club) => Number.parseInt(club.id) === Number.parseInt(id));
-  const updatedClub = {...clubToUpdate, ...Object.fromEntries(validParams)};
+  const updatedClub = {...clubToUpdate, ...Object.fromEntries(processedParams)};
   const updatedClubs = clubs.map((club) => {
     if (Number.parseInt(club.id) === Number.parseInt(id)) {
       return updatedClub;

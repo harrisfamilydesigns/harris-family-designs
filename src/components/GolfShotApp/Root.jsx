@@ -1,11 +1,11 @@
 import React from 'react';
 import { useRoutes } from 'react-router-dom';
-import MapComponent from './MapComponent';
+import Main from './Main';
 
 const GolfShotApp = () => {
   return useRoutes([
     { root: '/', children: [
-      { index: true, element: <MapComponent /> },
+      { index: true, element: <Main /> },
     ]},
   ]);
 };

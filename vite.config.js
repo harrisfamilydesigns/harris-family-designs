@@ -27,6 +27,7 @@ export default defineConfig(({ command, mode }) => {
         utils: '/src/utils',
         helpers: '/src/helpers',
         controllers: '/src/api/controllers',
+        providers: '/src/providers',
       }
     }
   }

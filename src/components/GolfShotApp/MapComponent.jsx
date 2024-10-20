@@ -7,20 +7,23 @@ import {
 import useGeolocation from 'hooks/useGeolocation';
 import ClubSelector from './ClubSelector';
 import GolfShotMapMarker from './GolfShotMapMarker';
-import { Button, Modal, Typography } from 'antd';
-import { CompassOutlined } from '@ant-design/icons';
+import { Button, Typography } from 'antd';
+import { CompassOutlined, EditOutlined } from '@ant-design/icons';
 import CirclesIcon from '../shared/CirclesIcon';
-import { set } from 'lodash';
+import { useClubContext } from 'providers/GolfShotApp/ClubProvider';
+import { useResetDefaultClubs } from 'api/resources/GolfShotApp/clubs';
 
+const DEFAULT_ZOOM_LEVEL = 18;
 const MapComponent = () => {
+  const { selectedClub, setEditingClub } = useClubContext();
   const { location, error, loading } = useGeolocation();
   const [map, setMap] = React.useState(null);
-  const [zoomLevel, setZoomLevel] = React.useState(18);
+  const [zoomLevel, setZoomLevel] = React.useState(DEFAULT_ZOOM_LEVEL);
   const [markerPosition, setMarkerPosition] = React.useState(null);
   const [destination, setDestination] = React.useState(null);
-  const [selectedClub, setSelectedClub] = React.useState(null);
   const [clubPower, setClubPower] = React.useState(1);
   const [standardDistancesVisible, setStandardDistancesVisible] = React.useState(false);
+  const { resetDefaultClubs } = useResetDefaultClubs();
 
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
   const { isLoaded } = useJsApiLoader({
@@ -48,6 +51,10 @@ const MapComponent = () => {
     setStandardDistancesVisible(visible => !visible);
   };
 
+  const handleDropMarker = () => {
+    setMarkerPosition(map.getCenter().toJSON());
+  };
+
   if (!isLoaded) return <p>Loading map...</p>
   if (loading || !location || !location.lat || !location.lng || !markerPosition || !markerPosition.lat || !markerPosition.lng) return <p>Fetching location...</p>;
   if (error) return <div>{error}</div>;
@@ -60,9 +67,8 @@ const MapComponent = () => {
           zoom={zoomLevel}
           center={location}
           onLoad={map => setMap(map)}
-          onDblClick={async event => {
-            setDestination({ lat: event.latLng.lat(), lng: event.latLng.lng() });
-            // setMarkerPosition({ lat: event.latLng.lat(), lng: event.latLng.lng() })
+          onDblClick={event => {
+            setMarkerPosition({ lat: event.latLng.lat(), lng: event.latLng.lng() })
           }}
           options={{
             disableDefaultUI: true,
@@ -75,10 +81,35 @@ const MapComponent = () => {
             }
           }}
         >
-          {/* Absolute position controls */}
-          <div className="absolute top-0 right-0 m-3 text-right">
-
+          <div className="absolute top-0 left-0 text-left">
+            <div className="mt-3 ml-3">
+              <Button type="default" onClick={resetDefaultClubs}>Reset clubs</Button>
+            </div>
+            {selectedClub && (
+              <div className="bg-slate-800 bg-opacity-75 rounded-bl-lg p-3 rounded mt-3 ml-3">
+                <div>
+                  <Typography.Text className="text-white">{selectedClub.name}</Typography.Text>
+                </div>
+                <div>
+                  <Typography.Text className="text-white">{Math.round(selectedClub.carryDistanceYards * clubPower)}yd</Typography.Text>
+                </div>
+                <div>
+                  <Typography.Text className="text-white">{Math.round(clubPower * 100)}%</Typography.Text>
+                </div>
+                <Button type="text" className="p-0" onClick={() => setEditingClub(selectedClub)}>
+                  <div className="flex items-center">
+                    <EditOutlined className="text-white mr-2"/>
+                    <span className="text-white">Edit</span>
+                  </div>
+                </Button>
+              </div>
+            )}
           </div>
+
+          {/* Absolute position controls */}
+          <div className="absolute top-0 right-0 text-right">
+          </div>
+
           <GolfShotMapMarker
             selectedClub={selectedClub}
             position={markerPosition}
@@ -92,49 +123,37 @@ const MapComponent = () => {
       </div>
 
       {/* Club Selector Button at the Bottom */}
-      <div className="absolute bottom-3 right-0 m-3 text-right">
-        <div className="flex flex-col items-end">
+      <div className="absolute bottom-0 w-full">
+        <div className="flex flex-col items-end mb-3 mr-3">
+          <Button
+            type="default"
+            className="mb-3"
+            onClick={handleDropMarker}
+            icon={<CompassOutlined/>}
+          >Drop Marker Into View</Button>
           <Button
             type="default"
             onClick={() => map.setCenter(destination)}
             icon={<CompassOutlined/>}
-          >Center Target</Button>
+          >View Target</Button>
           <Button
             type="default"
             className="mt-3"
             onClick={() => map.setCenter(markerPosition)}
             icon={<CompassOutlined/>}
-          >Center Stance</Button>
-          {selectedClub && (
-            <div className="bg-slate-800 bg-opacity-75 rounded-bl-lg p-3 rounded mt-3">
-              <div>
-                <Typography.Text className="text-white">{selectedClub.name}</Typography.Text>
-              </div>
-              <div>
-                <Typography.Text className="text-white">{Math.round(selectedClub.carryDistanceYards * clubPower)}yd</Typography.Text>
-              </div>
-              <div>
-                <Typography.Text className="text-white">{Math.round(clubPower * 100)}%</Typography.Text>
-              </div>
-            </div>
-          )}
-
-          <div className="mt-3 flex items-center">
-            <div className="mr-3">
-              <Button
-                type="default"
-                onClick={toggleStandardDistancesVisibility}
-                icon={<CirclesIcon
-                  style={{ color: standardDistancesVisible ? 'black' : 'gray' }}
-                />}
-              />
-            </div>
-            <ClubSelector
-              selectedClub={selectedClub}
-              onSelectClub={setSelectedClub}
+          >View Stance</Button>
+          <div className="mt-3 ml-3">
+            <Button
+              type="default"
+              onClick={toggleStandardDistancesVisibility}
+              icon={<CirclesIcon
+                style={{ color: standardDistancesVisible ? 'black' : 'gray' }}
+              />}
             />
           </div>
         </div>
+
+        <ClubSelector />
       </div>
     </div>
   );
