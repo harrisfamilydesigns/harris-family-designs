@@ -15,13 +15,17 @@ import { useResetDefaultClubs } from 'api/resources/GolfShotApp/clubs';
 
 const DEFAULT_ZOOM_LEVEL = 18;
 const MapComponent = () => {
-  const { selectedClub, setEditingClub } = useClubContext();
+  const {
+    selectedClub,
+    setEditingClub,
+    markerPosition,
+    setMarkerPosition,
+    ballPosition,
+    clubPower,
+  } = useClubContext();
   const { location, error, loading } = useGeolocation();
   const [map, setMap] = React.useState(null);
   const [zoomLevel, setZoomLevel] = React.useState(DEFAULT_ZOOM_LEVEL);
-  const [markerPosition, setMarkerPosition] = React.useState(null);
-  const [destination, setDestination] = React.useState(null);
-  const [clubPower, setClubPower] = React.useState(1);
   const [standardDistancesVisible, setStandardDistancesVisible] = React.useState(false);
   const { resetDefaultClubs } = useResetDefaultClubs();
 
@@ -81,7 +85,7 @@ const MapComponent = () => {
             }
           }}
         >
-          <div className="absolute top-0 left-0 text-left">
+          <div className="absolute top-0 left-0 text-left z-0">
             <div className="mt-3 ml-3">
               <Button type="default" onClick={resetDefaultClubs}>Reset clubs</Button>
             </div>
@@ -107,52 +111,50 @@ const MapComponent = () => {
           </div>
 
           {/* Absolute position controls */}
-          <div className="absolute top-0 right-0 text-right">
+          <div className="absolute top-0 right-0 text-right z-0">
           </div>
 
-          <GolfShotMapMarker
-            selectedClub={selectedClub}
-            position={markerPosition}
-            destination={destination}
-            onClubPowerChange={setClubPower}
-            onMarkerPositionChange={setMarkerPosition}
-            onDestinationChange={setDestination}
-            standardDistancesVisible={standardDistancesVisible}
-          />
+          <GolfShotMapMarker standardDistancesVisible={standardDistancesVisible} />
         </GoogleMap>
       </div>
 
       {/* Club Selector Button at the Bottom */}
-      <div className="absolute bottom-0 w-full">
-        <div className="flex flex-col items-end mb-3 mr-3">
+      <div className="absolute bottom-[48px] left-0 mb-3 ml-3">
+        <div>
           <Button
             type="default"
             className="mb-3"
             onClick={handleDropMarker}
             icon={<CompassOutlined/>}
           >Drop Marker Into View</Button>
+        </div>
+        <div>
           <Button
             type="default"
-            onClick={() => map.setCenter(destination)}
+            onClick={() => map.setCenter(ballPosition)}
             icon={<CompassOutlined/>}
           >View Target</Button>
+        </div>
+        <div>
           <Button
             type="default"
             className="mt-3"
             onClick={() => map.setCenter(markerPosition)}
             icon={<CompassOutlined/>}
           >View Stance</Button>
-          <div className="mt-3 ml-3">
-            <Button
-              type="default"
-              onClick={toggleStandardDistancesVisibility}
-              icon={<CirclesIcon
-                style={{ color: standardDistancesVisible ? 'black' : 'gray' }}
-              />}
-            />
-          </div>
         </div>
-
+        <div>
+          <Button
+            className="mt-3"
+            type="default"
+            onClick={toggleStandardDistancesVisibility}
+            icon={<CirclesIcon
+              style={{ color: standardDistancesVisible ? 'black' : 'gray' }}
+            />}
+          />
+        </div>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0">
         <ClubSelector />
       </div>
     </div>

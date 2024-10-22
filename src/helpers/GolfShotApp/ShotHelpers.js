@@ -4,14 +4,14 @@ const YARDS_TO_METERS = 0.9144; // Conversion factor from yards to meters
 const METERS_TO_YARDS = 1.09361; // Conversion factor from meters to yards
 
 /**
- * Calculates the destination point from a given latitude, longitude, distance, and bearing.
+ * Calculates the ballPosition point from a given latitude, longitude, distance, and bearing.
  * @param {number} lat - Latitude of the starting point.
  * @param {number} lng - Longitude of the starting point.
  * @param {number} carryDistanceYards - Distance to the destination point in feet.
  * @param {number} bearingInDegrees - Bearing in degrees (0 = North, 90 = East, etc.).
  * @returns {{ lat: number, lng: number }} - The destination point's latitude and longitude.
  */
-export const calculateDestination = (startingLocation, carryDistanceYards, bearingInDegrees) => {
+export const calculateBallPosition = (startingLocation, carryDistanceYards, bearingInDegrees) => {
   const { lat, lng } = startingLocation;
   const distanceInRadians = carryDistanceYards / EARTH_RADIUS_YARDS;
   const bearingInRadians = (bearingInDegrees * Math.PI) / 180;
