@@ -5,13 +5,12 @@ import BlankApp from './BlankApp';
 import FinePrintApp from './FinePrintApp';
 import TextUtilApp from './TextUtilApp';
 import { useLocation } from 'react-router-dom';
-import Icon, { CameraOutlined, CheckCircleFilled, ExportOutlined, FontSizeOutlined, ToolFilled, WarningFilled } from '@ant-design/icons';
+import { CalendarOutlined, CheckCircleFilled, ExportOutlined, ToolFilled, WarningFilled } from '@ant-design/icons';
 import { useTheme } from '../../hooks/useTheme';
 import { BudgetTracker } from '../BudgetTracker/BudgetTracker';
 import PhotoUtilApp from 'components/PhotoUtilApp/Root';
 import { TabBar } from 'antd-mobile';
 import './ProjectsPage.scss';
-const { useBreakpoint } = Grid;
 import {
   IconCamera,
   IconLetterCaseToggle,
@@ -23,11 +22,13 @@ import {
   IconRecycle,
   IconGolf
 } from '@tabler/icons-react';
+const { useBreakpoint } = Grid;
 
 const projects = [
   {name: 'ImageUtil', status: 'active', icon: <IconCamera/>, description: 'An app that helps you manipulate photos.', path: 'photo_util'},
   {name: "TextUtil", status: 'active', icon: <IconLetterCaseToggle/>, description: "An app that helps you manipulate text.", path: "text_util"},
 
+  {name: 'Booking App', status: 'active', icon: <CalendarOutlined />, description: "An app that helps set your team's availability, and book appointments.", path: '/booksuite'},
   {name: 'Fitness Tracker', status: 'unstarted', icon: <IconHeartbeat />, description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker'},
   {name: 'Piano App', status: 'unstarted', icon: <IconPiano />, description: 'A piano app that helps you learn how to play the piano.', path: 'piano_app'},
   {name: 'Recipe Book', status: 'unstarted', icon: <IconChefHat />, description: 'A recipe book app that helps you keep track of your favorite recipes.', path: 'recipe_book'},
