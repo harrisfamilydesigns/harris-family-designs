@@ -1,13 +1,10 @@
 import { Button } from "antd";
-import { useState } from "react";
-import LoginForm from 'components/BookingApp/LoginForm/LoginForm';
-import SignupForm from 'components/BookingApp/SignupForm/SignupForm';
+import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginButton from "../Auth0/Login/Login";
 
-const LOGIN_FORM = 'login';
-const SIGNUP_FORM = 'signup';
-
-export default function Main() {
-  const [visibleForm, setVisibleForm] = useState(null);
+const Main = () => {
+  const { logout } = useAuth0();
 
   return (
     <div className="h-dvh bg-gray-50 overflow-auto flex flex-col">
@@ -18,24 +15,14 @@ export default function Main() {
           <p className="text-lg text-gray-500">
             Create, track, and manage bookings, appointments, and reservations with ease.
           </p>
-          {!visibleForm && (
-            <div>
-              <Button type="primary" className="mt-5" onClick={() => setVisibleForm(SIGNUP_FORM)}>Sign Up</Button>
-              <div>
-                Already have an account?
-                <Button type="link" className="m-0" onClick={() => setVisibleForm(LOGIN_FORM)}>Login</Button>
-              </div>
-            </div>
-          )}
-          { visibleForm && (
-            <div className="mt-10 max-w-lg">
-              { visibleForm === LOGIN_FORM && <LoginForm onSwitch={() => setVisibleForm(SIGNUP_FORM)}/> }
-              { visibleForm === SIGNUP_FORM && <SignupForm onSwitch={() => setVisibleForm(LOGIN_FORM)}/> }
-            </div>
-          ) }
+
+          <div className="mt-5">
+            <LoginButton />
+          </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
+export default Main;
 
