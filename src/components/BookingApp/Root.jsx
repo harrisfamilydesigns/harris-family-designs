@@ -2,12 +2,13 @@ import { useRoutes } from 'react-router-dom';
 import Main from './Main/Main';
 import { Auth0Provider } from '@auth0/auth0-react';
 import Dashboard from './Dashboard/Dashboard';
+import DashboardWelcome from './Dashboard/DashboardWelcome/DashboardWelcome';
 
 const routes = [
   { root: '/', children: [
     { index: true, element: <Main /> },
-    { path: 'dashboard/*', children: [
-      { index: true, element: <Dashboard /> },
+    { path: 'dashboard/*', element: <Dashboard />, children: [
+      { index: true, element: <DashboardWelcome /> }
     ]}
   ] },
 ];
