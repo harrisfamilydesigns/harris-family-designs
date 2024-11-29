@@ -1,9 +1,9 @@
 import { tokenProvider } from '../tokenProvider';
 import { urlForPath } from './utils';
 
-const _request = async (path, method, body, requiresAuth = true) => {
+const _request = async (path, method, body, requiresAuth = true, providedToken = null) => {
   const url = urlForPath(path);
-  const token = tokenProvider.getToken();
+  const token = providedToken || tokenProvider.getToken();
   const headers = {
     'Content-Type': 'application/json',
     ...(requiresAuth && { Authorization: `Bearer ${token}` }),
@@ -14,7 +14,7 @@ const _request = async (path, method, body, requiresAuth = true) => {
     ...(body && { body: JSON.stringify(body) }),
   });
 
-  if (requiresAuth && response.status === 401) {
+  if (requiresAuth && response.status === 401 && !providedToken) {
     tokenProvider.removeToken();
     window.location.reload();
 
@@ -42,10 +42,10 @@ const _request = async (path, method, body, requiresAuth = true) => {
   };
 }
 
-const get = (path, requiresAuth = true) => _request(path, 'GET', null, requiresAuth);
-const post = (path, body, requiresAuth = true) => _request(path, 'POST', body, requiresAuth);
-const patch = (path, body, requiresAuth = true) => _request(path, 'PATCH', body, requiresAuth);
-const destroy = (path, requiresAuth = true) => _request(path, 'DELETE', null, requiresAuth);
+const get = (path, requiresAuth = true, token = null) => _request(path, 'GET', null, requiresAuth, token);
+const post = (path, body, requiresAuth = true, token = null) => _request(path, 'POST', body, requiresAuth, token);
+const patch = (path, body, requiresAuth = true, token = null) => _request(path, 'PATCH', body, requiresAuth, token);
+const destroy = (path, requiresAuth = true, token = null) => _request(path, 'DELETE', null, requiresAuth, token);
 
 export const request = {
   get,

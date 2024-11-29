@@ -51,9 +51,7 @@ const Dashboard = () => {
       </Sider>
 
       <Content>
-        <div className="container mx-auto">
-          <Outlet />
-        </div>
+        <Outlet />
       </Content>
     </Layout>
   );
