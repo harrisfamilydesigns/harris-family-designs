@@ -33,6 +33,7 @@ const DashboardWelcome = () => {
           Welcome, {user.name}!
         </p>
         <Button className="mt-3" onClick={getTest}>Get Test</Button>
+        <div className="mt-3">{JSON.stringify(user, null, 2)}</div>
       </div>
 
     </div>

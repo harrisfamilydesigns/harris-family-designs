@@ -9,7 +9,11 @@ const {
 } = Layout;
 
 const Dashboard = () => {
-  const { logout, isAuthenticated, isLoading } = useAuth0();
+  const {
+    logout,
+    isAuthenticated,
+    isLoading
+  } = useAuth0();
 
   if (isLoading) {
     return <div>Loading ...</div>;

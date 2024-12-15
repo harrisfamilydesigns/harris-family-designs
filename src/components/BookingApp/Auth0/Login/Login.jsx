@@ -5,7 +5,12 @@ const LoginButton = () => {
   const { loginWithRedirect } = useAuth0();
 
   return (
-    <Button type="primary" onClick={() => loginWithRedirect()}>Login</Button>
+    <>
+      <Button type="primary" onClick={() => loginWithRedirect()}>Login</Button>
+      <span className="ml-3">or</span>
+      <Button type="link" onClick={() => loginWithRedirect({ screen_hint: 'signup' })}>Sign Up</Button>
+    </>
+
   );
 }
 

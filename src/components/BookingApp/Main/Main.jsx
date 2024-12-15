@@ -1,11 +1,6 @@
-import { Button } from "antd";
-import { Link } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from "../Auth0/Login/Login";
 
 const Main = () => {
-  const { logout } = useAuth0();
-
   return (
     <div className="h-dvh bg-gray-50 overflow-auto flex flex-col">
       <div className="container mx-auto flex-1 flex flex-col justify-center items-center">
