@@ -29,12 +29,12 @@ const projects = [
   {name: "TextUtil", status: 'active', icon: <IconLetterCaseToggle/>, description: "An app that helps you manipulate text.", path: "text_util"},
 
   {name: 'Fitness Tracker', status: 'unstarted', icon: <IconHeartbeat />, description: 'A fitness tracker app that helps you keep track of your daily exercise routine.', path: 'fitness_tracker'},
-  {name: 'Piano App', status: 'unstarted', icon: <IconPiano />, description: 'A piano app that helps you learn how to play the piano.', path: '/chord_or_notes'},
   {name: 'Recipe Book', status: 'unstarted', icon: <IconChefHat />, description: 'A recipe book app that helps you keep track of your favorite recipes.', path: 'recipe_book'},
   {name: 'Fine Print', status: 'unstarted', icon: <IconFileText />, description: 'An app that helps you read the fine print on contracts.', path: 'fine_print'},
 
   {name: 'Budget Tracker', status: 'inProgress', icon: <IconCash />, description: 'Set up your weekly safe-to-spend and track transactions.', path: 'budget_tracker'},
 
+  {name: 'Piano App', status: 'active', icon: <IconPiano />, description: 'A piano app that helps you learn how to play the piano.', path: '/chord_or_notes'},
   {name: 'SecondHand', status: 'active', icon: <IconRecycle />, description: 'An app that helps you buy and sell second-hand items.', path: '/second_hand'},
   {name: 'GolfShot', status: 'inProgress', icon: <IconGolf />, description: 'Hit the perfect golf shot, every time.', path: '/golf_shot'}
 ]
