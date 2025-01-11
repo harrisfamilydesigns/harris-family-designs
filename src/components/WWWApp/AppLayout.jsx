@@ -23,11 +23,11 @@ const AppLayout = () => {
   let menuItems = [
     {
       key: 'projects',
-      label: <Link to="projects">Projects</Link>,
+      label: <Link to="/projects">Projects</Link>,
     },
     {
       key: 'about',
-      label: <Link to="about">About Us</Link>,
+      label: <Link to="/about">About Us</Link>,
     },
     // {
     //   key: 'contact',
